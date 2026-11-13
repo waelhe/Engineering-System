@@ -42,26 +42,27 @@ def update_manifest(path: Path) -> None:
     manifest["repository"] = "https://github.com/waelhe/Engineering-System"
     manifest["homepage"] = "https://github.com/waelhe/Engineering-System"
     manifest["license"] = "Apache-2.0"
+
     interface = manifest.get("interface")
     if not isinstance(interface, dict):
-        interface = manifest.setdefault("extensions", {}).setdefault("com.openai", {}).setdefault("interface", {})
-    interface["displayName"] = LOCAL_NAME
-    interface["shortDescription"] = "Design, build, verify and learn with evidence"
-    interface["longDescription"] = (
-        "A unified engineering system built on the pinned Elephant-Goldfish Model. "
-        "It combines task-scoped project context, structured engineering knowledge, "
-        "independent design review, controlled implementation, SHA-bound verification "
-        "and evidence-backed learning. Human approval remains required at authority boundaries."
-    )
-    interface["developerName"] = LOCAL_NAME
-    interface["capabilities"] = [
-        "Engineering task orchestration",
-        "Evidence-backed project knowledge",
-        "Independent design review",
-        "Controlled implementation and verification",
-        "Closed-loop engineering learning",
-    ]
-    if path.name == "plugin.json":
+        interface = manifest.get("extensions", {}).get("com.openai", {}).get("interface")
+    if isinstance(interface, dict):
+        interface["displayName"] = LOCAL_NAME
+        interface["shortDescription"] = "Design, build, verify and learn with evidence"
+        interface["longDescription"] = (
+            "A unified engineering system built on the pinned Elephant-Goldfish Model. "
+            "It combines task-scoped project context, structured engineering knowledge, "
+            "independent design review, controlled implementation, SHA-bound verification "
+            "and evidence-backed learning. Human approval remains required at authority boundaries."
+        )
+        interface["developerName"] = LOCAL_NAME
+        interface["capabilities"] = [
+            "Engineering task orchestration",
+            "Evidence-backed project knowledge",
+            "Independent design review",
+            "Controlled implementation and verification",
+            "Closed-loop engineering learning",
+        ]
         interface["defaultPrompt"] = [
             "Classify this engineering task and retrieve the relevant project knowledge.",
             "Review this engineering design independently before implementation.",
@@ -115,12 +116,17 @@ def assemble(target: str, output: Path) -> tuple[Path, Path]:
             "knowledge-learning.md": ROOT / "docs/policies/knowledge-learning.md",
             "system-architecture.md": ROOT / "docs/architecture/system-architecture.md",
             "knowledge-model.md": ROOT / "docs/architecture/knowledge-model.md",
+            "knowledge-lifecycle.md": ROOT / "docs/architecture/knowledge-lifecycle.md",
         }
         for name, source in policy_map.items():
             shutil.copy2(source, stage / "resources" / name)
 
         update_manifest(stage / "plugin.json")
         update_manifest(stage / ".codex-plugin" / "plugin.json")
+        claude_manifest = stage / ".claude-plugin" / "plugin.json"
+        if claude_manifest.is_file():
+            update_manifest(claude_manifest)
+
         packer = stage / "scripts" / "pack_plugin.py"
         if not packer.is_file():
             raise RuntimeError("Pinned EGM packaging script is missing")
