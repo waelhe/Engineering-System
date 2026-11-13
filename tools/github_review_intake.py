@@ -164,28 +164,32 @@ def collect_one_pr(repo: str, project_id: str, token: str, number: int,
             counts["objects"] += 1
     return counts
 
-def open_intake_prs(repo: str, token: str) -> list[dict[str, Any]]:
-    return [p for p in api_pages(f"/repos/{repo}/pulls?state=open&base=main", token)
+def open_intake_prs(repo: str, token: str, base_branch: str) -> list[dict[str, Any]]:
+    return [p for p in api_pages(f"/repos/{repo}/pulls?state=open&base={base_branch}", token)
             if str(p.get("head", {}).get("ref", "")).startswith("automation/knowledge-intake")
             and p.get("head", {}).get("repo", {}).get("full_name", "").lower() == repo.lower()]
 
-def prepare_branch(repo: str, token: str, run_id: str) -> tuple[str, int | None]:
-    git("fetch", "origin", "main", "--no-tags")
-    existing = open_intake_prs(repo, token)
+def prepare_branch(repo: str, token: str, run_id: str) -> tuple[str, int | None, str]:
+    repository = api_request("GET", f"/repos/{repo}", token)
+    base_branch = repository.get("default_branch")
+    if not isinstance(base_branch, str) or not base_branch:
+        raise IntakeError("repository API did not return a default branch")
+    git("fetch", "origin", base_branch, "--no-tags")
+    existing = open_intake_prs(repo, token, base_branch)
     if existing:
         existing.sort(key=lambda p: p.get("updated_at", ""), reverse=True)
         pr = existing[0]
         branch = pr["head"]["ref"]
         git("fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}")
         git("checkout", "-B", branch, f"refs/remotes/origin/{branch}")
-        git("merge", "--no-edit", "refs/remotes/origin/main")
-        return branch, int(pr["number"])
+        git("merge", "--no-edit", f"refs/remotes/origin/{base_branch}")
+        return branch, int(pr["number"]), base_branch
     suffix = "".join(c for c in run_id if c.isalnum() or c == "-")[:50] or "manual"
     branch = f"automation/knowledge-intake-{suffix}"
-    git("checkout", "-B", branch, "refs/remotes/origin/main")
-    return branch, None
+    git("checkout", "-B", branch, f"refs/remotes/origin/{base_branch}")
+    return branch, None, base_branch
 
-def publish_batch(repo: str, token: str, branch: str, existing_pr: int | None) -> dict[str, Any] | None:
+def publish_batch(repo: str, token: str, branch: str, existing_pr: int | None, base_branch: str) -> dict[str, Any] | None:
     git("add", "knowledge/inbox", "knowledge/index.json")
     staged = git("diff", "--cached", "--quiet", check=False)
     if staged.returncode == 0:
@@ -200,7 +204,7 @@ def publish_batch(repo: str, token: str, branch: str, existing_pr: int | None) -
         pr = api_request("GET", f"/repos/{repo}/pulls/{existing_pr}", token)
     else:
         pr = api_request("POST", f"/repos/{repo}/pulls", token, {
-            "title": "Engineering knowledge intake sync", "head": branch, "base": "main",
+            "title": "Engineering knowledge intake sync", "head": branch, "base": base_branch,
             "body": ("## Automated intake batch\n\n"
                      "Source-linked GitHub reviews/comments are stored as untrusted Signals. "
                      "No Finding, Pattern, Rule or closure is auto-approved.\n\n"
@@ -223,7 +227,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pr-number", type=int)
     parser.add_argument("--since-days", type=int, default=7)
     parser.add_argument("--max-prs", type=int, default=50)
-    parser.add_argument("--project-id", default="app-java-v3")
+    parser.add_argument("--project-id", default=os.environ.get("EGM_PROJECT_ID", "egm-engineering-system"))
     args = parser.parse_args(argv)
     repo = os.environ.get("GITHUB_REPOSITORY", "")
     token = os.environ.get("GITHUB_TOKEN", "")
@@ -237,7 +241,7 @@ def main(argv: list[str] | None = None) -> int:
         if not numbers:
             print(json.dumps({"message": "No recently updated PRs selected; no changes made."}))
             return 0
-        branch, existing_pr = prepare_branch(repo, token, args.run_id)
+        branch, existing_pr, base_branch = prepare_branch(repo, token, args.run_id)
         totals = {"created": 0, "duplicate": 0, "objects": 0, "prs": 0}
         for number in numbers:
             counts = collect_one_pr(repo, args.project_id, token, number, args.event_name)
@@ -248,7 +252,7 @@ def main(argv: list[str] | None = None) -> int:
         subprocess.run([sys.executable, "tools/egm_knowledge.py", "index"], check=True)
         subprocess.run([sys.executable, "tools/egm_knowledge.py", "validate-receipts"], check=True)
         subprocess.run([sys.executable, "-m", "pytest", "-q"], check=True)
-        published = publish_batch(repo, token, branch, existing_pr)
+        published = publish_batch(repo, token, branch, existing_pr, base_branch)
         print(json.dumps({"selected_prs": numbers, "totals": totals, "intake_pr": published}, ensure_ascii=False))
         return 0
     except (IntakeError, KnowledgeError, OSError, ValueError, subprocess.CalledProcessError, json.JSONDecodeError) as exc:

@@ -51,6 +51,8 @@ def sample_case(case_id: str = "case-ledger-rounding") -> dict:
         "project_id": "sample-project",
         "title": "Ledger rounding invariant",
         "summary": "Rounding at the line boundary caused ledger drift.",
+        "completeness": "complete",
+        "legacy_excerpt": "Test fixture: rounding at the line boundary caused ledger drift.",
         "assessment": "verified",
         "lifecycle": "open",
         "approval": "approved",

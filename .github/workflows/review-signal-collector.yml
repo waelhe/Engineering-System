@@ -62,7 +62,7 @@ jobs:
         run: |
           set -eu
           if [ -n "$PR_NUMBER" ]; then
-            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --pr-number "$PR_NUMBER" --since-days "$SINCE_DAYS"
+            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --pr-number "$PR_NUMBER" --since-days "$SINCE_DAYS" --project-id "$EGM_PROJECT_ID"
           else
             python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --since-days "$SINCE_DAYS"
           fi

@@ -641,6 +641,13 @@
         },
         "event_action": {
           "type": "string"
+        },
+        "trust_level": {
+          "enum": [
+            "untrusted_source",
+            "verified_provider_metadata",
+            "system_generated"
+          ]
         }
       },
       "additionalProperties": false
