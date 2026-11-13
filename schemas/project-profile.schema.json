@@ -133,6 +133,37 @@
     "updated_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "profile_status": {
+      "enum": [
+        "active",
+        "candidate",
+        "candidate_data_imported",
+        "deprecated",
+        "archived"
+      ]
+    },
+    "baseline_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "candidate_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "candidate_pr": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "profile_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "additionalProperties": false

@@ -266,6 +266,108 @@
     },
     "disposition": {
       "type": "string"
+    },
+    "completeness": {
+      "enum": [
+        "complete",
+        "partial",
+        "source_only"
+      ]
+    },
+    "legacy_id": {
+      "type": "string"
+    },
+    "legacy_status": {
+      "type": "string"
+    },
+    "legacy_assessment": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "legacy_classification": {
+      "type": "string"
+    },
+    "legacy_severity": {
+      "type": "string"
+    },
+    "legacy_excerpt": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "legacy_source_revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "migration_batch": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "scenario": {
+      "type": "string"
+    },
+    "invariant": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string"
+    },
+    "source_report": {
+      "type": "string"
+    },
+    "repair_pr": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "evidence_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pattern_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "control_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "enforcement_status": {
+      "type": "string"
+    },
+    "measurement": {
+      "type": "object"
+    },
+    "review_thread_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "legacy_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "legacy_source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
     }
   },
   "allOf": [
@@ -301,8 +403,20 @@
       },
       "then": {
         "required": [
-          "claim",
-          "impact"
+          "completeness"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "claim",
+              "impact"
+            ]
+          },
+          {
+            "required": [
+              "legacy_excerpt"
+            ]
+          }
         ]
       }
     },
@@ -315,6 +429,28 @@
         },
         "required": [
           "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "completeness",
+          "legacy_excerpt"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "case"
+          },
+          "completeness": {
+            "const": "complete"
+          }
+        },
+        "required": [
+          "type",
+          "completeness"
         ]
       },
       "then": {
@@ -339,9 +475,29 @@
       },
       "then": {
         "required": [
-          "owner",
-          "approver",
+          "completeness"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "rule"
+          },
+          "approval": {
+            "const": "approved"
+          }
+        },
+        "required": [
+          "type",
           "approval"
+        ]
+      },
+      "then": {
+        "required": [
+          "owner",
+          "approver"
         ]
       }
     },
