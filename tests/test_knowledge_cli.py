@@ -161,4 +161,5 @@ def test_jsonl_migration_batches_are_loaded_as_individual_records(tmp_path, monk
     knowledge.write_index()
     index = json.loads((root / "knowledge/index.json").read_text(encoding="utf-8"))
     assert index["record_count"] == 2
-    assert all(item["path"].endswith(".jsonl#" + item["id"]) for item in index["records"])
+    assert {item["path"] for item in index["records"]} == {"knowledge/cases/migration.jsonl"}
+    assert {item["id"] for item in index["records"]} == {"case-migration-one", "case-migration-two"}

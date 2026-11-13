@@ -1,12 +1,13 @@
 from __future__ import annotations
 import json
+from urllib.parse import parse_qs, urlsplit
 import tools.github_review_intake as intake
 
 def test_api_pages_reads_all_pages(monkeypatch):
     calls=[]
     def fake(method,path,token,payload=None):
         calls.append(path)
-        page=int(path.split("page=")[1])
+        page=int(parse_qs(urlsplit(path).query)["page"][0])
         return [{"id":page*100+i} for i in range(100 if page==1 else 2)]
     monkeypatch.setattr(intake,"api_request",fake)
     assert len(intake.api_pages("/repos/owner/repo/pulls/1/reviews","token"))==102
