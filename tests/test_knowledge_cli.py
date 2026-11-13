@@ -143,3 +143,20 @@ def test_retrieval_ranks_exact_tags_and_scope(tmp_path, monkeypatch):
     assert results
     assert results[0]["id"] == "case-ledger-rounding"
     assert "ledger" in results[0]["matched_terms"]
+
+
+def test_jsonl_migration_batches_are_loaded_as_individual_records(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    batch = root / "knowledge/cases/migration.jsonl"
+    first = sample_case("case-migration-one")
+    second = sample_case("case-migration-two")
+    batch.write_text(
+        json.dumps(first) + "\n" + json.dumps(second) + "\n",
+        encoding="utf-8"
+    )
+    loaded = knowledge.iter_records()
+    assert [record["id"] for _, record in loaded] == ["case-migration-one", "case-migration-two"]
+    knowledge.write_index()
+    index = json.loads((root / "knowledge/index.json").read_text(encoding="utf-8"))
+    assert index["record_count"] == 2
+    assert all(item["path"].endswith(".jsonl#" + item["id"]) for item in index["records"])

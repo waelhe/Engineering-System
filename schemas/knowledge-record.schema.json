@@ -614,6 +614,26 @@
         "excerpt_sha256": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "actor_login": {
+          "type": "string"
+        },
+        "author_association": {
+          "type": "string"
+        },
+        "source_created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "event_action": {
+          "type": "string"
         }
       },
       "additionalProperties": false

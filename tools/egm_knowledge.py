@@ -86,6 +86,7 @@ def schema_errors(instance: Any, schema: dict[str, Any]) -> list[str]:
 
 
 def iter_records() -> list[tuple[Path, dict[str, Any]]]:
+    """Read one-record JSON files and line-oriented JSONL migration batches."""
     result: list[tuple[Path, dict[str, Any]]] = []
     for folder in RECORD_DIRS:
         directory = KNOWLEDGE / folder
@@ -96,6 +97,21 @@ def iter_records() -> list[tuple[Path, dict[str, Any]]]:
             if not isinstance(value, dict):
                 raise KnowledgeError(f"{path}: record must be a JSON object")
             result.append((path, value))
+        for path in sorted(directory.rglob("*.jsonl")):
+            try:
+                lines = path.read_text(encoding="utf-8").splitlines()
+            except OSError as exc:
+                raise KnowledgeError(f"{path}: cannot read JSONL: {exc}") from exc
+            for line_number, line in enumerate(lines, start=1):
+                if not line.strip():
+                    continue
+                try:
+                    value = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise KnowledgeError(f"{path}:{line_number}: invalid JSONL record: {exc}") from exc
+                if not isinstance(value, dict):
+                    raise KnowledgeError(f"{path}:{line_number}: JSONL record must be an object")
+                result.append((path, value))
     return result
 
 
@@ -143,7 +159,11 @@ def validate_all() -> list[dict[str, str]]:
             allowed = RELATION_TYPES.get(relation.get("type"))
             if allowed and (record.get("type"), target.get("type")) not in allowed:
                 errors.append({
-                    "path": path.relative_to(ROOT).as_posix(),
+                    "path": (
+                path.relative_to(ROOT).as_posix() + "#" + record["id"]
+                if path.suffix == ".jsonl"
+                else path.relative_to(ROOT).as_posix()
+            ),
                     "error": f"relation {relation.get('type')} is not valid from {record.get('type')} to {target.get('type')}",
                 })
 
