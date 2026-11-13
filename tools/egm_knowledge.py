@@ -303,6 +303,7 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
         "captured_at": captured_at,
         "excerpt_sha256": hashlib.sha256(excerpt.encode("utf-8")).hexdigest(),
         "source_id": source_id,
+        "trust_level": "untrusted_source",
         "actor_login": payload.get("source_actor"),
         "author_association": payload.get("author_association"),
         "source_created_at": payload.get("source_created_at"),

@@ -2,6 +2,7 @@ name: EGM knowledge and runtime validation
 
 on:
   pull_request:
+  workflow_dispatch:
   push:
     branches: [main]
 

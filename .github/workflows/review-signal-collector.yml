@@ -1,0 +1,68 @@
+name: Trusted Review Signal Collector
+
+on:
+  workflow_run:
+    workflows: ["Review Signal Capture"]
+    types: [completed]
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Optional PR number to synchronize"
+        required: false
+        type: string
+      since_days:
+        description: "Sweep PRs updated in the last 1-90 days"
+        required: false
+        default: "7"
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+  actions: write
+
+concurrency:
+  group: egm-github-review-intake-single-writer
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Review Signal Capture') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout trusted default branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install validation dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Collect source-linked review signals and open a draft intake PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          SINCE_DAYS: ${{ inputs.since_days || '7' }}
+        run: |
+          set -eu
+          if [ -n "$PR_NUMBER" ]; then
+            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --pr-number "$PR_NUMBER" --since-days "$SINCE_DAYS"
+          else
+            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --since-days "$SINCE_DAYS"
+          fi
