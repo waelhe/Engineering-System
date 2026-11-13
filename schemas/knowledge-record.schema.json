@@ -368,6 +368,26 @@
         "type": "string"
       },
       "uniqueItems": true
+    },
+    "source_actor": {
+      "type": "string"
+    },
+    "source_created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_action": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_revision": {
+      "type": "string"
     }
   },
   "allOf": [

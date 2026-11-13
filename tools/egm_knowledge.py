@@ -257,7 +257,6 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
     parsed = urlparse(payload["source_url"])
     if parsed.scheme not in {"https", "http"} or not parsed.netloc or parsed.username or parsed.password:
         raise KnowledgeError("source_url must be an absolute HTTP(S) URL without embedded credentials")
-    # Signed query strings are omitted to avoid persisting bearer-style URL credentials.
     safe_url = urlunparse(parsed._replace(query=""))
     source_kind = payload.get("source_kind", "other")
     if source_kind not in SOURCE_KINDS:
@@ -283,6 +282,12 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
         "commit_sha": payload.get("commit_sha"),
         "captured_at": captured_at,
         "excerpt_sha256": hashlib.sha256(excerpt.encode("utf-8")).hexdigest(),
+        "source_id": source_id,
+        "actor_login": payload.get("source_actor"),
+        "author_association": payload.get("author_association"),
+        "source_created_at": payload.get("source_created_at"),
+        "source_updated_at": payload.get("source_updated_at"),
+        "event_action": payload.get("event_action"),
     }
     source = {key: value for key, value in source.items() if value is not None and value != ""}
     record = {
@@ -300,6 +305,11 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
         "actor": "intake:" + provider[:80],
         "provider": provider[:80],
         "source_identity": source_identity,
+        "source_id": source_id,
+        "source_actor": payload.get("source_actor", ""),
+        "source_created_at": payload.get("source_created_at", captured_at),
+        "source_updated_at": payload.get("source_updated_at", captured_at),
+        "event_action": payload.get("event_action", "snapshot"),
         "payload_digest": digest,
         "tags": payload.get("tags", []) if isinstance(payload.get("tags", []), list) else [],
         "sources": [source],
@@ -318,7 +328,6 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
         raise KnowledgeError("existing Signal snapshot failed integrity comparison; do not overwrite it")
     target.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return "created", target
-
 
 def validate_receipts() -> list[dict[str, str]]:
     schema = load_schema(RECEIPT_SCHEMA)
