@@ -14,15 +14,26 @@ def test_api_pages_reads_all_pages(monkeypatch):
     assert len(calls)==2
 
 def test_workflow_run_accepts_only_trusted_capture_and_deduplicates_pr_numbers(monkeypatch):
-    monkeypatch.setattr(intake,"api_request",lambda *a,**k:{
-        "name":intake.CAPTURE_WORKFLOW,"status":"completed","conclusion":"success",
-        "repository":{"full_name":"owner/repo"},"pull_requests":[{"number":42},{"number":42},{"number":43}]})
+    def fake(method, path, token, payload=None):
+        if path.endswith("/actions/workflows/review-signal-capture.yml"):
+            return {"id": 700}
+        return {"name":intake.CAPTURE_WORKFLOW,"workflow_id":700,
+            "path":".github/workflows/review-signal-capture.yml","event":"pull_request_review",
+            "status":"completed","conclusion":"success",
+            "repository":{"full_name":"owner/repo"},"pull_requests":[{"number":42},{"number":42},{"number":43}]}
+    monkeypatch.setattr(intake,"api_request",fake)
     assert intake.resolve_pr_numbers("owner/repo","token","workflow_run",
         {"workflow_run":{"id":17}},None,7,50)==[42,43]
 
 def test_untrusted_workflow_run_is_rejected(monkeypatch):
-    monkeypatch.setattr(intake,"api_request",lambda *a,**k:{"name":"Other Workflow","status":"completed",
-        "conclusion":"success","repository":{"full_name":"owner/repo"},"pull_requests":[{"number":12}]})
+    def fake(method, path, token, payload=None):
+        if path.endswith("/actions/workflows/review-signal-capture.yml"):
+            return {"id": 700}
+        return {"name":intake.CAPTURE_WORKFLOW,"workflow_id":701,
+            "path":".github/workflows/evil.yml","event":"pull_request_review",
+            "status":"completed","conclusion":"success",
+            "repository":{"full_name":"owner/repo"},"pull_requests":[{"number":12}]}
+    monkeypatch.setattr(intake,"api_request",fake)
     try:
         intake.resolve_pr_numbers("owner/repo","token","workflow_run",{"workflow_run":{"id":5}},None,7,50)
     except intake.IntakeError as exc:

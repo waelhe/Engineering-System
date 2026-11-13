@@ -98,8 +98,15 @@ def resolve_pr_numbers(repo: str, token: str, event_name: str, payload: dict[str
         if not isinstance(run_id, int):
             raise IntakeError("workflow_run event has no run ID")
         run = api_request("GET", f"/repos/{repo}/actions/runs/{run_id}", token)
+        trusted_workflow = api_request("GET", f"/repos/{repo}/actions/workflows/review-signal-capture.yml", token)
+        if run.get("workflow_id") != trusted_workflow.get("id"):
+            raise IntakeError("workflow_run ID does not match the trusted capture workflow")
+        if run.get("path") != ".github/workflows/review-signal-capture.yml":
+            raise IntakeError("workflow_run path does not match the trusted capture workflow")
+        if run.get("event") not in {"pull_request_review", "pull_request_review_comment", "issue_comment"}:
+            raise IntakeError("workflow_run event is not an allowed review signal event")
         if run.get("name") != CAPTURE_WORKFLOW:
-            raise IntakeError("workflow_run did not originate from trusted review-capture workflow")
+            raise IntakeError("workflow_run name does not match the trusted capture workflow")
         if run.get("status") != "completed" or run.get("conclusion") != "success":
             raise IntakeError("capture workflow did not complete successfully")
         if run.get("repository", {}).get("full_name", "").lower() != repo.lower():
