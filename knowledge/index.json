@@ -30,7 +30,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-01"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-02",
@@ -60,7 +60,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-02"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-03",
@@ -97,7 +97,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-03"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-04",
@@ -127,7 +127,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-04"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-05",
@@ -157,7 +157,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-05"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-06",
@@ -194,7 +194,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-06"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-07",
@@ -224,7 +224,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-07"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-08",
@@ -254,7 +254,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-08"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-09",
@@ -284,7 +284,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-09"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-10",
@@ -321,7 +321,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-10"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-11",
@@ -351,7 +351,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-11"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-12",
@@ -388,7 +388,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-12"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-13",
@@ -418,7 +418,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-13"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-14",
@@ -448,7 +448,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-14"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-15",
@@ -485,7 +485,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-15"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-16",
@@ -515,7 +515,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-16"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-17",
@@ -545,7 +545,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-17"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-18",
@@ -575,7 +575,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-18"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-19",
@@ -605,7 +605,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-19"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-20",
@@ -635,7 +635,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-20"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-21",
@@ -665,7 +665,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-21"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-22",
@@ -695,7 +695,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-22"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-23",
@@ -725,7 +725,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-23"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-24",
@@ -769,7 +769,7 @@
           "issue_number": 749
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-24"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-25",
@@ -813,7 +813,7 @@
           "issue_number": 749
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-25"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-26",
@@ -857,7 +857,7 @@
           "pr_number": 826
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-26"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-27",
@@ -901,7 +901,7 @@
           "pr_number": 826
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-27"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-28",
@@ -945,7 +945,7 @@
           "pr_number": 764
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-28"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-29",
@@ -989,7 +989,7 @@
           "pr_number": 770
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-29"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-30",
@@ -1033,7 +1033,7 @@
           "pr_number": 771
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-30"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-31",
@@ -1077,7 +1077,7 @@
           "pr_number": 758
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-31"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-32",
@@ -1127,7 +1127,7 @@
           "pr_number": 758
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-32"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-33",
@@ -1177,7 +1177,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-33"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-34",
@@ -1227,7 +1227,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-34"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-35",
@@ -1271,7 +1271,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-35"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-36",
@@ -1333,7 +1333,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-36"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-37",
@@ -1377,7 +1377,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-37"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-38",
@@ -1427,7 +1427,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-38"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-39",
@@ -1477,7 +1477,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-39"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-40",
@@ -1527,7 +1527,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-40"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-41",
@@ -1571,7 +1571,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-41"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-42",
@@ -1621,7 +1621,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-42"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-43",
@@ -1671,7 +1671,7 @@
           "pr_number": 819
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-43"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-44",
@@ -1715,7 +1715,7 @@
           "pr_number": 821
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-44"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-45",
@@ -1759,7 +1759,7 @@
           "pr_number": 821
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-45"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-46",
@@ -1809,7 +1809,7 @@
           "pr_number": 821
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-46"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-47",
@@ -1859,7 +1859,7 @@
           "pr_number": 822
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-47"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-48",
@@ -1909,7 +1909,7 @@
           "pr_number": 822
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-48"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-49",
@@ -1953,7 +1953,7 @@
           "pr_number": 823
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-49"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-50",
@@ -2003,7 +2003,7 @@
           "pr_number": 834
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-50"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-51",
@@ -2047,7 +2047,7 @@
           "pr_number": 834
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-51"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "case-e-52",
@@ -2091,7 +2091,7 @@
           "pr_number": 834
         }
       ],
-      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl#case-e-52"
+      "path": "knowledge/cases/app-java-v3-cases-2026-11-13.jsonl"
     },
     {
       "id": "control-d1",
@@ -2121,7 +2121,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d1"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d10",
@@ -2151,7 +2151,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d10"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d11",
@@ -2181,7 +2181,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d11"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d12",
@@ -2211,7 +2211,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d12"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d2",
@@ -2241,7 +2241,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d2"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d3",
@@ -2271,7 +2271,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d3"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d4",
@@ -2301,7 +2301,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d4"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d5",
@@ -2331,7 +2331,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d5"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d6",
@@ -2361,7 +2361,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d6"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d7",
@@ -2391,7 +2391,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d7"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d8",
@@ -2421,7 +2421,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d8"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "control-d9",
@@ -2451,7 +2451,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl#control-d9"
+      "path": "knowledge/controls/app-java-v3-controls-2026-11-13.jsonl"
     },
     {
       "id": "evidence-legacy-counting-policy",
@@ -2481,7 +2481,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-legacy-counting-policy"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-pr834-copilot-review-attempt",
@@ -2510,7 +2510,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-pr834-copilot-review-attempt"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-repair-pr-819",
@@ -2540,7 +2540,7 @@
           "pr_number": 819
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-repair-pr-819"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-repair-pr-821",
@@ -2570,7 +2570,7 @@
           "pr_number": 821
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-repair-pr-821"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-repair-pr-822",
@@ -2600,7 +2600,7 @@
           "pr_number": 822
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-repair-pr-822"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-repair-pr-823",
@@ -2630,7 +2630,7 @@
           "pr_number": 823
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-repair-pr-823"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-repair-pr-829",
@@ -2660,7 +2660,7 @@
           "pr_number": 829
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-repair-pr-829"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-source-adv-2026-11-10",
@@ -2690,7 +2690,7 @@
           "pr_number": 816
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-adv-2026-11-10"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-source-adv-2026-11-12",
@@ -2720,7 +2720,7 @@
           "pr_number": 826
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-adv-2026-11-12"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-source-adv-implementation-2026-11-13",
@@ -2750,7 +2750,7 @@
           "pr_number": 834
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-adv-implementation-2026-11-13"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-source-cr-2026-10-25-26",
@@ -2779,7 +2779,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-cr-2026-10-25-26"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-source-cr-2026-10-29",
@@ -2809,7 +2809,7 @@
           "pr_number": 758
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-cr-2026-10-29"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-source-history-2026-10-27",
@@ -2839,7 +2839,7 @@
           "pr_number": 746
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-history-2026-10-27"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-source-repair-pr-review-sweep-2026-11-13",
@@ -2897,7 +2897,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-repair-pr-review-sweep-2026-11-13"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "evidence-source-saleor-shards-2026-11-13",
@@ -2962,7 +2962,7 @@
           "pr_number": 811
         }
       ],
-      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-saleor-shards-2026-11-13"
+      "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl"
     },
     {
       "id": "finding-a1",
@@ -3010,7 +3010,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-a1"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-a2",
@@ -3053,7 +3053,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-a2"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-a3",
@@ -3101,7 +3101,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-a3"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-a4",
@@ -3144,7 +3144,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-a4"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-a5",
@@ -3192,7 +3192,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-a5"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-b1",
@@ -3235,7 +3235,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-b1"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-b2",
@@ -3278,7 +3278,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-b2"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-b3",
@@ -3321,7 +3321,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-b3"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-b4",
@@ -3364,7 +3364,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-b4"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-d1",
@@ -3407,7 +3407,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-d1"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-d2",
@@ -3455,7 +3455,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-d2"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-d3",
@@ -3498,7 +3498,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-d3"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-d4",
@@ -3541,7 +3541,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-d4"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-d5",
@@ -3584,7 +3584,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-d5"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-d6",
@@ -3627,7 +3627,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-d6"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-d7",
@@ -3670,7 +3670,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-d7"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-d8",
@@ -3713,7 +3713,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-d8"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-e1",
@@ -3756,7 +3756,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-e1"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-e2",
@@ -3799,7 +3799,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-e2"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-e3",
@@ -3842,7 +3842,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-e3"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-e4",
@@ -3885,7 +3885,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-e4"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g1",
@@ -3933,7 +3933,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g1"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g10",
@@ -3986,7 +3986,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g10"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g2",
@@ -4034,7 +4034,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g2"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g3",
@@ -4077,7 +4077,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g3"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g4",
@@ -4125,7 +4125,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g4"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g5",
@@ -4173,7 +4173,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g5"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g6",
@@ -4221,7 +4221,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g6"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g7",
@@ -4264,7 +4264,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g7"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g8",
@@ -4312,7 +4312,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g8"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-g9",
@@ -4355,7 +4355,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-g9"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-issue-774",
@@ -4385,7 +4385,7 @@
           "issue_number": 774
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-issue-774"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-issue-775",
@@ -4415,7 +4415,7 @@
           "issue_number": 775
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-issue-775"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-issue-776",
@@ -4445,7 +4445,7 @@
           "issue_number": 776
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-issue-776"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-issue-779",
@@ -4475,7 +4475,7 @@
           "issue_number": 779
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-issue-779"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-issue-780",
@@ -4505,7 +4505,7 @@
           "issue_number": 780
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-issue-780"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-issue-781",
@@ -4535,7 +4535,7 @@
           "issue_number": 781
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-issue-781"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-issue-782",
@@ -4565,7 +4565,7 @@
           "issue_number": 782
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-issue-782"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-w1",
@@ -4613,7 +4613,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-w1"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-w2",
@@ -4656,7 +4656,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-w2"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-w3",
@@ -4704,7 +4704,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-w3"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-w4",
@@ -4747,7 +4747,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-w4"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-w5",
@@ -4795,7 +4795,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-w5"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-w6",
@@ -4838,7 +4838,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-w6"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-w7",
@@ -4886,7 +4886,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-w7"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "finding-w8",
@@ -4934,7 +4934,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl#finding-w8"
+      "path": "knowledge/findings/app-java-v3-findings-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p1",
@@ -4964,7 +4964,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p1"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p10",
@@ -4994,7 +4994,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p10"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p11",
@@ -5024,7 +5024,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p11"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p12",
@@ -5054,7 +5054,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p12"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p13",
@@ -5084,7 +5084,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p13"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p14",
@@ -5114,7 +5114,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p14"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p15",
@@ -5144,7 +5144,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p15"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p2",
@@ -5185,7 +5185,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p2"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p3",
@@ -5215,7 +5215,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p3"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p4",
@@ -5245,7 +5245,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p4"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p5",
@@ -5286,7 +5286,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p5"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p6",
@@ -5322,7 +5322,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p6"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p7",
@@ -5358,7 +5358,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p7"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p8",
@@ -5399,7 +5399,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p8"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "pattern-p9",
@@ -5429,7 +5429,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl#pattern-p9"
+      "path": "knowledge/patterns/app-java-v3-patterns-2026-11-13.jsonl"
     },
     {
       "id": "rule-a1",
@@ -5465,7 +5465,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-a1"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-a2",
@@ -5501,7 +5501,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-a2"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-a3",
@@ -5537,7 +5537,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-a3"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-a4",
@@ -5573,7 +5573,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-a4"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-a5",
@@ -5609,7 +5609,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-a5"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-a6",
@@ -5645,7 +5645,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-a6"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-b1",
@@ -5681,7 +5681,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-b1"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-b2",
@@ -5711,7 +5711,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-b2"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-b3",
@@ -5747,7 +5747,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-b3"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-b4",
@@ -5777,7 +5777,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-b4"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-b5",
@@ -5807,7 +5807,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-b5"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-b6",
@@ -5837,7 +5837,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-b6"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-b7",
@@ -5867,7 +5867,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-b7"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-b8",
@@ -5897,7 +5897,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-b8"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-c1",
@@ -5927,7 +5927,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-c1"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-c2",
@@ -5957,7 +5957,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-c2"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-c3",
@@ -5987,7 +5987,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-c3"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     },
     {
       "id": "rule-c4",
@@ -6017,7 +6017,7 @@
           "captured_at": "2026-11-13T22:00:00Z"
         }
       ],
-      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl#rule-c4"
+      "path": "knowledge/rules/app-java-v3-rules-2026-11-13.jsonl"
     }
   ]
 }
