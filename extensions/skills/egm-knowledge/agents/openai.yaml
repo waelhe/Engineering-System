@@ -1,6 +1,0 @@
-interface:
-  display_name: "EGM Knowledge"
-  short_description: "Retrieve and govern engineering knowledge"
-  icon_small: "./assets/icon.svg"
-  icon_large: "./assets/icon.svg"
-  brand_color: "#0F766E"
