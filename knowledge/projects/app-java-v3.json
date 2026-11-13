@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project_id": "app-java-v3",
   "name": "Marketplace Platform Backend (app-java-v3)",
-  "description": "Java/Spring modular monolith repository. The profile pins the verified main baseline and separately records the unmerged defect-knowledge candidate used for this migration.",
+  "description": "Java/Spring modular-monolith project. This profile records its verified main baseline separately from the unmerged PR #834 candidate used for historical knowledge intake.",
   "repositories": [
     {
       "name": "waelhe/app-java-v3",
@@ -44,9 +44,7 @@
     "docs/governance/defect-knowledge/change-protocol.md",
     "docs/governance/defect-knowledge/review-protocol.md"
   ],
-  "task_profiles": [
-    "docs/governance/defect-knowledge/SKILL.md"
-  ],
+  "task_profiles": [],
   "updated_at": "2026-11-13T22:00:00Z",
   "profile_status": "candidate_data_imported",
   "baseline_sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63",
@@ -54,8 +52,8 @@
   "candidate_pr": 834,
   "verified_at": "2026-11-13T22:00:00Z",
   "profile_notes": [
-    "PR #834 remains unmerged in this source snapshot; its records are candidate evidence, not mainline facts.",
-    "The legacy operational source remains authoritative until migration reconciliation and reviewed cutover.",
-    "No modules were guessed; the module map is intentionally empty pending a generated POM-derived inventory."
+    "PR #834 is unmerged in the source snapshot; candidate records are not mainline facts.",
+    "Legacy repository remains historical evidence source until migration reconciliation and approved cutover.",
+    "Module map deliberately remains empty rather than inventing a POM-derived inventory."
   ]
 }
