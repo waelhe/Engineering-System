@@ -1,6 +1,6 @@
 # Knowledge Lifecycle and Closed-Loop Learning
 
-¤¤¤mermaid
+~~~mermaid
 flowchart TD
   A[External source or agent observation] --> B[Signal inbox]
   B --> C[Normalize and deduplicate by source identity]
@@ -20,7 +20,7 @@ flowchart TD
   O -->|Yes| Q[Close with evidence]
   Q --> R[Monitor for recurrence]
   R -->|same causal mechanism reappears| F
-¤¤¤
+~~~
 
 ## Intake
 

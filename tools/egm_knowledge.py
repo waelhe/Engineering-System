@@ -340,9 +340,21 @@ def validate_receipts() -> list[dict[str, str]]:
             ]
             if not successful:
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "no successful check is tied to receipt tested_sha"})
-        if receipt.get("status") in {"merged", "deployed"} and not receipt.get("target_sha"):
-            errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "merged/deployed receipt requires target_sha"})
-        if receipt.get("tier") in {"T2", "T3"}:
+        if receipt.get("status") in {"merged", "deployed"}:
+            inclusion = receipt.get("target_inclusion") or {}
+            if not receipt.get("target_sha"):
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "merged/deployed receipt requires target_sha"})
+            if inclusion.get("target_sha") != receipt.get("target_sha") or inclusion.get("tested_sha_is_ancestor") is not True:
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "target inclusion proof must identify target_sha and confirm tested SHA ancestry"})
+        if receipt.get("status") == "deployed":
+            target_sha = receipt.get("target_sha")
+            deployments = [
+                deployment for deployment in receipt.get("deployments", [])
+                if deployment.get("status") == "success" and deployment.get("commit_sha") == target_sha
+            ]
+            if not deployments:
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "deployed receipt requires successful deployment evidence for target_sha"})
+        if receipt.get("tier") in {"T2", "T3"} and receipt.get("status") in {"verified", "merged", "deployed"}:
             goldfish = [
                 review for review in receipt.get("reviews", [])
                 if "goldfish" in review.get("role", "").lower() and review.get("status") == "completed" and review.get("independence_proof")

@@ -34,3 +34,12 @@ def test_overlay_adds_and_replaces_without_deleting_upstream_files(tmp_path: Pat
     assert (destination / "skills/new-skill/SKILL.md").read_text(encoding="utf-8") == "local skill"
     assert (destination / "skills/upstream-skill/SKILL.md").read_text(encoding="utf-8") == "upstream"
     assert (destination / "resources/execution_instructions.md").read_text(encoding="utf-8") == "local charter"
+
+
+def test_host_manifest_without_openai_interface_stays_host_neutral(tmp_path: Path):
+    path = tmp_path / "plugin.json"
+    path.write_text(json.dumps({"name": "egm", "version": "0.1.1"}), encoding="utf-8")
+    update_manifest(path)
+    result = json.loads(path.read_text(encoding="utf-8"))
+    assert result["name"] == "egm-engineering-system"
+    assert "extensions" not in result

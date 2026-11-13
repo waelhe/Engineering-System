@@ -8,10 +8,11 @@ def git(root: Path, *args: str):
     return subprocess.run(["git", *args], cwd=root, check=True, capture_output=True, text=True)
 
 
-def test_append_only_diff_reports_added_and_modified_paths(tmp_path: Path):
+def test_append_only_diff_reports_added_and_modified_paths(tmp_path: Path, monkeypatch):
     root = tmp_path / "repo"
     root.mkdir()
     git(root, "init")
+    monkeypatch.chdir(root)
     git(root, "config", "user.email", "test@example.invalid")
     git(root, "config", "user.name", "Test")
     (root / "knowledge/inbox").mkdir(parents=True)

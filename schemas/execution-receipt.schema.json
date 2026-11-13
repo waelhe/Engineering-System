@@ -247,7 +247,109 @@
       "items": {
         "type": "string"
       }
+    },
+    "target_inclusion": {
+      "type": "object",
+      "required": [
+        "target_branch",
+        "target_sha",
+        "tested_sha_is_ancestor",
+        "proof_url"
+      ],
+      "properties": {
+        "target_branch": {
+          "type": "string"
+        },
+        "target_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tested_sha_is_ancestor": {
+          "const": true
+        },
+        "proof_url": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "deployments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "environment",
+          "status",
+          "commit_sha",
+          "url",
+          "at"
+        ],
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "success",
+              "failure",
+              "rolled_back"
+            ]
+          },
+          "commit_sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "url": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      }
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "merged",
+              "deployed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "target_inclusion"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "deployed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "deployments"
+        ]
+      }
+    }
+  ]
 }
