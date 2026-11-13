@@ -2860,7 +2860,43 @@
         ]
       },
       "relations": [],
-      "sources": [],
+      "sources": [
+        {
+          "kind": "github_pr",
+          "uri": "https://github.com/waelhe/app-java-v3/pull/819",
+          "repository": "waelhe/app-java-v3",
+          "pr_number": 819,
+          "captured_at": "2026-11-13T22:00:00Z"
+        },
+        {
+          "kind": "github_pr",
+          "uri": "https://github.com/waelhe/app-java-v3/pull/821",
+          "repository": "waelhe/app-java-v3",
+          "pr_number": 821,
+          "captured_at": "2026-11-13T22:00:00Z"
+        },
+        {
+          "kind": "github_pr",
+          "uri": "https://github.com/waelhe/app-java-v3/pull/822",
+          "repository": "waelhe/app-java-v3",
+          "pr_number": 822,
+          "captured_at": "2026-11-13T22:00:00Z"
+        },
+        {
+          "kind": "github_pr",
+          "uri": "https://github.com/waelhe/app-java-v3/pull/823",
+          "repository": "waelhe/app-java-v3",
+          "pr_number": 823,
+          "captured_at": "2026-11-13T22:00:00Z"
+        },
+        {
+          "kind": "github_pr",
+          "uri": "https://github.com/waelhe/app-java-v3/pull/829",
+          "repository": "waelhe/app-java-v3",
+          "pr_number": 829,
+          "captured_at": "2026-11-13T22:00:00Z"
+        }
+      ],
       "path": "knowledge/evidence/app-java-v3-evidence-2026-11-13.jsonl#evidence-source-repair-pr-review-sweep-2026-11-13"
     },
     {
