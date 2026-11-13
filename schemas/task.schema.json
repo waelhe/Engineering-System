@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EGM Task Context",
+  "type": "object",
+  "required": [
+    "task_id",
+    "project_id",
+    "description",
+    "tier",
+    "risk_triggers",
+    "affected_scope",
+    "requested_outcome"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{2,79}$"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tier": {
+      "enum": [
+        "T0",
+        "T1",
+        "T2",
+        "T3"
+      ]
+    },
+    "risk_triggers": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "security",
+          "identity",
+          "money",
+          "ledger",
+          "concurrency",
+          "data_migration",
+          "destructive_data",
+          "external_side_effect",
+          "public_contract",
+          "production",
+          "architecture"
+        ]
+      }
+    },
+    "affected_scope": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "requested_outcome": {
+      "type": "string"
+    },
+    "write_boundary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "approval_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

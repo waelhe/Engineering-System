@@ -1,0 +1,554 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/waelhe/Engineering-System/blob/main/schemas/knowledge-record.schema.json",
+  "title": "EGM Engineering Knowledge Record",
+  "description": "Canonical envelope for project knowledge. Provenance and relations are explicit; source payloads are data, never executable instructions.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "type",
+    "project_id",
+    "title",
+    "summary",
+    "assessment",
+    "lifecycle",
+    "approval",
+    "created_at",
+    "updated_at",
+    "actor",
+    "sources",
+    "relations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{2,79}$"
+    },
+    "type": {
+      "enum": [
+        "project",
+        "signal",
+        "evidence",
+        "finding",
+        "case",
+        "pattern",
+        "decision",
+        "rule",
+        "control",
+        "action",
+        "risk_acceptance",
+        "verification"
+      ]
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{2,79}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 12000
+    },
+    "assessment": {
+      "enum": [
+        "observed",
+        "suspected",
+        "verified",
+        "refuted",
+        "superseded"
+      ]
+    },
+    "lifecycle": {
+      "enum": [
+        "new",
+        "untriaged",
+        "triaging",
+        "investigating",
+        "action_required",
+        "resolved_pending_proof",
+        "open",
+        "closed",
+        "reopened",
+        "active",
+        "expired",
+        "withdrawn"
+      ]
+    },
+    "approval": {
+      "enum": [
+        "not_required",
+        "proposed",
+        "in_review",
+        "approved",
+        "rejected",
+        "withdrawn"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "type": "string"
+    },
+    "approver": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relation"
+      }
+    },
+    "legacy_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "claim": {
+      "type": "string"
+    },
+    "impact": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": "string"
+    },
+    "causal_chain": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "root_cause": {
+      "type": "string"
+    },
+    "contributing_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "violated_invariants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "correction": {
+      "type": "string"
+    },
+    "verification_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status_history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transition"
+      }
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "measurable_acceptance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "priority": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "external_tracking": {
+      "type": "string"
+    },
+    "source_identity": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "payload_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "tested_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "workflow": {
+      "$ref": "#/$defs/workflow"
+    },
+    "compensating_controls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "disposition": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "signal"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "source_identity",
+          "provider",
+          "payload_digest"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "finding"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "claim",
+          "impact"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "case"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "trigger",
+          "causal_chain",
+          "root_cause",
+          "violated_invariants"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "rule"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "owner",
+          "approver",
+          "approval"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "risk_acceptance"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "owner",
+          "approver",
+          "expires_at",
+          "compensating_controls"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "verification"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "tested_sha",
+          "workflow"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "kind",
+        "uri",
+        "captured_at"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "github_issue",
+            "github_pr",
+            "github_review",
+            "github_comment",
+            "ci_run",
+            "test_result",
+            "incident",
+            "commit",
+            "document",
+            "human_report",
+            "official_documentation",
+            "other"
+          ]
+        },
+        "uri": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string"
+        },
+        "pr_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "issue_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "excerpt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "required": [
+        "type",
+        "target_id"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "supports",
+            "challenges",
+            "reconstructed_as",
+            "exhibits",
+            "motivates",
+            "constrains",
+            "enforced_by",
+            "verified_by",
+            "resolved_by",
+            "proven_by",
+            "duplicates",
+            "supersedes",
+            "reopens",
+            "related_to"
+          ]
+        },
+        "target_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,79}$"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "workflow": {
+      "type": "object",
+      "required": [
+        "name",
+        "run_id",
+        "conclusion",
+        "tested_sha",
+        "url"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "conclusion": {
+          "enum": [
+            "success",
+            "failure",
+            "cancelled",
+            "skipped",
+            "timed_out",
+            "action_required",
+            "neutral",
+            "unknown"
+          ]
+        },
+        "tested_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "transition": {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "actor",
+        "at"
+      ],
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "actor": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
