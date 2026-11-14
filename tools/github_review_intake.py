@@ -216,6 +216,46 @@ def prepare_branch(repo: str, token: str, run_id: str, run_attempt: str) -> tupl
     git("checkout", "-B", branch, f"refs/remotes/origin/{base_branch}")
     return branch, base_branch
 
+def pending_intake_signal_paths(repo: str, token: str, base_branch: str) -> set[str]:
+    """Return Signal paths already present in open, trusted intake draft PRs.
+
+    PR file metadata is treated strictly as data. This privileged collector
+    never fetches, checks out, merges or executes a pending intake branch.
+    """
+    pending: set[str] = set()
+    pulls = api_pages(
+        f"/repos/{repo}/pulls?state=open&sort=created&direction=desc",
+        token,
+    )
+    for pull in pulls:
+        number = pull.get("number")
+        base = pull.get("base") or {}
+        head = pull.get("head") or {}
+        if pull.get("draft") is not True or base.get("ref") != base_branch:
+            continue
+        if (base.get("repo") or {}).get("full_name", "").lower() != repo.lower():
+            continue
+        if not str(head.get("ref") or "").startswith("automation/knowledge-intake-"):
+            continue
+        if (head.get("repo") or {}).get("full_name", "").lower() != repo.lower():
+            continue
+        if not isinstance(number, int):
+            continue
+        for item in api_pages(f"/repos/{repo}/pulls/{number}/files", token):
+            filename = item.get("filename")
+            if isinstance(filename, str) and filename.startswith("knowledge/inbox/") and filename.endswith(".json"):
+                pending.add(filename)
+    return pending
+
+
+def staged_signal_paths() -> set[str]:
+    result = git("diff", "--cached", "--name-only", "-z", "--", "knowledge/inbox")
+    return {
+        path for path in result.stdout.split("\0")
+        if path.startswith("knowledge/inbox/") and path.endswith(".json")
+    }
+
+
 def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[str, Any] | None:
     """Publish generated inbox/index data on a fresh branch based on trusted main."""
     git("add", "--", "knowledge/inbox", "knowledge/index.json")
@@ -224,6 +264,15 @@ def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[
         return None
     if staged.returncode != 1:
         raise IntakeError(staged.stderr.strip() or "Cannot inspect staged intake changes")
+    current_signal_paths = staged_signal_paths()
+    if current_signal_paths:
+        overlap = current_signal_paths & pending_intake_signal_paths(repo, token, base_branch)
+        if overlap:
+            return {
+                "deferred": True,
+                "reason": "equivalent_signal_batch_pending",
+                "overlapping_signal_count": len(overlap),
+            }
     git("commit", "-m", "Capture trusted GitHub review signals")
     git("push", "--set-upstream", "origin", branch)
     pr = api_request("POST", f"/repos/{repo}/pulls", token, {
@@ -273,7 +322,7 @@ def main(argv: list[str] | None = None) -> int:
         run_trusted_python("tools/egm_knowledge.py", "validate-receipts")
         run_trusted_python("-m", "pytest", "-q")
         published = publish_batch(repo, token, branch, base_branch)
-        print(json.dumps({"selected_prs": numbers, "totals": totals, "intake_pr": published}, ensure_ascii=False))
+        print(json.dumps({"selected_prs": numbers, "totals": totals, "publication": published}, ensure_ascii=False))
         return 0
     except (IntakeError, KnowledgeError, OSError, ValueError, subprocess.CalledProcessError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
