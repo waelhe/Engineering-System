@@ -6,20 +6,41 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+import re
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "migration" / "app-java-v3-2026-11-13.manifest.json"
 
 
-def _read_json(path: Path) -> Any:
+def _ensure_safe_file(path: Path, root: Path) -> None:
+    root_path = root.absolute()
+    candidate = path.absolute()
+    try:
+        relative = candidate.relative_to(root_path)
+    except ValueError as exc:
+        raise ValueError(f"{path}: path escapes migration repository root") from exc
+    current = root_path
+    if current.is_symlink():
+        raise ValueError(f"{current}: symbolic links are not allowed in migration inputs")
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError(f"{current}: symbolic links are not allowed in migration inputs")
+    if not candidate.is_file():
+        raise ValueError(f"{candidate}: migration input must be a regular file")
+
+
+def _read_json(path: Path, root: Path = ROOT) -> Any:
+    _ensure_safe_file(path, root)
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError(f"{path}: cannot read valid JSON: {exc}") from exc
 
 
-def _read_jsonl(path: Path) -> list[dict[str, Any]]:
+def _read_jsonl(path: Path, root: Path = ROOT) -> list[dict[str, Any]]:
+    _ensure_safe_file(path, root)
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
     except OSError as exc:
@@ -41,7 +62,7 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
 def validate_migration(root: Path = ROOT, manifest_path: Path = MANIFEST) -> list[str]:
     errors: list[str] = []
     try:
-        manifest = _read_json(manifest_path)
+        manifest = _read_json(manifest_path, root)
     except ValueError as exc:
         return [str(exc)]
     if not isinstance(manifest, dict):
@@ -92,7 +113,7 @@ def validate_migration(root: Path = ROOT, manifest_path: Path = MANIFEST) -> lis
             errors.append(f"{name}: source artifact Git blob SHA is missing or malformed")
 
         try:
-            records = _read_jsonl(root / target)
+            records = _read_jsonl(root / target, root)
         except ValueError as exc:
             errors.append(str(exc))
             continue
@@ -137,27 +158,70 @@ def validate_migration(root: Path = ROOT, manifest_path: Path = MANIFEST) -> lis
     if family_names != {"cases", "findings", "evidence", "patterns", "rules", "controls"}:
         errors.append("manifest family set is incomplete or contains unexpected families")
 
-    for profile in manifest.get("project_profiles", []):
-        relative = Path(profile.get("path", ".."))
-        if relative.is_absolute() or ".." in relative.parts:
-            errors.append("project profile path must remain inside repository")
+    expected_project_ids = {
+        family.get("project_id")
+        for family in families
+        if isinstance(family, dict) and isinstance(family.get("project_id"), str) and family.get("project_id")
+    }
+    project_profiles = manifest.get("project_profiles")
+    if not isinstance(project_profiles, list) or not project_profiles:
+        errors.append("project_profiles must be a non-empty inventory; migration provenance cannot PASS without it")
+        project_profiles = []
+
+    seen_project_ids: set[str] = set()
+    for index, profile in enumerate(project_profiles, start=1):
+        if not isinstance(profile, dict):
+            errors.append(f"project_profiles[{index}] must be an object")
             continue
+        project_id = profile.get("project_id")
+        if not isinstance(project_id, str) or not project_id:
+            errors.append(f"project_profiles[{index}] requires a non-empty project_id")
+            continue
+        if project_id in seen_project_ids:
+            errors.append(f"duplicate project profile inventory entry: {project_id}")
+        seen_project_ids.add(project_id)
+        if project_id not in expected_project_ids:
+            errors.append(f"project profile {project_id} is not represented by a migrated family")
+
+        relative_text = profile.get("path")
+        if not isinstance(relative_text, str) or not relative_text:
+            errors.append(f"project profile {project_id} requires a repository-relative path")
+            continue
+        relative = Path(relative_text)
+        if relative.is_absolute() or ".." in relative.parts:
+            errors.append(f"{project_id}: project profile path must remain inside repository")
+            continue
+
+        baseline = profile.get("source_baseline_sha")
+        candidate = profile.get("source_candidate_sha")
+        candidate_pr = profile.get("candidate_pr")
+        if not isinstance(baseline, str) or not re.fullmatch(r"[0-9a-f]{40}", baseline):
+            errors.append(f"{project_id}: source_baseline_sha must be a full lowercase commit SHA")
+        if not isinstance(candidate, str) or not re.fullmatch(r"[0-9a-f]{40}", candidate):
+            errors.append(f"{project_id}: source_candidate_sha must be a full lowercase commit SHA")
+        if not isinstance(candidate_pr, int) or isinstance(candidate_pr, bool) or candidate_pr < 1:
+            errors.append(f"{project_id}: candidate_pr must be a positive integer")
+
         try:
-            value = _read_json(root / relative)
+            value = _read_json(root / relative, root)
         except ValueError as exc:
             errors.append(str(exc))
             continue
         expected_fields = {
-            "project_id": profile.get("project_id"),
-            "baseline_sha": profile.get("source_baseline_sha"),
-            "candidate_sha": profile.get("source_candidate_sha"),
-            "candidate_pr": profile.get("candidate_pr"),
+            "project_id": project_id,
+            "baseline_sha": baseline,
+            "candidate_sha": candidate,
+            "candidate_pr": candidate_pr,
         }
         for field, expected in expected_fields.items():
             if value.get(field) != expected:
                 errors.append(f"{relative}: {field} does not match manifest")
         if value.get("profile_status") != "candidate_data_imported":
             errors.append(f"{relative}: profile must remain candidate_data_imported until cutover")
+
+    missing_project_ids = expected_project_ids - seen_project_ids
+    if missing_project_ids:
+        errors.append("project profile inventory is missing: " + ", ".join(sorted(missing_project_ids)))
 
     breakdown = manifest.get("evidence_count_breakdown", {})
     if breakdown.get("source_snapshots") != 8:
