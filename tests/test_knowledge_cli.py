@@ -203,6 +203,7 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
         "finding",
         [{"type": "resolved_by", "target_id": "action-closure-test"}],
         lifecycle="closed",
+        closure_mode="code_defect",
         completeness="complete",
         claim="A regression defect has been repaired.",
         impact="The affected behavior no longer fails.",
@@ -266,6 +267,108 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
     errors = knowledge.validate_all()
     assert any("closed Finding requires a resolved Action linked to a successful Verification" in item["error"] for item in errors)
+
+
+def test_general_verification_record_does_not_require_target_inclusion(tmp_path, monkeypatch):
+    isolate_store(tmp_path, monkeypatch)
+    tested_sha = "d" * 40
+    verification = _minimal_record(
+        "verification-general-test",
+        "verification",
+        [],
+        tested_sha=tested_sha,
+        workflow={
+            "name": "control-check",
+            "run_id": "67890",
+            "conclusion": "success",
+            "tested_sha": tested_sha,
+            "url": "https://github.com/owner/repo/actions/runs/67890",
+        },
+    )
+
+    errors = knowledge.schema_errors(verification, knowledge.load_schema(knowledge.RECORD_SCHEMA))
+
+    assert errors == []
+
+
+def test_closed_finding_accepts_a_complete_alternate_proof_contract(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    timestamp = datetime.now(timezone.utc).isoformat()
+    finding = _minimal_record(
+        "finding-alternate-closure",
+        "finding",
+        [{"type": "resolved_by", "target_id": "action-alternate-closure"}],
+        lifecycle="closed",
+        closure_mode="alternate_proof",
+        completeness="complete",
+        claim="An organizational control gap has been addressed.",
+        impact="The required operating process is now active.",
+        alternate_closure_proof={
+            "owner": "accountable-owner",
+            "decision_or_control_id": "control-alternate-closure",
+            "evidence_ids": ["evidence-alternate-closure"],
+            "test_limitation": "The control is organizational and cannot be represented by a deterministic code test.",
+            "residual_risk": True,
+            "reassessment_at": timestamp,
+        },
+    )
+    action = _minimal_record(
+        "action-alternate-closure",
+        "action",
+        [],
+        owner="accountable-owner",
+        measurable_acceptance=["The approved process is operating and sampled evidence is retained."],
+    )
+    control = _minimal_record(
+        "control-alternate-closure",
+        "control",
+        [],
+        approval="approved",
+        approver="authorized-reviewer",
+        owner="accountable-owner",
+    )
+    evidence = _minimal_record(
+        "evidence-alternate-closure",
+        "evidence",
+        [],
+        sources=[{
+            "kind": "document",
+            "uri": "https://example.test/operating-evidence",
+            "captured_at": timestamp,
+        }],
+    )
+    (root / "knowledge/findings/finding-alternate-closure.json").write_text(json.dumps(finding), encoding="utf-8")
+    (root / "knowledge/actions/action-alternate-closure.json").write_text(json.dumps(action), encoding="utf-8")
+    (root / "knowledge/controls/control-alternate-closure.json").write_text(json.dumps(control), encoding="utf-8")
+    (root / "knowledge/evidence/evidence-alternate-closure.json").write_text(json.dumps(evidence), encoding="utf-8")
+
+    errors = knowledge.validate_all()
+
+    assert not any("closed alternate-proof Finding" in item["error"] for item in errors)
+
+
+def test_alternate_closure_with_residual_risk_requires_reassessment_date(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    timestamp = datetime.now(timezone.utc).isoformat()
+    finding = _minimal_record(
+        "finding-alternate-date",
+        "finding",
+        [],
+        lifecycle="closed",
+        closure_mode="alternate_proof",
+        completeness="complete",
+        claim="A policy gap has been addressed.",
+        impact="The operating policy is now active.",
+        alternate_closure_proof={
+            "owner": "accountable-owner",
+            "decision_or_control_id": "control-alternate-date",
+            "evidence_ids": ["evidence-alternate-date"],
+            "test_limitation": "This is an organizational control.",
+            "residual_risk": True,
+        },
+    )
+    errors = knowledge.schema_errors(finding, knowledge.load_schema(knowledge.RECORD_SCHEMA))
+    assert any("reassessment_at" in item for item in errors)
 
 
 def test_verified_receipt_requires_tested_sha_to_equal_head_sha(tmp_path, monkeypatch):
