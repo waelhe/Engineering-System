@@ -77,6 +77,43 @@ def test_migration_validator_accepts_complete_source_family_inventory(tmp_path: 
     assert validate_migration(tmp_path, manifest) == []
 
 
+
+def test_migration_validator_rejects_missing_project_profile_inventory(tmp_path: Path):
+    manifest = write_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["project_profiles"] = []
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    errors = validate_migration(tmp_path, manifest)
+
+    assert any("project_profiles must be a non-empty inventory" in item for item in errors)
+    assert any("project profile inventory is missing: sample" in item for item in errors)
+
+
+def test_migration_validator_rejects_incomplete_project_profile_entry(tmp_path: Path):
+    manifest = write_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    del payload["project_profiles"][0]["source_baseline_sha"]
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    errors = validate_migration(tmp_path, manifest)
+
+    assert any("source_baseline_sha must be a full lowercase commit SHA" in item for item in errors)
+
+
+def test_migration_validator_rejects_symlinked_profile_file(tmp_path: Path):
+    manifest = write_fixture(tmp_path)
+    profile_path = tmp_path / "knowledge" / "projects" / "sample.json"
+    external = tmp_path / "external-profile.json"
+    external.write_text(profile_path.read_text(encoding="utf-8"), encoding="utf-8")
+    profile_path.unlink()
+    profile_path.symlink_to(external)
+
+    errors = validate_migration(tmp_path, manifest)
+
+    assert any("symbolic links are not allowed" in item for item in errors)
+
+
 def test_migration_validator_detects_missing_extra_ids_and_wrong_provenance(tmp_path: Path):
     manifest = write_fixture(tmp_path)
     path = tmp_path / "knowledge" / "cases" / "cases.jsonl"
