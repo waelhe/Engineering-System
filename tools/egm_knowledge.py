@@ -218,6 +218,7 @@ def validate_all() -> list[dict[str, str]]:
                 and isinstance(proof_url, str)
                 and proof_url.endswith(f"/compare/{tested_sha}...{target_sha}")
             )
+            proof_url_is_https = isinstance(proof_url, str) and proof_url.startswith("https://")
             if (
                 isinstance(tested_sha, str)
                 and workflow.get("tested_sha") == tested_sha
@@ -228,7 +229,7 @@ def validate_all() -> list[dict[str, str]]:
                 and re.fullmatch(r"[0-9a-f]{40}", target_sha)
                 and isinstance(inclusion.get("target_branch"), str)
                 and bool(inclusion["target_branch"].strip())
-                and proof_url.startswith("https://") if isinstance(proof_url, str) else False
+                and proof_url_is_https
             ):
                 if (
                     compare_proof_matches
