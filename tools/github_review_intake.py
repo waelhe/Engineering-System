@@ -6,7 +6,7 @@ import argparse, json, os, subprocess, sys, urllib.error, urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
-from tools.egm_knowledge import KnowledgeError, receive_signal
+from tools.egm_knowledge import KnowledgeError, receive_signal, redact_excerpt
 
 API = "https://api.github.com"
 API_VERSION = "2022-11-28"
@@ -154,8 +154,12 @@ def source_payload(repo: str, project_id: str, pr: dict[str, Any], item: dict[st
     if not (isinstance(commit_sha, str) and len(commit_sha) == 40
             and all(c in "0123456789abcdef" for c in commit_sha)):
         commit_sha = None
+    # Redact the complete original body before either JSON serialization or the
+    # intake size bound; otherwise a PEM/API credential crossing the cap leaks.
+    raw_body = str(item.get("body") or "")
+    safe_body = redact_excerpt(raw_body, maximum=MAX_SOURCE_BODY)
     body_data = {
-        "state": item.get("state"), "body": item.get("body") or "", "path": item.get("path"),
+        "state": item.get("state"), "body": safe_body, "path": item.get("path"),
         "line": item.get("line"), "original_line": item.get("original_line"),
         "diff_hunk": item.get("diff_hunk"), "commit_id": commit_sha,
         "created_at": created, "updated_at": updated, "author_login": login,
