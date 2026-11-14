@@ -31,6 +31,9 @@ jobs:
       - name: Validate knowledge records and relations
         run: python tools/egm_knowledge.py validate
 
+      - name: Reconcile imported records against pinned source manifest
+        run: python tools/validate_migration.py
+
       - name: Validate execution receipts
         run: python tools/egm_knowledge.py validate-receipts
 
@@ -50,3 +53,6 @@ jobs:
 
       - name: Build integrated OpenAI runtime package
         run: python tools/build_plugin.py --target openai --output "$RUNNER_TEMP/egm-system-package"
+
+      - name: Build integrated Claude runtime package
+        run: python tools/build_plugin.py --target claude --output "$RUNNER_TEMP/egm-system-claude-package"

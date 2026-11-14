@@ -3,7 +3,7 @@
 ~~~mermaid
 flowchart TD
   A[External source or agent observation] --> B[Signal inbox]
-  B --> C[Normalize and deduplicate by source identity]
+  B --> C[Normalize and deduplicate identical source snapshots]
   C --> D[Triage: relevant, duplicate, noise, security]
   D --> E[Evidence record]
   E --> F[Finding investigation]
@@ -26,7 +26,7 @@ flowchart TD
 
 Sources include GitHub issue and PR comments, formal review submissions, CodeRabbit/Copilot findings, CI failures, unit/integration/property/fuzz tests, production incidents, security scans, and human reports.
 
-Intake is idempotent by source identity (provider + repository + event/comment/run ID). It stores untrusted source content as data. It does not create a confirmed defect or alter a human triage decision.
+Intake deduplicates at the immutable snapshot level. The Signal ID binds source identity to a digest of the captured body: redelivery of the same source identity with unchanged content returns the existing Signal, while edited content with the same source identity creates a new Signal snapshot. This is not source-identity-only deduplication. Untrusted content is stored as data; intake does not create a confirmed defect or alter a human triage decision.
 
 ## Investigation
 

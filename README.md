@@ -13,11 +13,13 @@ The system combines EGM's context-rich design and fresh-context review workflow 
 - [System architecture](docs/architecture/system-architecture.md)
 - [Knowledge model](docs/architecture/knowledge-model.md)
 - [Knowledge lifecycle](docs/architecture/knowledge-lifecycle.md)
+- [GitHub intake trust boundary](docs/architecture/intake-trust-boundary.md)
 - [Core engineering charter](docs/policies/engineering-charter.md)
 - [Task risk policy](docs/policies/task-risk.md)
 - [Independent review policy](docs/policies/review.md)
 - [Verification policy](docs/policies/verification.md)
 - [Migration plan](docs/operations/migration-from-defect-knowledge.md)
+- [Pinned migration manifest](migration/app-java-v3-2026-11-13.manifest.json)
 - [ADR-0001: one EGM-based system](docs/adr/0001-single-egm-system.md)
 
 ## Upstream EGM baseline
@@ -51,6 +53,7 @@ Set up the local tooling:
 
     python tools/egm_knowledge.py validate
     python tools/egm_knowledge.py validate-receipts
+    python tools/validate_migration.py
     python tools/egm_knowledge.py index --check
     python -m pytest
 
@@ -80,7 +83,7 @@ For Claude:
 
     python tools/build_plugin.py --target claude --output /tmp/egm-system-claude-package
 
-The builder refuses an unpinned upstream checkout and uses the upstream EGM package script after overlaying local skills, agents and policies. The output directory must not already exist.
+The builder exports files from the locked Git commit object (not the mutable submodule worktree), then overlays reviewed local skills, canonical agents, Claude host adapters and policies before invoking the upstream EGM package script. The output directory must not already exist.
 
 ## Knowledge principles
 

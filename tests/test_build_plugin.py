@@ -1,7 +1,9 @@
 import json
+import subprocess
 from pathlib import Path
 
-from tools.build_plugin import copy_overlay, update_manifest
+import tools.build_plugin as build_plugin
+from tools.build_plugin import copy_overlay, register_claude_agents, update_manifest
 
 
 def test_manifest_identity_and_openai_surface_are_rebranded(tmp_path: Path):
@@ -43,3 +45,49 @@ def test_host_manifest_without_openai_interface_stays_host_neutral(tmp_path: Pat
     result = json.loads(path.read_text(encoding="utf-8"))
     assert result["name"] == "egm-engineering-system"
     assert "extensions" not in result
+
+
+def test_export_uses_pinned_git_tree_not_mutable_worktree(tmp_path: Path, monkeypatch):
+    upstream = tmp_path / "upstream"
+    upstream.mkdir()
+
+    def git(*args):
+        return subprocess.run(
+            ["git", "-C", str(upstream), *args],
+            check=True, capture_output=True, text=True,
+        )
+
+    git("init")
+    git("config", "user.name", "Test")
+    git("config", "user.email", "test@example.invalid")
+    (upstream / "scripts").mkdir()
+    packer = upstream / "scripts" / "pack_plugin.py"
+    packer.write_text("print('pinned')\\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "pinned baseline")
+    commit = git("rev-parse", "HEAD").stdout.strip()
+
+    packer.write_text("print('modified worktree')\\n", encoding="utf-8")
+    (upstream / "scripts" / "untracked.py").write_text("raise RuntimeError()\\n", encoding="utf-8")
+    monkeypatch.setattr(build_plugin, "UPSTREAM", upstream)
+    destination = tmp_path / "exported"
+
+    build_plugin.export_pinned_upstream(destination, commit)
+
+    assert (destination / "scripts" / "pack_plugin.py").read_text(encoding="utf-8") == "print('pinned')\\n"
+    assert not (destination / "scripts" / "untracked.py").exists()
+
+
+def test_claude_manifest_registers_all_local_agent_adapters(tmp_path: Path):
+    manifest = tmp_path / "plugin.json"
+    manifest.write_text(json.dumps({
+        "agents": ["./.claude-plugin/agents/design_critic.md"]
+    }), encoding="utf-8")
+
+    register_claude_agents(manifest)
+
+    agents = json.loads(manifest.read_text(encoding="utf-8"))["agents"]
+    assert "./.claude-plugin/agents/design_critic.md" in agents
+    assert "./.claude-plugin/agents/implementation-verifier.md" in agents
+    assert "./.claude-plugin/agents/knowledge-integrity-auditor.md" in agents
+    assert "./.claude-plugin/agents/root-cause-investigator.md" in agents
