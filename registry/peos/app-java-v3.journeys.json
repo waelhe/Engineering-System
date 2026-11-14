@@ -592,7 +592,10 @@
         "J29"
       ],
       "kind": "missing_row_boundary_and_duplicate_representation",
-      "summary": "J29 is appended inside the final cell of J28 using a double-pipe boundary and appears again as a standalone J29 row. W0 retains one canonical J29 record and preserves source_occurrences=2; the source document was not changed."
+      "summary": "J29 is appended inside the final cell of J28 using a double-pipe boundary and appears again as a standalone J29 row. W0 retains one canonical J29 record and preserves source_occurrences=2; the source document was not changed.",
+      "tracking_issue": 838,
+      "tracking_issue_url": "https://github.com/waelhe/app-java-v3/issues/838",
+      "tracking_state": "open"
     }
   ],
   "revalidation_policy": "All documented journey states are historic labels until file/test evidence is rechecked against app-java-v3 main at 5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6."
