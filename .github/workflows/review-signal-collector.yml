@@ -62,7 +62,7 @@ jobs:
         run: |
           set -eu
           if [ -n "$PR_NUMBER" ]; then
-            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --pr-number "$PR_NUMBER" --since-days "$SINCE_DAYS"
+            python -m tools.github_review_intake --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --pr-number "$PR_NUMBER" --since-days "$SINCE_DAYS"
           else
-            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --since-days "$SINCE_DAYS"
+            python -m tools.github_review_intake --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --since-days "$SINCE_DAYS"
           fi
