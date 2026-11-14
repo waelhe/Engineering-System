@@ -251,13 +251,13 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
     verification["workflow"]["conclusion"] = "failure"
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
     errors = knowledge.validate_all()
-    assert any("closed Finding requires a resolved Action linked to a successful Verification" in item["error"] for item in errors)
+    assert any("closed code-defect Finding requires a resolved Action linked to successful Verification" in item["error"] for item in errors)
 
     verification["workflow"]["conclusion"] = "success"
     verification["target_inclusion"]["included"] = False
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
     errors = knowledge.validate_all()
-    assert any("closed Finding requires a resolved Action linked to a successful Verification" in item["error"] for item in errors)
+    assert any("closed code-defect Finding requires a resolved Action linked to successful Verification" in item["error"] for item in errors)
 
     verification["target_inclusion"]["included"] = True
     verification["sources"] = [
@@ -266,7 +266,7 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
     ]
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
     errors = knowledge.validate_all()
-    assert any("closed Finding requires a resolved Action linked to a successful Verification" in item["error"] for item in errors)
+    assert any("closed code-defect Finding requires a resolved Action linked to successful Verification" in item["error"] for item in errors)
 
 
 def test_general_verification_record_does_not_require_target_inclusion(tmp_path, monkeypatch):
