@@ -26,7 +26,7 @@ For reproducible defects, require a reproducer and regression test when feasible
 
 For non-reproducible or non-code cases, set the Finding's `closure_mode` to `alternate_proof` and record `alternate_closure_proof`. The validator requires an approved same-project Decision or Control with an approver, at least one source-linked Evidence record, a test limitation, and a resolved Action whose owner matches the accountable proof owner and has measurable acceptance. When residual risk remains, a reassessment date is mandatory. Do not attach a CI target-inclusion claim to an organizational proof merely to satisfy a code-defect gate.
 
-For reproducible code defects, set `closure_mode` to `code_defect`; the linked Verification must bind the successful workflow's tested SHA to the target-inclusion proof and its source record.
+For reproducible code defects, set `closure_mode` to `code_defect`; the linked Verification must bind the successful workflow's tested SHA to the target-inclusion proof and its source record. The proof stores the GitHub Compare API result for `tested_sha...target_sha`: accept only `ahead` with `ahead_by > 0` or `identical` with `ahead_by = 0`, and require `behind_by = 0`. The comparison URL, base/head SHAs, recorded status and commit counts must agree.
 
 ## Enforcement mapping
 
