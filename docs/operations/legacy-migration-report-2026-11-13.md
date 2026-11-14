@@ -15,14 +15,14 @@ The source corpus is normalized into the canonical knowledge model. IDs are pres
 | Engineering rules A1…A6, B1…B8, C1…C4 | 18 | Rules |
 | Automated controls D1…D12 | 12 | Controls |
 | Individually adjudicated review findings | 39 | Findings |
-| Capability/decision gaps ISSUE-774…ISSUE-782 | 7 | Findings with explicit gap classification |
+| Capability/decision gaps ISSUE-774, ISSUE-775, ISSUE-776, ISSUE-779, ISSUE-780, ISSUE-781 and ISSUE-782 | 7 | Findings with explicit gap classification |
 | Repair-PR review reconciliations (#819, #821, #822, #823, #829) | 5 | Evidence records |
 | Aggregate/source audit, review and adversarial snapshots | 8 | Evidence records |
 | Copilot review-attempt evidence (HTTP 422; no review was created) | 1 | Evidence record |
 | Legacy audit/counting-policy evidence | 1 | Evidence record |
+| Project profiles | 1 | Projects |
 
 The 15 imported Evidence records reconcile as five repair reconciliations, eight source snapshots and two additional records. Exact source IDs and revision are pinned in `migration/app-java-v3-2026-11-13.manifest.json`; `python tools/validate_migration.py` checks the source-to-destination ID and provenance inventory.
-| Project profiles | 1 | Projects |
 
 The 29 \`separateHistoricalCases\` entries E-24…E-52 overlap existing ledger Cases. They were not duplicated. Their source issue/PR URLs and branch-aware dispositions were attached to the corresponding Case records.
 
