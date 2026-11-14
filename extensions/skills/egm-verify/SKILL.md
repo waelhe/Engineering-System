@@ -20,7 +20,7 @@ Record repository, PR, branch, candidate HEAD SHA, tested SHA, target branch and
 5. Verify module boundaries, security, data/concurrency and API compatibility where affected.
 6. Capture actual workflow/run IDs, conclusions, tested SHA and canonical URLs.
 7. Verify required independent review completion, including actual fresh-context and source-read evidence for Goldfish.
-8. For a merge claim, prove the tested fix commit is an ancestor of the target branch.
+8. For a merge claim, call GitHub's commit comparison for `tested_sha...target_sha`; require `status=ahead` with `ahead_by > 0` or `status=identical` with `ahead_by = 0`, and `behind_by = 0`. Preserve the comparison URL, both SHAs, result status and counts as evidence.
 9. For a deployment claim, require deployment evidence; a merge is not a deployment.
 10. Record residual risks and unavailable proof.
 
