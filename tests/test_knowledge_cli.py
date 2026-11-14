@@ -229,10 +229,17 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
             "target_sha": "c" * 40,
             "tested_sha": tested_sha,
             "included": True,
-            "proof_url": "https://github.com/owner/repo/compare/" + ("c" * 40),
+            "proof_url": "https://github.com/owner/repo/compare/" + tested_sha + "..." + ("c" * 40),
             "verified_at": datetime.now(timezone.utc).isoformat(),
         },
     )
+    verification["sources"].append({
+        "kind": "commit",
+        "uri": verification["target_inclusion"]["proof_url"],
+        "repository": "owner/repo",
+        "commit_sha": "c" * 40,
+        "captured_at": datetime.now(timezone.utc).isoformat(),
+    })
     (root / "knowledge/findings/finding-closure-test.json").write_text(json.dumps(finding), encoding="utf-8")
     (root / "knowledge/actions/action-closure-test.json").write_text(json.dumps(action), encoding="utf-8")
     verification_path = root / "knowledge/verifications/verification-closure-test.json"
@@ -247,6 +254,15 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
 
     verification["workflow"]["conclusion"] = "success"
     verification["target_inclusion"]["included"] = False
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    errors = knowledge.validate_all()
+    assert any("closed Finding requires a resolved Action linked to a successful Verification" in item["error"] for item in errors)
+
+    verification["target_inclusion"]["included"] = True
+    verification["sources"] = [
+        source for source in verification["sources"]
+        if source.get("kind") != "commit"
+    ]
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
     errors = knowledge.validate_all()
     assert any("closed Finding requires a resolved Action linked to a successful Verification" in item["error"] for item in errors)
