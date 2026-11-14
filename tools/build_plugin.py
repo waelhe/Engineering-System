@@ -89,7 +89,12 @@ def register_claude_agents(path: Path, agents_directory: Path, adapters_source: 
             raise RuntimeError(f"Pinned Claude agent file is missing or unsafe: {reference}")
         target = agents_directory / source.name
         if target.exists():
-            raise RuntimeError(f"Claude agent path collides with a local agent: {target.name}")
+            # The pinned release also ships some of these agent names in its
+            # standard root agents directory. Preserve both copies rather than
+            # shadowing or dropping either component.
+            target = agents_directory / f"egm-upstream-{source.name}"
+        if target.exists():
+            raise RuntimeError(f"Claude upstream agent path is not unique: {target.name}")
         shutil.move(str(source), str(target))
         registered.append(f"./agents/{target.name}")
 
