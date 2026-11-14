@@ -5,7 +5,7 @@
   "source": {
     "repository": "waelhe/app-java-v3",
     "ref": "main",
-    "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+    "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
     "file_path": "docs/observability/slo.md",
     "file_blob_sha": "2a9764455d2da983187a2bb5256136c74fd428d5",
     "snapshot_date": "2026-11-14",
@@ -14,14 +14,15 @@
       "Railway project/environment read APIs",
       "Grafana Cloud MCP and Grafana HTTP API"
     ],
-    "capture_boundary": "Read-only observation. No deployment, endpoint probe, service configuration, alerting configuration, database, or credential mutation was performed."
+    "capture_boundary": "Read-only observation. No deployment, endpoint probe, service configuration, alerting configuration, database, or credential mutation was performed.",
+    "capture_note": "The app-java-v3 main ref advanced from the W0 baseline 5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6 after PR #835 merged at 2026-11-14T17:28:12Z. All five evidence-source file blobs were re-read at 8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26 and were byte-identical to the previously captured blob SHAs. W0 remains a historical snapshot; this W1 registry is pinned to the current main tip."
   },
   "evidence_sources": [
     {
       "system": "GitHub",
       "repository": "waelhe/app-java-v3",
       "ref": "main",
-      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
       "path": ".github/workflows/watchdog.yml",
       "blob_sha": "9cab05f6e918fd3c4d4ab1286d987c9e0359f179"
     },
@@ -29,7 +30,7 @@
       "system": "GitHub",
       "repository": "waelhe/app-java-v3",
       "ref": "main",
-      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
       "path": "monitoring/prometheus-rules/marketplace-alerts.yml",
       "blob_sha": "d39f20d20cf27a148d6d566a7a281bb84d69b117"
     },
@@ -37,7 +38,7 @@
       "system": "GitHub",
       "repository": "waelhe/app-java-v3",
       "ref": "main",
-      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
       "path": "docs/observability/slo.md",
       "blob_sha": "2a9764455d2da983187a2bb5256136c74fd428d5"
     },
@@ -45,7 +46,7 @@
       "system": "GitHub",
       "repository": "waelhe/app-java-v3",
       "ref": "main",
-      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
       "path": "docs/observability/runbooks.md",
       "blob_sha": "620ba3ce2d80c7d55b76612885c9351a1c806fa0"
     },
@@ -53,7 +54,7 @@
       "system": "GitHub",
       "repository": "waelhe/app-java-v3",
       "ref": "main",
-      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
       "path": "docs/release/rollout-strategy.md",
       "blob_sha": "acc313b987118ddae9b88ce89d67edd9facec8ae"
     }
