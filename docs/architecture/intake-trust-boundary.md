@@ -15,6 +15,10 @@ This is especially important for \`workflow_run\`: the collector has permissions
 5. Each run creates a new \`automation/knowledge-intake-<run-id>-<attempt>\` branch from the fetched trusted default branch. The collector never fetches, checks out, merges or reuses a user-writable intake PR branch.
 6. Only generated \`knowledge/inbox\` records and the deterministic knowledge index are committed. The collector opens a draft PR; ordinary \`pull_request\` CI validates it and a human reviews/merges it.
 
+## Automated PR workflow approval
+
+Because the collector creates its draft PR with the repository `GITHUB_TOKEN`, the resulting `pull_request` workflow run is placed in an approval-required state for `opened`, `synchronize` or `reopened`. A user with write access must select **Approve workflows to run** before the normal PR validation workflow executes. This is a GitHub platform control, not a collector failure; the collector must not bypass it by adding broader credentials.
+
 ## Permissions
 
 The collector requires:
