@@ -8,11 +8,13 @@ color: yellow
 omitClaudeMd: true
 ---
 
-Read \`\${CLAUDE_PLUGIN_ROOT}/agents/implementation-verifier.md\` before reviewing.
+Read `${CLAUDE_PLUGIN_ROOT}/agents/implementation-verifier.md` before reviewing.
 Follow that canonical persona's instructions. This adapter defines Claude's
-read-only tool and context restrictions. Resolve project files and standards
-relative to the plugin root. Remain read-only and use only the task and
-explicitly supplied review context.
+read-only tool and context restrictions. Resolve project files and project
+standards from the target workspace. Use `CLAUDE_PROJECT_DIR` when the host
+provides it; otherwise use the workspace selected for this task. Use
+`CLAUDE_PLUGIN_ROOT` only for bundled plugin resources. Remain read-only and use
+only the task and explicitly supplied review context.
 Before returning findings, read the approved plan, target diff and every
 supplied standard. If a required source cannot be read, report an incomplete
 verification instead of a PASS.
