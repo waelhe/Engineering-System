@@ -48,12 +48,21 @@
       "role": "peos_operating_model_extension",
       "pull_request": 2,
       "branch": "peos/w0-operating-model-2026-11-14",
-      "head_sha": "10fa759bad79564cf872ede4b88a5ca6087bbaa8",
+      "head_sha": "a0feee7045adab1f85591559070379dc19b88273",
       "base_branch": "build/egm-engineering-system-v1",
       "base_sha": "6c452ffec952641c50c63252fafe726607980200",
       "pull_request_state": "open_draft_stacked_on_pr_1",
       "allowed_to_merge": false,
-      "note": "Dependent on PR #1; not retargeted to main and not merged."
+      "note": "Dependent on PR #1; not retargeted to main and not merged.",
+      "latest_ci": {
+        "run_id": 43596911984,
+        "head_sha": "a0feee7045adab1f85591559070379dc19b88273",
+        "conclusion": "success",
+        "peos_inventory_validator": "success",
+        "pytest": "47 passed in 3.67s",
+        "openai_runtime_package": "success",
+        "claude_runtime_package": "success"
+      }
     }
   ],
   "notes": [
