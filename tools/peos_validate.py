@@ -37,6 +37,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         "modules": ("module_registry", "app-java-v3.modules.json"),
         "journeys": ("journey_registry", "app-java-v3.journeys.json"),
         "prs": ("pull_request_registry", "app-java-v3.open-prs.json"),
+        "operations": ("operations_registry", "app-java-v3.operations.json"),
     }
     loaded: dict[str, dict[str, Any]] = {}
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
@@ -127,6 +128,35 @@ def validate_registry(root: Path = ROOT) -> list[str]:
             errors.append("project main SHA disagrees with module inventory source SHA")
     except (ValueError, KeyError, StopIteration, TypeError) as exc:
         errors.append(f"projects.json: {exc}")
+
+    operations = loaded.get("operations", {}).get("records", [])
+    operation_ids = [item.get("id") for item in operations]
+    required_operation_ids = {
+        "OPS-RAILWAY-001", "OPS-RAILWAY-002", "OPS-GITHUB-001", "OPS-GITHUB-002",
+        "OPS-REPO-001", "OPS-GRAFANA-001", "OPS-GRAFANA-002", "OPS-GRAFANA-003", "OPS-GRAFANA-004",
+    }
+    if len(operation_ids) != len(set(operation_ids)):
+        errors.append("operations record IDs are not unique")
+    missing_operations = required_operation_ids - set(operation_ids)
+    if missing_operations:
+        errors.append(f"operations evidence missing required records: {sorted(missing_operations)}")
+    for item in operations:
+        if not item.get("id") or not item.get("system") or not item.get("state"):
+            errors.append("every operations record requires id, system and state")
+        if not item.get("evidence"):
+            errors.append(f"{item.get('id')}: operational state must cite at least one evidence item")
+    by_operation = {item.get("id"): item for item in operations}
+    expected_states = {
+        "OPS-RAILWAY-001": "offline",
+        "OPS-GRAFANA-001": "no_series",
+        "OPS-GRAFANA-002": "incomplete_datasource_configuration",
+        "OPS-GRAFANA-003": "no_alert_rules",
+        "OPS-GRAFANA-004": "no_notification_destination",
+        "OPS-GITHUB-002": "open_incident",
+    }
+    for record_id, expected_state in expected_states.items():
+        if by_operation.get(record_id, {}).get("state") != expected_state:
+            errors.append(f"{record_id}: state must remain explicitly {expected_state} until reverified")
 
     return errors
 

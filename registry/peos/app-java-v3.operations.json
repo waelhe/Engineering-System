@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "kind": "operations_registry",
+  "snapshot_date": "2026-11-14",
+  "source": {
+    "repository": "waelhe/app-java-v3",
+    "ref": "main",
+    "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+    "file_path": "docs/observability/slo.md",
+    "file_blob_sha": "2a9764455d2da983187a2bb5256136c74fd428d5",
+    "snapshot_date": "2026-11-14",
+    "capture_surfaces": [
+      "GitHub repository files and issue search",
+      "Railway project/environment read APIs",
+      "Grafana Cloud MCP and Grafana HTTP API"
+    ],
+    "capture_boundary": "Read-only observation. No deployment, endpoint probe, service configuration, alerting configuration, database, or credential mutation was performed."
+  },
+  "evidence_sources": [
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "path": ".github/workflows/watchdog.yml",
+      "blob_sha": "9cab05f6e918fd3c4d4ab1286d987c9e0359f179"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "path": "monitoring/prometheus-rules/marketplace-alerts.yml",
+      "blob_sha": "d39f20d20cf27a148d6d566a7a281bb84d69b117"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "path": "docs/observability/slo.md",
+      "blob_sha": "2a9764455d2da983187a2bb5256136c74fd428d5"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "path": "docs/observability/runbooks.md",
+      "blob_sha": "620ba3ce2d80c7d55b76612885c9351a1c806fa0"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "path": "docs/release/rollout-strategy.md",
+      "blob_sha": "acc313b987118ddae9b88ce89d67edd9facec8ae"
+    }
+  ],
+  "records": [
+    {
+      "id": "OPS-RAILWAY-001",
+      "system": "Railway",
+      "area": "production_runtime",
+      "state": "offline",
+      "subject": "app-java-v3 / production",
+      "evidence": [
+        {
+          "kind": "environment_status",
+          "resource_id": "60fb0197-fc76-4e72-b18d-dca7532e343d",
+          "observed_date": "2026-11-14",
+          "value": {
+            "state": "offline",
+            "active_deployments": 0,
+            "replicas": null,
+            "warning_count": 0,
+            "critical_count": 0,
+            "recent_failures_last_48h": 0
+          }
+        },
+        {
+          "kind": "service_config",
+          "resource_id": "3efcf70c-56d5-4d87-ada5-6bba32022229",
+          "value": {
+            "repository": "waelhe/app-java-v3",
+            "branch": "main",
+            "domain": "app-java-v3-production.up.railway.app",
+            "healthcheck_path": "/actuator/health/liveness",
+            "healthcheck_timeout_seconds": 300,
+            "configured_replicas": 1,
+            "region": "europe-west4-drams3a"
+          }
+        },
+        {
+          "kind": "service_latest_deployment",
+          "resource_id": "fc09d660-b4b7-4f12-8eaf-5ccffc815be2",
+          "value": {
+            "status": "FAILED",
+            "created_at": "2026-10-19T17:58:40.069Z"
+          }
+        }
+      ],
+      "interpretation": "Railway reports production OFFLINE with no active deployments. The newest November 13 listed deployment is REMOVED. A zero recent-failure count does not override the explicit offline state."
+    },
+    {
+      "id": "OPS-RAILWAY-002",
+      "system": "Railway",
+      "area": "resource_metrics_and_tracing",
+      "state": "telemetry_not_proven_live",
+      "subject": "app-java-v3 / production",
+      "evidence": [
+        {
+          "kind": "deployment_history",
+          "value": {
+            "newest_listed": {
+              "id": "62a12198-e46d-436a-9433-f2093907b781",
+              "status": "REMOVED",
+              "created_at": "2026-11-13T05:51:12.475Z",
+              "updated_at": "2026-11-13T16:32:44.340Z",
+              "branch": "main",
+              "commit_sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+            }
+          }
+        },
+        {
+          "kind": "resource_metrics_24h",
+          "value": {
+            "sample_count": 289,
+            "cpu_current": 0,
+            "cpu_average": 0.00015900630911188006,
+            "cpu_max": 0.0020354233333333333,
+            "memory_current_gb": 0.982091776,
+            "memory_average_gb": 0.9822578251448814,
+            "memory_max_gb": 0.99351552,
+            "memory_limit_gb": 0.99999744
+          }
+        },
+        {
+          "kind": "tracing_configuration",
+          "value": {
+            "tracing_enabled": false,
+            "auto_instrumentation_enabled": false,
+            "auto_instrumentation_active": false
+          }
+        }
+      ],
+      "interpretation": "The metrics API returned 289 samples while environment-status reported OFFLINE. Until a live deployment and sample timestamps are reconciled, these values are not proof of current health or resource saturation."
+    },
+    {
+      "id": "OPS-GITHUB-001",
+      "system": "GitHub Actions",
+      "area": "production_watchdog",
+      "state": "workflow_configured_live_schedule_unverified",
+      "subject": ".github/workflows/watchdog.yml",
+      "evidence": [
+        {
+          "kind": "workflow_source",
+          "path": ".github/workflows/watchdog.yml",
+          "blob_sha": "9cab05f6e918fd3c4d4ab1286d987c9e0359f179",
+          "value": {
+            "schedule": "7,22,37,52 * * * *",
+            "probes": [
+              "/actuator/health/liveness",
+              "/actuator/health/readiness",
+              "/oauth2/jwks",
+              "/.well-known/openid-configuration",
+              "/actuator/modulith",
+              "/actuator/health"
+            ],
+            "incident_mechanism": "open deduplicated uptime-watchdog issue on failure and close it after healthy run"
+          }
+        },
+        {
+          "kind": "workflow_run_evidence",
+          "run_id": 39387951727,
+          "observed_at": "2026-10-20T07:46:35Z",
+          "value": {
+            "historical_run_only": true,
+            "probe_results": {
+              "/.well-known/openid-configuration": 200,
+              "/actuator/health": 503,
+              "/actuator/health/liveness": 200,
+              "/actuator/modulith": 401,
+              "/oauth2/jwks": 200,
+              "/actuator/health/readiness": 200
+            }
+          }
+        }
+      ],
+      "interpretation": "The scheduled workflow and probe contract exist in main. The latest scheduled execution was not retrievable through the available GitHub Actions read operation in this audit; current cadence and last-run health remain unverified."
+    },
+    {
+      "id": "OPS-GITHUB-002",
+      "system": "GitHub",
+      "area": "production_incident",
+      "state": "open_incident",
+      "subject": "Issue #682 — [watchdog] Production endpoints unhealthy - 2026-10-20 07:46 UTC",
+      "evidence": [
+        {
+          "kind": "issue_search",
+          "url": "https://github.com/waelhe/app-java-v3/issues/682",
+          "query": "repo:waelhe/app-java-v3 label:uptime-watchdog is:open",
+          "observed_date": "2026-11-14",
+          "value": {
+            "issue_number": 682,
+            "open": true,
+            "created_title": "[watchdog] Production endpoints unhealthy - 2026-10-20 07:46 UTC"
+          }
+        },
+        {
+          "kind": "issue_body",
+          "value": {
+            "failing_probe": "/actuator/health",
+            "http_status": 503,
+            "attempts": 3,
+            "other_probes": {
+              "liveness": 200,
+              "readiness": 200,
+              "oidc": 200,
+              "jwks": 200,
+              "modulith": 401
+            }
+          }
+        }
+      ],
+      "interpretation": "The watchdog incident remained open at this audit. It is not proof of the precise current root cause, but it is unresolved incident history and must not be silently marked recovered."
+    },
+    {
+      "id": "OPS-REPO-001",
+      "system": "app-java-v3",
+      "area": "observability_contract",
+      "state": "source_contract_present_runtime_consumer_missing",
+      "subject": "SLOs, Prometheus rules and incident runbooks",
+      "evidence": [
+        {
+          "kind": "slo_document",
+          "path": "docs/observability/slo.md",
+          "blob_sha": "2a9764455d2da983187a2bb5256136c74fd428d5",
+          "value": {
+            "documented_slos": [
+              "availability_99.5_percent_monthly",
+              "payment_success_at_least_99_percent",
+              "zero_event_publications_stale_over_6h"
+            ],
+            "thresholds": "provisional_pending_real_traffic"
+          }
+        },
+        {
+          "kind": "alert_rule_file",
+          "path": "monitoring/prometheus-rules/marketplace-alerts.yml",
+          "blob_sha": "d39f20d20cf27a148d6d566a7a281bb84d69b117",
+          "value": {
+            "source_rules_present": true,
+            "operator_loaded_rule_files_not_proven": true
+          }
+        },
+        {
+          "kind": "runbooks",
+          "path": "docs/observability/runbooks.md",
+          "blob_sha": "620ba3ce2d80c7d55b76612885c9351a1c806fa0",
+          "value": {
+            "runbook_document_present": true,
+            "interactive_incident_automation_not_proven": true
+          }
+        },
+        {
+          "kind": "release_policy",
+          "path": "docs/release/rollout-strategy.md",
+          "blob_sha": "acc313b987118ddae9b88ce89d67edd9facec8ae",
+          "value": {
+            "release_gates_documented": true,
+            "canary_and_rollback_required": true
+          }
+        }
+      ],
+      "interpretation": "Repository-side contracts and runbooks exist, with provisional thresholds. Their presence does not prove a running Prometheus rule evaluator or a working notification destination."
+    },
+    {
+      "id": "OPS-GRAFANA-001",
+      "system": "Grafana Cloud",
+      "area": "prometheus_ingestion",
+      "state": "no_series",
+      "subject": "pinkblackberry661 / default Prometheus datasource",
+      "evidence": [
+        {
+          "kind": "grafana_api_health",
+          "url": "https://pinkblackberry661.grafana.net/api/health",
+          "value": {
+            "http_status": 200,
+            "version": "13.4.0-41840432882.patch1"
+          }
+        },
+        {
+          "kind": "datasource",
+          "uid": "grafanacloud-prom",
+          "value": {
+            "name": "grafanacloud-pinkblackberry661-prom",
+            "type": "prometheus",
+            "is_default": true,
+            "read_only": true,
+            "manage_alerts": false
+          }
+        },
+        {
+          "kind": "prometheus_instant_query",
+          "datasource_uid": "grafanacloud-prom",
+          "query": "up",
+          "value": {
+            "series_count": 0
+          }
+        },
+        {
+          "kind": "metric_discovery",
+          "datasource_uid": "grafanacloud-prom",
+          "query_regex": ".*",
+          "time_window": "now-24h to now",
+          "value": {
+            "metrics_returned": 0
+          }
+        }
+      ],
+      "interpretation": "Grafana is reachable, but its default Prometheus datasource returned no series for the generic up query and no metric names in 24 hours. Application telemetry ingestion is not proven."
+    },
+    {
+      "id": "OPS-GRAFANA-002",
+      "system": "Grafana Cloud",
+      "area": "datasource_configuration",
+      "state": "incomplete_datasource_configuration",
+      "subject": "additional Prometheus datasources",
+      "evidence": [
+        {
+          "kind": "datasource",
+          "uid": "afz67bstgccu8f",
+          "value": {
+            "name": "prometheus",
+            "url_present": true,
+            "queried_up_series": 0,
+            "metric_names_returned": 0
+          }
+        },
+        {
+          "kind": "datasource",
+          "uid": "afz6bj06r4q2od",
+          "value": {
+            "name": "prometheus-1",
+            "url_present": false,
+            "query_error": "empty url"
+          }
+        },
+        {
+          "kind": "datasource",
+          "uid": "efz6bnwp3twcgb",
+          "value": {
+            "name": "prometheus-2",
+            "url_present": false,
+            "query_error": "empty url"
+          }
+        }
+      ],
+      "interpretation": "Two additional Prometheus datasource entries have no URL and cannot be queried; one extra entry with a URL returned no data. Ownership and intended use are not inferred."
+    },
+    {
+      "id": "OPS-GRAFANA-003",
+      "system": "Grafana Cloud",
+      "area": "alert_rules",
+      "state": "no_alert_rules",
+      "subject": "Grafana-managed alerting",
+      "evidence": [
+        {
+          "kind": "grafana_api",
+          "endpoint": "/api/v1/provisioning/alert-rules",
+          "value": {
+            "http_status": 200,
+            "rule_count": 0
+          }
+        },
+        {
+          "kind": "grafana_api",
+          "endpoint": "/api/ruler/grafana/api/v1/rules",
+          "value": {
+            "http_status": 200,
+            "rule_groups": 0
+          }
+        },
+        {
+          "kind": "grafana_tool_read",
+          "operation": "list_alert_rules",
+          "value": {
+            "result": null
+          }
+        }
+      ],
+      "interpretation": "No Grafana-managed or Grafana ruler rule groups were returned. The repository Prometheus rules are not observed as loaded in this Grafana stack."
+    },
+    {
+      "id": "OPS-GRAFANA-004",
+      "system": "Grafana Cloud",
+      "area": "notification_routing",
+      "state": "no_notification_destination",
+      "subject": "Grafana-managed notification route",
+      "evidence": [
+        {
+          "kind": "grafana_api",
+          "endpoint": "/api/v1/provisioning/contact-points",
+          "value": {
+            "http_status": 200,
+            "contact_point_count": 0
+          }
+        },
+        {
+          "kind": "grafana_api",
+          "endpoint": "/api/v1/provisioning/policies",
+          "value": {
+            "http_status": 200,
+            "root_receiver": "empty",
+            "routes": 0
+          }
+        },
+        {
+          "kind": "grafana_tool_read",
+          "operation": "get_contact_points",
+          "value": {
+            "contact_points": []
+          }
+        }
+      ],
+      "interpretation": "The notification policy has only the receiver named empty and no contact points; it cannot deliver alerts to a human responder."
+    }
+  ],
+  "anomalies": [
+    {
+      "id": "W1-OPS-001",
+      "severity": "critical",
+      "affected_records": [
+        "OPS-RAILWAY-001",
+        "OPS-GITHUB-002"
+      ],
+      "summary": "Production runtime is OFFLINE while an old production watchdog incident remains open; current root cause and recovery are not proven."
+    },
+    {
+      "id": "W1-OPS-002",
+      "severity": "critical",
+      "affected_records": [
+        "OPS-GRAFANA-001",
+        "OPS-GRAFANA-003",
+        "OPS-GRAFANA-004"
+      ],
+      "summary": "Grafana has no observed Prometheus series, alert rules, or notification destination; repository rules and runbooks are not a live alerting loop."
+    },
+    {
+      "id": "W1-OPS-003",
+      "severity": "warning",
+      "affected_records": [
+        "OPS-RAILWAY-002"
+      ],
+      "summary": "Railway returns resource samples despite the environment being offline. Do not infer current capacity or saturation until sample timestamps are reconciled."
+    },
+    {
+      "id": "W1-OPS-004",
+      "severity": "warning",
+      "affected_records": [
+        "OPS-GITHUB-001"
+      ],
+      "summary": "The watchdog schedule is present in source, but the most recent scheduled run was not independently retrieved."
+    }
+  ],
+  "credential_policy": "No OAuth client secret, access token, service-account token, authorization header, or credential value is stored in this registry, documentation, or source control."
+}
