@@ -18,6 +18,8 @@ Capture exact repository, PR, branch and tested SHA; workflow name, run ID, job/
 
 A workflow must be complete and successful. queued, in_progress, cancelled, skipped, missing, or mismatched runs do not satisfy a successful-proof claim.
 
+A `verified` Execution Receipt must have `tested_sha` equal to its `head_sha`: the claim is that the declared candidate itself was tested. A `merged` or `deployed` receipt may retain an earlier `tested_sha` only when it also records the target SHA and a verifiable ancestry/inclusion proof. A passing run on an unrelated revision is not proof for the candidate.
+
 ## Code-defect closure
 
 For reproducible defects, require a reproducer and regression test when feasible. The test should fail on pre-fix code and pass on the fix. Record candidate SHA, successful workflow evidence and target-branch inclusion. A fix commit by itself does not close a Finding.
