@@ -91,6 +91,28 @@ def test_child_environment_drops_github_credentials(monkeypatch):
     assert "GH_TOKEN" not in environment
 
 
+def test_source_payload_redacts_secrets_before_its_size_limit():
+    private_key = (
+        "-----BEGIN PRIVATE KEY-----\\n"
+        + ("SOURCE-PAYLOAD-SECRET-" * 1000)
+        + "\\n-----END PRIVATE KEY-----"
+    )
+    review = {
+        "id": 102,
+        "body": ("x" * (intake.MAX_SOURCE_BODY - 2000)) + private_key,
+        "user": {"login": "reviewer"},
+        "created_at": "2026-11-14T00:00:00Z",
+    }
+
+    payload = intake.source_payload(
+        "owner/repo", "sample-project", {"number": 9},
+        review, "github_review", "workflow_run",
+    )
+
+    assert "SOURCE-PAYLOAD-SECRET" not in payload["body"]
+    assert "BEGIN PRIVATE KEY" not in payload["body"]
+
+
 def test_review_signal_binds_author_sha_and_source_link():
     review={"id":101,"state":"CHANGES_REQUESTED","body":"Please fix this.",
         "html_url":"https://github.com/owner/repo/pull/9#pullrequestreview-101",
