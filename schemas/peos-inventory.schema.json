@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PEOS inventory envelope",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "snapshot_date",
+    "source",
+    "records",
+    "anomalies"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "kind": {
+      "enum": [
+        "module_registry",
+        "journey_registry",
+        "pull_request_registry"
+      ]
+    },
+    "snapshot_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repository",
+        "ref",
+        "commit_sha",
+        "snapshot_date"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "file_path": {
+          "type": "string"
+        },
+        "file_blob_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "documented_baseline_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "documented_baseline_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "snapshot_date": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "additionalProperties": true
+    },
+    "records": {
+      "type": "array"
+    },
+    "anomalies": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true
+}

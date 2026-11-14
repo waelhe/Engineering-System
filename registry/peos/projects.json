@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "kind": "project_baseline",
+  "snapshot_date": "2026-11-14",
+  "records": [
+    {
+      "repository": "waelhe/app-java-v3",
+      "role": "platform_backend",
+      "default_branch": "main",
+      "main_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "pom_blob_sha": "0d53d259fd440a88e3517c34e7e6703420171439",
+      "modules": 30,
+      "language": "Java 25",
+      "framework": "Spring Boot 4.1.2",
+      "graphql": "Netflix DGS 12.1.0",
+      "architecture": "Maven multi-module Modular Monolith",
+      "evidence_state": "verified_from_main_files"
+    },
+    {
+      "repository": "waelhe/marketplace-admin",
+      "role": "admin_dashboard",
+      "default_branch": "main",
+      "main_sha": "982ecf3667d2242cab941737cb6a0bceaee7ffcb",
+      "package_json_blob_sha": "0e7315da720b162d5ef931fa3b3bb2672477cce0",
+      "dashboard_version": "3.23.39",
+      "open_pr_count": 0,
+      "evidence_state": "metadata_and_package_read"
+    },
+    {
+      "repository": "waelhe/Engineering-System",
+      "role": "engineering_knowledge_and_execution_system",
+      "default_branch": "main",
+      "main_sha": "96866d47c2ea6f54c6f6afba3442459907c03b0d",
+      "foundation_pr": 1,
+      "foundation_branch": "build/egm-engineering-system-v1",
+      "foundation_head_sha": "6c452ffec952641c50c63252fafe726607980200",
+      "foundation_pr_state": "open_not_merged",
+      "foundation_pr_ahead": 93,
+      "foundation_pr_behind": 0,
+      "foundation_tests_passed": 44,
+      "latest_coderabbit_state": "CHANGES_REQUESTED",
+      "latest_coderabbit_at": "2026-11-14T11:39:31Z",
+      "production_ready": false,
+      "evidence_state": "verified_from_pr_and_readme"
+    }
+  ],
+  "notes": [
+    "Engineering-System PR #1 is not part of Engineering-System main; PEOS additions are stacked on its head and must not be treated as adopted until both PRs are reviewed and merged in order.",
+    "The app-java-v3 journey register and W13 readiness files were authored on 2026-10-18; their states are not assumed current merely because the files remain in main.",
+    "The Admin repository is a Saleor Dashboard-derived admin surface; no assertion is made that all PAOS workflows are implemented."
+  ]
+}
