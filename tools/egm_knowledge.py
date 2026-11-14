@@ -239,6 +239,49 @@ def validate_all() -> list[dict[str, str]]:
                     return True
         return False
 
+    def has_alternate_closure_proof(
+        finding: dict[str, Any],
+        resolved_actions: list[dict[str, Any]],
+    ) -> bool:
+        proof = finding.get("alternate_closure_proof")
+        if not isinstance(proof, dict):
+            return False
+        owner = proof.get("owner")
+        if not isinstance(owner, str) or not owner.strip():
+            return False
+        target = by_id.get(proof.get("decision_or_control_id"))
+        if (
+            not isinstance(target, dict)
+            or target.get("type") not in {"decision", "control"}
+            or target.get("project_id") != finding.get("project_id")
+            or target.get("approval") != "approved"
+            or not isinstance(target.get("approver"), str)
+            or not target["approver"].strip()
+        ):
+            return False
+        evidence_ids = proof.get("evidence_ids")
+        if not isinstance(evidence_ids, list) or not evidence_ids:
+            return False
+        for evidence_id in evidence_ids:
+            evidence = by_id.get(evidence_id)
+            if (
+                not isinstance(evidence, dict)
+                or evidence.get("type") != "evidence"
+                or evidence.get("project_id") != finding.get("project_id")
+                or not evidence.get("sources")
+            ):
+                return False
+        if proof.get("residual_risk") is True and not proof.get("reassessment_at"):
+            return False
+        return any(
+            isinstance(action, dict)
+            and action.get("type") == "action"
+            and action.get("project_id") == finding.get("project_id")
+            and action.get("owner") == owner
+            and bool(action.get("measurable_acceptance"))
+            for action in resolved_actions
+        )
+
     for path, record in records:
         if record.get("type") != "finding" or record.get("lifecycle") != "closed":
             continue
@@ -247,16 +290,31 @@ def validate_all() -> list[dict[str, str]]:
             for rel in record.get("relations", [])
             if rel.get("type") == "resolved_by"
         ]
-        action_proof = any(
-            isinstance(action, dict)
-            and action.get("type") == "action"
-            and has_successful_verification(action)
-            for action in resolved_actions
-        )
-        if not action_proof:
+        closure_mode = record.get("closure_mode")
+        if closure_mode == "code_defect":
+            closure_proof_valid = any(
+                isinstance(action, dict)
+                and action.get("type") == "action"
+                and has_successful_verification(action)
+                for action in resolved_actions
+            )
+            error_message = (
+                "closed code-defect Finding requires a resolved Action linked to "
+                "successful Verification and target-branch inclusion evidence on its tested SHA"
+            )
+        elif closure_mode == "alternate_proof":
+            closure_proof_valid = has_alternate_closure_proof(record, resolved_actions)
+            error_message = (
+                "closed alternate-proof Finding requires an approved same-project Decision/Control, "
+                "a same-owner Action with measurable acceptance, source-linked Evidence, and a test limitation"
+            )
+        else:
+            closure_proof_valid = False
+            error_message = "closed Finding requires an explicit code_defect or alternate_proof closure_mode"
+        if not closure_proof_valid:
             errors.append({
                 "path": path.relative_to(ROOT).as_posix(),
-                "error": "closed Finding requires a resolved Action linked to a successful Verification on its tested SHA",
+                "error": error_message,
             })
     return errors
 
