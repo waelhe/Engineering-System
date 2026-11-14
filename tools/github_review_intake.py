@@ -231,7 +231,7 @@ def pending_intake_signal_paths(repo: str, token: str, base_branch: str) -> set[
         number = pull.get("number")
         base = pull.get("base") or {}
         head = pull.get("head") or {}
-        if pull.get("draft") is not True or base.get("ref") != base_branch:
+        if base.get("ref") != base_branch:
             continue
         if (base.get("repo") or {}).get("full_name", "").lower() != repo.lower():
             continue
@@ -267,12 +267,21 @@ def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[
     current_signal_paths = staged_signal_paths()
     if current_signal_paths:
         overlap = current_signal_paths & pending_intake_signal_paths(repo, token, base_branch)
-        if overlap:
+        if overlap == current_signal_paths:
             return {
                 "deferred": True,
                 "reason": "equivalent_signal_batch_pending",
                 "overlapping_signal_count": len(overlap),
             }
+        if overlap:
+            # Remove only already-pending snapshots from this fresh branch.
+            # Rebuild the index from the remaining inbox so it cannot reference
+            # Signals whose records are intentionally deferred to another PR.
+            for path in sorted(overlap):
+                git("reset", "-q", "HEAD", "--", path)
+                Path(path).unlink(missing_ok=True)
+            run_trusted_python("tools/egm_knowledge.py", "index")
+            git("add", "--", "knowledge/inbox", "knowledge/index.json")
     git("commit", "-m", "Capture trusted GitHub review signals")
     git("push", "--set-upstream", "origin", branch)
     pr = api_request("POST", f"/repos/{repo}/pulls", token, {
