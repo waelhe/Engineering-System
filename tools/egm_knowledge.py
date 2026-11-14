@@ -64,7 +64,27 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def ensure_no_symlink(path: Path) -> None:
+    """Reject symlinked files or parent directories within this repository."""
+    root = ROOT.absolute()
+    candidate = path.absolute()
+    try:
+        relative = candidate.relative_to(root)
+    except ValueError:
+        if path.is_symlink():
+            raise KnowledgeError(f"{path}: symbolic links are not allowed")
+        return
+    current = root
+    if current.is_symlink():
+        raise KnowledgeError(f"{current}: symbolic links are not allowed")
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            raise KnowledgeError(f"{current}: symbolic links are not allowed")
+
+
 def read_json(path: Path) -> Any:
+    ensure_no_symlink(path)
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
@@ -90,6 +110,7 @@ def iter_records() -> list[tuple[Path, dict[str, Any]]]:
     result: list[tuple[Path, dict[str, Any]]] = []
     for folder in RECORD_DIRS:
         directory = KNOWLEDGE / folder
+        ensure_no_symlink(directory)
         if not directory.exists():
             continue
         for path in sorted(directory.rglob("*.json")):
@@ -98,6 +119,7 @@ def iter_records() -> list[tuple[Path, dict[str, Any]]]:
                 raise KnowledgeError(f"{path}: record must be a JSON object")
             result.append((path, value))
         for path in sorted(directory.rglob("*.jsonl")):
+            ensure_no_symlink(path)
             try:
                 lines = path.read_text(encoding="utf-8").splitlines()
             except OSError as exc:
@@ -123,7 +145,9 @@ def validate_all() -> list[dict[str, str]]:
     by_id: dict[str, dict[str, Any]] = {}
     project_ids: set[str] = set()
 
-    for path in sorted((KNOWLEDGE / "projects").rglob("*.json")) if (KNOWLEDGE / "projects").exists() else []:
+    project_directory = KNOWLEDGE / "projects"
+    ensure_no_symlink(project_directory)
+    for path in sorted(project_directory.rglob("*.json")) if project_directory.exists() else []:
         profile = read_json(path)
         for message in schema_errors(profile, profile_schema):
             errors.append({"path": path.relative_to(ROOT).as_posix(), "error": message})
@@ -167,23 +191,39 @@ def validate_all() -> list[dict[str, str]]:
                     "error": f"relation {relation.get('type')} is not valid from {record.get('type')} to {target.get('type')}",
                 })
 
+    def has_successful_verification(action: dict[str, Any]) -> bool:
+        for relation in action.get("relations", []):
+            if relation.get("type") != "proven_by":
+                continue
+            verification = by_id.get(relation.get("target_id"))
+            if not isinstance(verification, dict) or verification.get("type") != "verification":
+                continue
+            workflow = verification.get("workflow")
+            if not isinstance(workflow, dict) or workflow.get("conclusion") != "success":
+                continue
+            tested_sha = verification.get("tested_sha")
+            if isinstance(tested_sha, str) and workflow.get("tested_sha") == tested_sha:
+                return True
+        return False
+
     for path, record in records:
         if record.get("type") != "finding" or record.get("lifecycle") != "closed":
             continue
-        resolved = [
+        resolved_actions = [
             by_id.get(rel.get("target_id"))
             for rel in record.get("relations", [])
             if rel.get("type") == "resolved_by"
         ]
-        direct_proof = any(rel.get("type") == "proven_by" for rel in record.get("relations", []))
         action_proof = any(
-            isinstance(action, dict) and any(rel.get("type") == "proven_by" for rel in action.get("relations", []))
-            for action in resolved
+            isinstance(action, dict)
+            and action.get("type") == "action"
+            and has_successful_verification(action)
+            for action in resolved_actions
         )
-        if not (direct_proof or action_proof):
+        if not action_proof:
             errors.append({
                 "path": path.relative_to(ROOT).as_posix(),
-                "error": "closed Finding requires direct proof or a resolved Action linked to Verification",
+                "error": "closed Finding requires a resolved Action linked to a successful Verification on its tested SHA",
             })
     return errors
 
@@ -198,7 +238,7 @@ def build_index() -> dict[str, Any]:
             "id": record["id"],
             "type": record["type"],
             "project_id": record["project_id"],
-            "title": record["title"],
+            "title": redact_excerpt(record["title"], maximum=240),
             "summary": record["summary"],
             "assessment": record["assessment"],
             "lifecycle": record["lifecycle"],
@@ -268,11 +308,39 @@ def redact_excerpt(value: str, maximum: int = 1200) -> str:
     return redacted[:maximum]
 
 
+def registered_project_ids() -> set[str]:
+    """Return project IDs from validated, repository-registered project profiles."""
+    directory = KNOWLEDGE / "projects"
+    ensure_no_symlink(directory)
+    if not directory.is_dir():
+        raise KnowledgeError("knowledge/projects must contain registered project profiles")
+    schema = load_schema(PROFILE_SCHEMA)
+    project_ids: set[str] = set()
+    for path in sorted(directory.rglob("*.json")):
+        profile = read_json(path)
+        if not isinstance(profile, dict):
+            raise KnowledgeError(f"{path}: project profile must be an object")
+        errors = schema_errors(profile, schema)
+        if errors:
+            raise KnowledgeError(f"{path}: invalid project profile: " + "; ".join(errors))
+        project_id = profile.get("project_id")
+        if not isinstance(project_id, str) or not project_id:
+            raise KnowledgeError(f"{path}: project_id is required")
+        if project_id in project_ids:
+            raise KnowledgeError(f"duplicate registered project_id: {project_id}")
+        project_ids.add(project_id)
+    if not project_ids:
+        raise KnowledgeError("no registered project profiles found")
+    return project_ids
+
+
 def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
     required = ("project_id", "provider", "source_id", "source_url", "title", "body")
     missing = [key for key in required if not isinstance(payload.get(key), str) or not payload[key].strip()]
     if missing:
         raise KnowledgeError("missing non-empty intake fields: " + ", ".join(missing))
+    if payload["project_id"] not in registered_project_ids():
+        raise KnowledgeError(f"unregistered project_id: {payload['project_id']}")
     if len(payload["body"]) > 300_000:
         raise KnowledgeError("source body exceeds the 300 KB intake limit")
     parsed = urlparse(payload["source_url"])
@@ -317,7 +385,7 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
         "id": signal_id,
         "type": "signal",
         "project_id": payload["project_id"],
-        "title": payload["title"][:240],
+        "title": redact_excerpt(payload["title"], maximum=240),
         "summary": excerpt,
         "assessment": "observed",
         "lifecycle": "untriaged",
@@ -354,6 +422,7 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
 def validate_receipts() -> list[dict[str, str]]:
     schema = load_schema(RECEIPT_SCHEMA)
     directory = KNOWLEDGE / "execution-receipts"
+    ensure_no_symlink(directory)
     if not directory.exists():
         return []
     errors: list[dict[str, str]] = []
@@ -365,6 +434,8 @@ def validate_receipts() -> list[dict[str, str]]:
             tested_sha = receipt.get("tested_sha")
             if not tested_sha:
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "verified/merged/deployed receipt requires tested_sha"})
+            if receipt.get("status") == "verified" and tested_sha != receipt.get("head_sha"):
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "verified receipt tested_sha must equal head_sha"})
             successful = [
                 check for check in receipt.get("checks", [])
                 if check.get("status") == "success" and check.get("tested_sha") == tested_sha
