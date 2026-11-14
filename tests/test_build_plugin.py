@@ -88,9 +88,10 @@ def test_claude_manifest_registers_agents_from_plugin_root(tmp_path: Path):
     root_agents.mkdir(parents=True)
     adapters.mkdir(parents=True)
 
-    upstream_names = ("comprehension.md", "design_critic.md")
+    upstream_names = ("comprehension.md", "design_critic.md", "bootstrap_orchestrator.md")
     for name in upstream_names:
         (upstream_agents / name).write_text("upstream agent", encoding="utf-8")
+    (root_agents / "bootstrap_orchestrator.md").write_text("existing root agent", encoding="utf-8")
     local_names = (
         ("implementation-verifier.md", "egm-implementation-verifier.md"),
         ("knowledge-integrity-auditor.md", "egm-knowledge-integrity-auditor.md"),
@@ -110,10 +111,13 @@ def test_claude_manifest_registers_agents_from_plugin_root(tmp_path: Path):
     assert refs == [
         "./agents/comprehension.md",
         "./agents/design_critic.md",
+        "./agents/egm-upstream-bootstrap_orchestrator.md",
         "./agents/egm-implementation-verifier.md",
         "./agents/egm-knowledge-integrity-auditor.md",
         "./agents/egm-root-cause-investigator.md",
     ]
-    assert all((root_agents / name).is_file() for name in upstream_names)
+    assert all((root_agents / name).is_file() for name in upstream_names if name != "bootstrap_orchestrator.md")
+    assert (root_agents / "bootstrap_orchestrator.md").read_text(encoding="utf-8") == "existing root agent"
+    assert (root_agents / "egm-upstream-bootstrap_orchestrator.md").read_text(encoding="utf-8") == "upstream agent"
     assert all((root_agents / target_name).is_file() for _, target_name in local_names)
     assert not upstream_agents.exists() or not any(upstream_agents.iterdir())
