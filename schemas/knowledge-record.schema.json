@@ -433,6 +433,72 @@
         }
       },
       "additionalProperties": false
+    },
+    "closure_mode": {
+      "enum": [
+        "code_defect",
+        "alternate_proof"
+      ]
+    },
+    "alternate_closure_proof": {
+      "type": "object",
+      "required": [
+        "owner",
+        "decision_or_control_id",
+        "evidence_ids",
+        "test_limitation",
+        "residual_risk"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_or_control_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,79}$"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{2,79}$"
+          }
+        },
+        "test_limitation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "residual_risk": {
+          "type": "boolean"
+        },
+        "reassessment_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "residual_risk": {
+                "const": true
+              }
+            },
+            "required": [
+              "residual_risk"
+            ]
+          },
+          "then": {
+            "required": [
+              "reassessment_at"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
     }
   },
   "allOf": [
@@ -600,8 +666,49 @@
       "then": {
         "required": [
           "tested_sha",
-          "workflow",
-          "target_inclusion"
+          "workflow"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "finding"
+          },
+          "lifecycle": {
+            "const": "closed"
+          }
+        },
+        "required": [
+          "type",
+          "lifecycle"
+        ]
+      },
+      "then": {
+        "required": [
+          "closure_mode"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "finding"
+          },
+          "closure_mode": {
+            "const": "alternate_proof"
+          }
+        },
+        "required": [
+          "type",
+          "closure_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "alternate_closure_proof"
         ]
       }
     }
