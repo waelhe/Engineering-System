@@ -395,6 +395,44 @@
         "verified_provider_metadata",
         "system_generated"
       ]
+    },
+    "target_inclusion": {
+      "type": "object",
+      "required": [
+        "target_branch",
+        "target_sha",
+        "tested_sha",
+        "included",
+        "proof_url",
+        "verified_at"
+      ],
+      "properties": {
+        "target_branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tested_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "included": {
+          "const": true
+        },
+        "proof_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "verified_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "allOf": [
@@ -562,7 +600,8 @@
       "then": {
         "required": [
           "tested_sha",
-          "workflow"
+          "workflow",
+          "target_inclusion"
         ]
       }
     }
