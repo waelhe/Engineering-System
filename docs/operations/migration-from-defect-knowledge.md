@@ -25,9 +25,9 @@ The current historical material is in waelhe/app-java-v3, primarily docs/governa
 
 1. Snapshot source repository refs, branch heads, PR states and file digests.
 2. Inventory every record and references before transformation.
-3. Preserve original identifiers in legacy_ids and exact source URLs/SHAs.
+3. Preserve each original identifier in the singular `legacy_id` field and exact source URLs/SHAs.
 4. Convert only records whose structure and provenance are understood.
-5. Mark uncertain claims as suspected/needs_triage; never upgrade confidence.
+5. Mark uncertain claims with `assessment: suspected`; use lifecycle `untriaged` until triage begins or `investigating` while active investigation is underway. `needs_triage` is not a supported lifecycle value. Never upgrade confidence during migration.
 6. Deduplicate canonical entities without deleting source observations.
 7. Compare source and destination counts by record class and reference graph.
 8. Run validators and human sample review of every entity family.
