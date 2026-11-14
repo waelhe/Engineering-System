@@ -217,7 +217,7 @@ def prepare_branch(repo: str, token: str, run_id: str, run_attempt: str) -> tupl
     return branch, base_branch
 
 def pending_intake_signal_paths(repo: str, token: str, base_branch: str) -> set[str]:
-    """Return Signal paths already present in open, trusted intake draft PRs.
+    """Return Signal paths already present in qualifying open, trusted intake PRs.
 
     PR file metadata is treated strictly as data. This privileged collector
     never fetches, checks out, merges or executes a pending intake branch.
@@ -243,7 +243,12 @@ def pending_intake_signal_paths(repo: str, token: str, base_branch: str) -> set[
             continue
         for item in api_pages(f"/repos/{repo}/pulls/{number}/files", token):
             filename = item.get("filename")
-            if isinstance(filename, str) and filename.startswith("knowledge/inbox/") and filename.endswith(".json"):
+            if (
+                item.get("status") != "removed"
+                and isinstance(filename, str)
+                and filename.startswith("knowledge/inbox/")
+                and filename.endswith(".json")
+            ):
                 pending.add(filename)
     return pending
 
