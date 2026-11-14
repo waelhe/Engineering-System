@@ -203,21 +203,39 @@ def validate_all() -> list[dict[str, str]]:
                 continue
             tested_sha = verification.get("tested_sha")
             inclusion = verification.get("target_inclusion")
+            target_sha = inclusion.get("target_sha") if isinstance(inclusion, dict) else None
+            proof_url = inclusion.get("proof_url") if isinstance(inclusion, dict) else None
+            proof_source_matches = any(
+                isinstance(source, dict)
+                and source.get("kind") == "commit"
+                and source.get("uri") == proof_url
+                and source.get("commit_sha") == target_sha
+                for source in verification.get("sources", [])
+            )
+            compare_proof_matches = (
+                isinstance(tested_sha, str)
+                and isinstance(target_sha, str)
+                and isinstance(proof_url, str)
+                and proof_url.endswith(f"/compare/{tested_sha}...{target_sha}")
+            )
             if (
                 isinstance(tested_sha, str)
                 and workflow.get("tested_sha") == tested_sha
                 and isinstance(inclusion, dict)
                 and inclusion.get("included") is True
                 and inclusion.get("tested_sha") == tested_sha
-                and isinstance(inclusion.get("target_sha"), str)
-                and re.fullmatch(r"[0-9a-f]{40}", inclusion["target_sha"])
+                and isinstance(target_sha, str)
+                and re.fullmatch(r"[0-9a-f]{40}", target_sha)
                 and isinstance(inclusion.get("target_branch"), str)
                 and bool(inclusion["target_branch"].strip())
-                and isinstance(inclusion.get("proof_url"), str)
-                and inclusion["proof_url"].startswith("https://")
-                and isinstance(inclusion.get("verified_at"), str)
+                and proof_url.startswith("https://") if isinstance(proof_url, str) else False
             ):
-                return True
+                if (
+                    compare_proof_matches
+                    and proof_source_matches
+                    and isinstance(inclusion.get("verified_at"), str)
+                ):
+                    return True
         return False
 
     for path, record in records:
