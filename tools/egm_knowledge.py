@@ -212,11 +212,36 @@ def validate_all() -> list[dict[str, str]]:
                 and source.get("commit_sha") == target_sha
                 for source in verification.get("sources", [])
             )
+            comparison_status = inclusion.get("comparison_status") if isinstance(inclusion, dict) else None
+            ahead_by = inclusion.get("ahead_by") if isinstance(inclusion, dict) else None
+            behind_by = inclusion.get("behind_by") if isinstance(inclusion, dict) else None
+            compare_result_matches = (
+                type(ahead_by) is int
+                and type(behind_by) is int
+                and behind_by == 0
+                and (
+                    (
+                        comparison_status == "ahead"
+                        and ahead_by > 0
+                        and isinstance(tested_sha, str)
+                        and isinstance(target_sha, str)
+                        and tested_sha != target_sha
+                    )
+                    or (
+                        comparison_status == "identical"
+                        and ahead_by == 0
+                        and isinstance(tested_sha, str)
+                        and isinstance(target_sha, str)
+                        and tested_sha == target_sha
+                    )
+                )
+            )
             compare_proof_matches = (
                 isinstance(tested_sha, str)
                 and isinstance(target_sha, str)
                 and isinstance(proof_url, str)
                 and proof_url.endswith(f"/compare/{tested_sha}...{target_sha}")
+                and compare_result_matches
             )
             proof_url_is_https = isinstance(proof_url, str) and proof_url.startswith("https://")
             if (
