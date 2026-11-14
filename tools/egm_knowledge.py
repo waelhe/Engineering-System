@@ -202,7 +202,21 @@ def validate_all() -> list[dict[str, str]]:
             if not isinstance(workflow, dict) or workflow.get("conclusion") != "success":
                 continue
             tested_sha = verification.get("tested_sha")
-            if isinstance(tested_sha, str) and workflow.get("tested_sha") == tested_sha:
+            inclusion = verification.get("target_inclusion")
+            if (
+                isinstance(tested_sha, str)
+                and workflow.get("tested_sha") == tested_sha
+                and isinstance(inclusion, dict)
+                and inclusion.get("included") is True
+                and inclusion.get("tested_sha") == tested_sha
+                and isinstance(inclusion.get("target_sha"), str)
+                and re.fullmatch(r"[0-9a-f]{40}", inclusion["target_sha"])
+                and isinstance(inclusion.get("target_branch"), str)
+                and bool(inclusion["target_branch"].strip())
+                and isinstance(inclusion.get("proof_url"), str)
+                and inclusion["proof_url"].startswith("https://")
+                and isinstance(inclusion.get("verified_at"), str)
+            ):
                 return True
         return False
 
