@@ -78,16 +78,42 @@ def test_export_uses_pinned_git_tree_not_mutable_worktree(tmp_path: Path, monkey
     assert not (destination / "scripts" / "untracked.py").exists()
 
 
-def test_claude_manifest_registers_all_local_agent_adapters(tmp_path: Path):
-    manifest = tmp_path / "plugin.json"
+def test_claude_manifest_registers_agents_from_plugin_root(tmp_path: Path):
+    stage = tmp_path / "stage"
+    manifest_directory = stage / ".claude-plugin"
+    upstream_agents = manifest_directory / "agents"
+    root_agents = stage / "agents"
+    adapters = tmp_path / "adapters"
+    upstream_agents.mkdir(parents=True)
+    root_agents.mkdir(parents=True)
+    adapters.mkdir(parents=True)
+
+    upstream_names = ("comprehension.md", "design_critic.md")
+    for name in upstream_names:
+        (upstream_agents / name).write_text("upstream agent", encoding="utf-8")
+    local_names = (
+        ("implementation-verifier.md", "egm-implementation-verifier.md"),
+        ("knowledge-integrity-auditor.md", "egm-knowledge-integrity-auditor.md"),
+        ("root-cause-investigator.md", "egm-root-cause-investigator.md"),
+    )
+    for source_name, _ in local_names:
+        (adapters / source_name).write_text("local adapter", encoding="utf-8")
+
+    manifest = manifest_directory / "plugin.json"
     manifest.write_text(json.dumps({
-        "agents": ["./.claude-plugin/agents/design_critic.md"]
+        "agents": [f"./.claude-plugin/agents/{name}" for name in upstream_names]
     }), encoding="utf-8")
 
-    register_claude_agents(manifest)
+    register_claude_agents(manifest, root_agents, adapters)
 
-    agents = json.loads(manifest.read_text(encoding="utf-8"))["agents"]
-    assert "./.claude-plugin/agents/design_critic.md" in agents
-    assert "./.claude-plugin/agents/implementation-verifier.md" in agents
-    assert "./.claude-plugin/agents/knowledge-integrity-auditor.md" in agents
-    assert "./.claude-plugin/agents/root-cause-investigator.md" in agents
+    refs = json.loads(manifest.read_text(encoding="utf-8"))["agents"]
+    assert refs == [
+        "./agents/comprehension.md",
+        "./agents/design_critic.md",
+        "./agents/egm-implementation-verifier.md",
+        "./agents/egm-knowledge-integrity-auditor.md",
+        "./agents/egm-root-cause-investigator.md",
+    ]
+    assert all((root_agents / name).is_file() for name in upstream_names)
+    assert all((root_agents / target_name).is_file() for _, target_name in local_names)
+    assert not upstream_agents.exists() or not any(upstream_agents.iterdir())
