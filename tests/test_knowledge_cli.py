@@ -230,6 +230,9 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
             "target_sha": "c" * 40,
             "tested_sha": tested_sha,
             "included": True,
+            "comparison_status": "ahead",
+            "ahead_by": 1,
+            "behind_by": 0,
             "proof_url": "https://github.com/owner/repo/compare/" + tested_sha + "..." + ("c" * 40),
             "verified_at": datetime.now(timezone.utc).isoformat(),
         },
@@ -260,6 +263,18 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
     assert any("closed code-defect Finding requires a resolved Action linked to successful Verification" in item["error"] for item in errors)
 
     verification["target_inclusion"]["included"] = True
+    verification["target_inclusion"]["comparison_status"] = "diverged"
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    errors = knowledge.validate_all()
+    assert any("closed code-defect Finding requires" in item["error"] for item in errors)
+
+    verification["target_inclusion"]["comparison_status"] = "ahead"
+    verification["target_inclusion"]["behind_by"] = 1
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    errors = knowledge.validate_all()
+    assert any("closed code-defect Finding requires" in item["error"] for item in errors)
+
+    verification["target_inclusion"]["behind_by"] = 0
     verification["sources"] = [
         source for source in verification["sources"]
         if source.get("kind") != "commit"
