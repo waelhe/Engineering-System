@@ -403,6 +403,9 @@
         "target_sha",
         "tested_sha",
         "included",
+        "comparison_status",
+        "ahead_by",
+        "behind_by",
         "proof_url",
         "verified_at"
       ],
@@ -430,6 +433,19 @@
         "verified_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "comparison_status": {
+          "enum": [
+            "ahead",
+            "identical"
+          ]
+        },
+        "ahead_by": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "behind_by": {
+          "const": 0
         }
       },
       "additionalProperties": false
