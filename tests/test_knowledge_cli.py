@@ -5,6 +5,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
+import pytest
 import tools.egm_knowledge as knowledge
 
 
@@ -18,6 +19,7 @@ def isolate_store(tmp_path: Path, monkeypatch) -> Path:
     schemas.mkdir()
     shutil.copy(REPO / "schemas/knowledge-record.schema.json", schemas)
     shutil.copy(REPO / "schemas/project-profile.schema.json", schemas)
+    shutil.copy(REPO / "schemas/execution-receipt.schema.json", schemas)
     for folder in knowledge.RECORD_DIRS:
         (root / "knowledge" / folder).mkdir(parents=True, exist_ok=True)
     (root / "knowledge/projects").mkdir(parents=True, exist_ok=True)
@@ -99,13 +101,15 @@ def test_signal_intake_is_idempotent_and_redacts_secrets(tmp_path, monkeypatch):
         "source_id": "review-comment-42",
         "source_url": "https://github.com/owner/repo/pull/7?token=unsafe#discussion_r42",
         "source_kind": "github_comment",
-        "title": "Potential credential leak",
+        "title": "Potential credential leak: Bearer abcdefghijklmnopqrstuvwxyz12345",
         "body": "Log contains ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 and must be reviewed."
     }
     outcome, path = knowledge.receive_signal(payload)
     assert outcome == "created"
     stored = json.loads(path.read_text(encoding="utf-8"))
     assert "[REDACTED_GITHUB_TOKEN]" in stored["summary"]
+    assert "abcdefghijklmnopqrstuvwxyz12345" not in stored["title"]
+    assert "Bearer [REDACTED]" in stored["title"]
     assert "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890" not in stored["summary"]
     assert "token=" not in stored["sources"][0]["uri"]
     duplicate, same_path = knowledge.receive_signal(payload)
@@ -132,6 +136,139 @@ def test_edited_signal_body_creates_a_new_immutable_snapshot(tmp_path, monkeypat
     assert len(list((root / "knowledge/inbox").glob("*.json"))) == 2
     records = [json.loads(path.read_text(encoding="utf-8")) for path in (root / "knowledge/inbox").glob("*.json")]
     assert len({record["payload_digest"] for record in records}) == 2
+
+
+def test_signal_intake_rejects_unregistered_project_without_writing(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    payload = {
+        "project_id": "not-registered",
+        "provider": "github",
+        "source_id": "review-comment-unknown-project",
+        "source_url": "https://github.com/owner/repo/pull/8",
+        "title": "Unregistered project",
+        "body": "An external signal for a project that is not registered.",
+    }
+
+    with pytest.raises(knowledge.KnowledgeError, match="unregistered project_id"):
+        knowledge.receive_signal(payload)
+
+    assert list((root / "knowledge/inbox").glob("*.json")) == []
+
+
+@pytest.mark.parametrize("suffix", [".json", ".jsonl"])
+def test_record_loader_rejects_symbolic_links_before_reading(tmp_path, monkeypatch, suffix):
+    root = isolate_store(tmp_path, monkeypatch)
+    external = tmp_path / f"external{suffix}"
+    external.write_text("{}" if suffix == ".json" else "{}\n", encoding="utf-8")
+    link = root / "knowledge" / "cases" / f"linked{suffix}"
+    link.symlink_to(external)
+
+    with pytest.raises(knowledge.KnowledgeError, match="symbolic links are not allowed"):
+        knowledge.iter_records()
+
+
+def _minimal_record(record_id, record_type, relations, lifecycle="investigating", **extra):
+    timestamp = datetime.now(timezone.utc).isoformat()
+    record = {
+        "schema_version": 1,
+        "id": record_id,
+        "type": record_type,
+        "project_id": "sample-project",
+        "title": f"Test {record_type}",
+        "summary": "Test record for verification closure semantics.",
+        "assessment": "verified" if record_type == "verification" else "observed",
+        "lifecycle": lifecycle,
+        "approval": "not_required",
+        "created_at": timestamp,
+        "updated_at": timestamp,
+        "actor": "test",
+        "tags": [],
+        "scope": {},
+        "sources": [{
+            "kind": "document",
+            "uri": "https://example.test/source",
+            "captured_at": timestamp,
+        }],
+        "relations": relations,
+    }
+    record.update(extra)
+    return record
+
+
+def test_closed_finding_requires_successful_verification_through_resolved_action(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    tested_sha = "a" * 40
+    finding = _minimal_record(
+        "finding-closure-test",
+        "finding",
+        [{"type": "resolved_by", "target_id": "action-closure-test"}],
+        lifecycle="closed",
+        completeness="complete",
+        claim="A regression defect has been repaired.",
+        impact="The affected behavior no longer fails.",
+    )
+    action = _minimal_record(
+        "action-closure-test",
+        "action",
+        [{"type": "proven_by", "target_id": "verification-closure-test"}],
+    )
+    verification = _minimal_record(
+        "verification-closure-test",
+        "verification",
+        [],
+        tested_sha=tested_sha,
+        workflow={
+            "name": "validation",
+            "run_id": "12345",
+            "conclusion": "success",
+            "tested_sha": tested_sha,
+            "url": "https://github.com/owner/repo/actions/runs/12345",
+        },
+    )
+    (root / "knowledge/findings/finding-closure-test.json").write_text(json.dumps(finding), encoding="utf-8")
+    (root / "knowledge/actions/action-closure-test.json").write_text(json.dumps(action), encoding="utf-8")
+    verification_path = root / "knowledge/verifications/verification-closure-test.json"
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+
+    assert not any("closed Finding requires" in item["error"] for item in knowledge.validate_all())
+
+    verification["workflow"]["conclusion"] = "failure"
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    errors = knowledge.validate_all()
+    assert any("closed Finding requires a resolved Action linked to a successful Verification" in item["error"] for item in errors)
+
+
+def test_verified_receipt_requires_tested_sha_to_equal_head_sha(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    tested_sha = "b" * 40
+    receipt = {
+        "schema_version": 1,
+        "task_id": "receipt-task-1",
+        "project_id": "sample-project",
+        "repository": "owner/repo",
+        "tier": "T1",
+        "status": "verified",
+        "head_sha": "a" * 40,
+        "tested_sha": tested_sha,
+        "started_at": "2026-11-14T00:00:00Z",
+        "knowledge_pack": {"generated_at": "2026-11-14T00:00:00Z", "record_ids": []},
+        "checks": [{"name": "unit-tests", "status": "success", "tested_sha": tested_sha}],
+        "reviews": [],
+        "write_boundary": ["src/"],
+    }
+    directory = root / "knowledge/execution-receipts"
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / "receipt.json"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    errors = knowledge.validate_receipts()
+    assert any("verified receipt tested_sha must equal head_sha" in item["error"] for item in errors)
+
+    receipt["tested_sha"] = receipt["head_sha"]
+    receipt["checks"][0]["tested_sha"] = receipt["head_sha"]
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert knowledge.validate_receipts() == []
+
 
 
 def test_retrieval_ranks_exact_tags_and_scope(tmp_path, monkeypatch):
