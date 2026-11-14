@@ -319,6 +319,27 @@
         "properties": {
           "status": {
             "enum": [
+              "verified",
+              "merged",
+              "deployed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "tested_sha"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
               "merged",
               "deployed"
             ]
