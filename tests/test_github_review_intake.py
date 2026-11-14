@@ -231,3 +231,24 @@ def test_publish_batch_filters_only_pending_signals_and_publishes_new_signal(mon
     assert ("push", "--set-upstream", "origin", "automation/knowledge-intake-456-1") in calls
     assert "knowledge/inbox/sig-pending.json" not in staged_paths
     assert "knowledge/inbox/sig-new.json" in staged_paths
+
+
+def test_pending_intake_pr_ignores_removed_signal_files(monkeypatch):
+    pages = {
+        "/repos/owner/repo/pulls?state=open&sort=created&direction=desc": [{
+            "number": 21,
+            "draft": False,
+            "base": {"ref": "main", "repo": {"full_name": "owner/repo"}},
+            "head": {"ref": "automation/knowledge-intake-321-1", "repo": {"full_name": "owner/repo"}},
+        }],
+        "/repos/owner/repo/pulls/21/files": [
+            {"filename": "knowledge/inbox/sig-removed.json", "status": "removed"},
+            {"filename": "knowledge/inbox/sig-current.json", "status": "added"},
+        ],
+    }
+
+    monkeypatch.setattr(intake, "api_pages", lambda path, token: pages[path])
+
+    pending = intake.pending_intake_signal_paths("owner/repo", "token", "main")
+
+    assert pending == {"knowledge/inbox/sig-current.json"}
