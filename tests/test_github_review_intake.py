@@ -124,7 +124,7 @@ def test_publish_batch_defers_when_same_signal_is_in_a_pending_intake_pr(monkeyp
             return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
         if args[:3] == ("diff", "--cached", "--name-only"):
             return subprocess.CompletedProcess(
-                args, 0, stdout="knowledge/inbox/sig-same-snapshot.json\\0", stderr=""
+                args, 0, stdout="knowledge/inbox/sig-same-snapshot.json\0", stderr=""
             )
         return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
 
