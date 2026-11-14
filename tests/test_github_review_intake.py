@@ -1,5 +1,6 @@
 from __future__ import annotations
 import json
+import subprocess
 
 import pytest
 from urllib.parse import parse_qs, urlsplit
@@ -111,6 +112,66 @@ def test_source_payload_redacts_secrets_before_its_size_limit():
 
     assert "SOURCE-PAYLOAD-SECRET" not in payload["body"]
     assert "BEGIN PRIVATE KEY" not in payload["body"]
+
+
+
+def test_publish_batch_defers_when_same_signal_is_in_a_pending_intake_pr(monkeypatch):
+    calls = []
+
+    def fake_git(*args, **kwargs):
+        calls.append(args)
+        if args[:3] == ("diff", "--cached", "--quiet"):
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
+        if args[:3] == ("diff", "--cached", "--name-only"):
+            return subprocess.CompletedProcess(
+                args, 0, stdout="knowledge/inbox/sig-same-snapshot.json\\0", stderr=""
+            )
+        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    def fake_api_pages(path, token):
+        if path.startswith("/repos/owner/repo/pulls?"):
+            return [{
+                "number": 17,
+                "draft": True,
+                "base": {"ref": "main", "repo": {"full_name": "owner/repo"}},
+                "head": {"ref": "automation/knowledge-intake-123-1", "repo": {"full_name": "owner/repo"}},
+            }]
+        if path == "/repos/owner/repo/pulls/17/files":
+            return [{"filename": "knowledge/inbox/sig-same-snapshot.json"}]
+        raise AssertionError(f"unexpected API page: {path}")
+
+    monkeypatch.setattr(intake, "git", fake_git)
+    monkeypatch.setattr(intake, "api_pages", fake_api_pages)
+
+    result = intake.publish_batch("owner/repo", "token", "automation/knowledge-intake-456-1", "main")
+
+    assert result == {
+        "deferred": True,
+        "reason": "equivalent_signal_batch_pending",
+        "overlapping_signal_count": 1,
+    }
+    assert not any(args and args[0] in {"commit", "push"} for args in calls)
+
+
+def test_pending_intake_pr_does_not_suppress_unrelated_signal_paths(monkeypatch):
+    pages = {
+        "/repos/owner/repo/pulls?state=open&sort=created&direction=desc": [{
+            "number": 18,
+            "draft": True,
+            "base": {"ref": "main", "repo": {"full_name": "owner/repo"}},
+            "head": {"ref": "automation/knowledge-intake-123-1", "repo": {"full_name": "owner/repo"}},
+        }],
+        "/repos/owner/repo/pulls/18/files": [
+            {"filename": "knowledge/inbox/sig-another-snapshot.json"}
+        ],
+    }
+
+    monkeypatch.setattr(intake, "api_pages", lambda path, token: pages[path])
+
+    pending = intake.pending_intake_signal_paths("owner/repo", "token", "main")
+
+    assert pending == {"knowledge/inbox/sig-another-snapshot.json"}
+
 
 
 def test_review_signal_binds_author_sha_and_source_link():
