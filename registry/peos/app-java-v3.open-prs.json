@@ -1,0 +1,1683 @@
+{
+  "schema_version": 1,
+  "kind": "pull_request_registry",
+  "snapshot_date": "2026-11-14",
+  "source": {
+    "repository": "waelhe/app-java-v3",
+    "ref": "main",
+    "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+    "endpoint": "GET /repos/waelhe/app-java-v3/pulls?state=open&per_page=100&sort=updated&direction=desc",
+    "snapshot_date": "2026-11-14"
+  },
+  "records": [
+    {
+      "number": 834,
+      "title": "governance(defect-knowledge): close the defect learning loop",
+      "url": "https://github.com/waelhe/app-java-v3/pull/834",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "governance/closed-loop-defect-knowledge-20261113",
+        "sha": "665e1778361920b169f134e801842ec50dd8d80a"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-13T07:52:36Z",
+      "updated_at": "2026-11-14T12:39:41Z",
+      "classification": "defect_knowledge_governance",
+      "notes": "Closed-loop defect knowledge and intake.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        816,
+        826,
+        746,
+        806,
+        811,
+        819,
+        821,
+        822,
+        823,
+        829,
+        813
+      ],
+      "checks": [
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "665e1778361920b169f134e801842ec50dd8d80a"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "in_progress",
+          "head_sha": "665e1778361920b169f134e801842ec50dd8d80a"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "in_progress",
+          "head_sha": "665e1778361920b169f134e801842ec50dd8d80a"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "665e1778361920b169f134e801842ec50dd8d80a"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "in_progress",
+          "head_sha": "665e1778361920b169f134e801842ec50dd8d80a"
+        },
+        {
+          "name": "CI",
+          "conclusion": "in_progress",
+          "head_sha": "665e1778361920b169f134e801842ec50dd8d80a"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "665e1778361920b169f134e801842ec50dd8d80a"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 826,
+      "title": "docs(governance): the 2026-11-12 follow-up adversarial review ledger + owner-gate recommendations (W7/W8)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/826",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "review/adversarial-behavioral-followup-20261112",
+        "sha": "2f61872ccb6ce6ca5fc6e109467c5f8d38dc4d2a"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6"
+      },
+      "base_main_delta": {
+        "status": "identical",
+        "ahead_by": 0,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-12T07:49:50Z",
+      "updated_at": "2026-11-14T12:37:39Z",
+      "classification": "adversarial_followup_ledger",
+      "notes": "Governance owner-gate follow-up.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        816,
+        813,
+        817,
+        818,
+        825,
+        819,
+        820,
+        821,
+        822,
+        823,
+        824
+      ],
+      "checks": [
+        {
+          "name": "Integration Test",
+          "conclusion": "in_progress",
+          "head_sha": "2f61872ccb6ce6ca5fc6e109467c5f8d38dc4d2a"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "in_progress",
+          "head_sha": "2f61872ccb6ce6ca5fc6e109467c5f8d38dc4d2a"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "in_progress",
+          "head_sha": "2f61872ccb6ce6ca5fc6e109467c5f8d38dc4d2a"
+        },
+        {
+          "name": "CI",
+          "conclusion": "queued",
+          "head_sha": "2f61872ccb6ce6ca5fc6e109467c5f8d38dc4d2a"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "2f61872ccb6ce6ca5fc6e109467c5f8d38dc4d2a"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 827,
+      "title": "fix(payments): answer 503 SU-001 on the consumer money path when no PSP channel is bound (W3)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/827",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-w3-psp-503-processintent-20261112",
+        "sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "445f421d67ad58bd533d42be9d5bbf6d268d9161"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 2,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-12T09:05:43Z",
+      "updated_at": "2026-11-14T11:39:37Z",
+      "classification": "business_logic_fix",
+      "notes": "PSP absence error contract.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        826,
+        816
+      ],
+      "checks": [
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 833,
+      "title": "fix(media): the account-erasure flow's media purge — the tombstone state and the objects' destruction (G3)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/833",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-g3-media-purge-scope-20261112",
+        "sha": "3ee5713760e17164811a4362f9f601fb782efb88"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-12T13:17:12Z",
+      "updated_at": "2026-11-14T11:21:11Z",
+      "classification": "privacy_security_fix",
+      "notes": "Account-erasure media purge.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        826,
+        241
+      ],
+      "checks": [
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 819,
+      "title": "fix(graphql): map the house ApiProblemDetail family onto the canonical taxonomy (D1)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/819",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-d1-graphql-problem-family-20261110",
+        "sha": "ba53d7bbd285c97f0a6fafcec1b346a99ad57c23"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "445f421d67ad58bd533d42be9d5bbf6d268d9161"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 2,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-10T05:50:38Z",
+      "updated_at": "2026-11-14T11:11:41Z",
+      "classification": "api_contract_fix",
+      "notes": "GraphQL error taxonomy.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        816
+      ],
+      "checks": [
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "ba53d7bbd285c97f0a6fafcec1b346a99ad57c23"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "ba53d7bbd285c97f0a6fafcec1b346a99ad57c23"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "ba53d7bbd285c97f0a6fafcec1b346a99ad57c23"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "ba53d7bbd285c97f0a6fafcec1b346a99ad57c23"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "ba53d7bbd285c97f0a6fafcec1b346a99ad57c23"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "ba53d7bbd285c97f0a6fafcec1b346a99ad57c23"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 832,
+      "title": "fix(ledger,orders,payments): the delivery fee's D4 modeling — fee split, carrier compensation, order-leg event binding (A1)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/832",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-a1-delivery-fee-ledger-modeling-20261112",
+        "sha": "538431603531caf052fc4b868a41a673335f3f29"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-12T13:07:51Z",
+      "updated_at": "2026-11-14T11:08:41Z",
+      "classification": "financial_domain_fix",
+      "notes": "Delivery fee ledger modelling.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        826
+      ],
+      "checks": [
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "538431603531caf052fc4b868a41a673335f3f29"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "538431603531caf052fc4b868a41a673335f3f29"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "538431603531caf052fc4b868a41a673335f3f29"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "538431603531caf052fc4b868a41a673335f3f29"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "538431603531caf052fc4b868a41a673335f3f29"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "538431603531caf052fc4b868a41a673335f3f29"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "538431603531caf052fc4b868a41a673335f3f29"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 822,
+      "title": "fix(identity): fail-fast on the mail link origin in every deployable profile (W2)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/822",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-w2-identity-mail-base-url-prod-20261110",
+        "sha": "3fc3c9e5637e17fba412440c2b1c737314591a47"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "445f421d67ad58bd533d42be9d5bbf6d268d9161"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 2,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-10T08:17:26Z",
+      "updated_at": "2026-11-13T20:39:56Z",
+      "classification": "identity_configuration_fix",
+      "notes": "Mail link origin validation.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        816,
+        820,
+        821
+      ],
+      "checks": [
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "3fc3c9e5637e17fba412440c2b1c737314591a47"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "3fc3c9e5637e17fba412440c2b1c737314591a47"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "3fc3c9e5637e17fba412440c2b1c737314591a47"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "3fc3c9e5637e17fba412440c2b1c737314591a47"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "3fc3c9e5637e17fba412440c2b1c737314591a47"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "3fc3c9e5637e17fba412440c2b1c737314591a47"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 787,
+      "title": "release(commerce): promote full commerce integration to main",
+      "url": "https://github.com/waelhe/app-java-v3/pull/787",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "integration/saleor-full-commerce-20261021",
+        "sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-10-31T18:07:17Z",
+      "updated_at": "2026-11-13T16:58:01Z",
+      "classification": "release_candidate",
+      "notes": "Full commerce release candidate; merge blocked by divergence.",
+      "merge_policy": "release_candidate_not_mergeable",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": false,
+      "references_prs": [],
+      "checks": [
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        },
+        {
+          "name": "Android client",
+          "conclusion": "success",
+          "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 837,
+      "title": "docs(governance): refresh commerce campaign status and shard evidence",
+      "url": "https://github.com/waelhe/app-java-v3/pull/837",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "docs/refresh-commerce-status-20261113",
+        "sha": "1e9440084775b715116fbd2c5664a0a3b511a7a9"
+      },
+      "base": {
+        "branch": "integration/saleor-full-commerce-20261021",
+        "sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+      },
+      "base_main_delta": null,
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-13T16:54:49Z",
+      "updated_at": "2026-11-13T16:55:00Z",
+      "classification": "stacked_governance_docs",
+      "notes": "Based on the #787 commerce branch, not main.",
+      "merge_policy": "stacked_into_commerce_branch",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        836,
+        787,
+        811
+      ],
+      "checks": [
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "1e9440084775b715116fbd2c5664a0a3b511a7a9"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "1e9440084775b715116fbd2c5664a0a3b511a7a9"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "1e9440084775b715116fbd2c5664a0a3b511a7a9"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "1e9440084775b715116fbd2c5664a0a3b511a7a9"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 811,
+      "title": "review(commerce): commerce-review-06-orders-governance-support (99 files)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/811",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "review/commerce-review-06-orders-governance-support-20261101-w4",
+        "sha": "a443a601c673239d30767334487b813d4e950ca2"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-01T10:20:49Z",
+      "updated_at": "2026-11-13T16:50:05Z",
+      "classification": "review_shard_tracking",
+      "notes": "Permanent review-coverage shard; DO_NOT_MERGE.",
+      "merge_policy": "tracking_only",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        787,
+        806,
+        813
+      ],
+      "checks": [
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "a443a601c673239d30767334487b813d4e950ca2"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "failure",
+          "head_sha": "a443a601c673239d30767334487b813d4e950ca2"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "failure",
+          "head_sha": "a443a601c673239d30767334487b813d4e950ca2"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "failure",
+          "head_sha": "a443a601c673239d30767334487b813d4e950ca2"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "failure",
+          "head_sha": "a443a601c673239d30767334487b813d4e950ca2"
+        },
+        {
+          "name": "CI",
+          "conclusion": "failure",
+          "head_sha": "a443a601c673239d30767334487b813d4e950ca2"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "a443a601c673239d30767334487b813d4e950ca2"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 810,
+      "title": "review(commerce): commerce-review-05-identity-console-pricing (98 files)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/810",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "review/commerce-review-05-identity-console-pricing-20261101-w4",
+        "sha": "91a084bc7469885022aab899a2552b7ace53e8db"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-01T10:20:47Z",
+      "updated_at": "2026-11-13T16:50:03Z",
+      "classification": "review_shard_tracking",
+      "notes": "Permanent review-coverage shard; DO_NOT_MERGE.",
+      "merge_policy": "tracking_only",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        787,
+        806,
+        813
+      ],
+      "checks": [
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "failure",
+          "head_sha": "91a084bc7469885022aab899a2552b7ace53e8db"
+        },
+        {
+          "name": "CI",
+          "conclusion": "failure",
+          "head_sha": "91a084bc7469885022aab899a2552b7ace53e8db"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "failure",
+          "head_sha": "91a084bc7469885022aab899a2552b7ace53e8db"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "failure",
+          "head_sha": "91a084bc7469885022aab899a2552b7ace53e8db"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "failure",
+          "head_sha": "91a084bc7469885022aab899a2552b7ace53e8db"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "91a084bc7469885022aab899a2552b7ace53e8db"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 809,
+      "title": "review(commerce): commerce-review-04-catalog-core-b (89 files)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/809",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "review/commerce-review-04-catalog-core-b-20261101-w4",
+        "sha": "28ce816759969a316a2126d55331b2592d9bf8d4"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-01T10:20:46Z",
+      "updated_at": "2026-11-13T16:50:00Z",
+      "classification": "review_shard_tracking",
+      "notes": "Permanent review-coverage shard; DO_NOT_MERGE.",
+      "merge_policy": "tracking_only",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        787,
+        806,
+        813
+      ],
+      "checks": [
+        {
+          "name": "Container Scan",
+          "conclusion": "failure",
+          "head_sha": "28ce816759969a316a2126d55331b2592d9bf8d4"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "failure",
+          "head_sha": "28ce816759969a316a2126d55331b2592d9bf8d4"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "failure",
+          "head_sha": "28ce816759969a316a2126d55331b2592d9bf8d4"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "failure",
+          "head_sha": "28ce816759969a316a2126d55331b2592d9bf8d4"
+        },
+        {
+          "name": "CI",
+          "conclusion": "failure",
+          "head_sha": "28ce816759969a316a2126d55331b2592d9bf8d4"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "28ce816759969a316a2126d55331b2592d9bf8d4"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 808,
+      "title": "review(commerce): commerce-review-03-catalog-core-a (87 files)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/808",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "review/commerce-review-03-catalog-core-a-20261101-w4",
+        "sha": "c2c0749e149d3a39764211d7843feff95995ca4b"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-01T10:20:44Z",
+      "updated_at": "2026-11-13T16:49:57Z",
+      "classification": "review_shard_tracking",
+      "notes": "Permanent review-coverage shard; DO_NOT_MERGE.",
+      "merge_policy": "tracking_only",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        787,
+        813
+      ],
+      "checks": [
+        {
+          "name": "CI",
+          "conclusion": "failure",
+          "head_sha": "c2c0749e149d3a39764211d7843feff95995ca4b"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "failure",
+          "head_sha": "c2c0749e149d3a39764211d7843feff95995ca4b"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "failure",
+          "head_sha": "c2c0749e149d3a39764211d7843feff95995ca4b"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "failure",
+          "head_sha": "c2c0749e149d3a39764211d7843feff95995ca4b"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "failure",
+          "head_sha": "c2c0749e149d3a39764211d7843feff95995ca4b"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "c2c0749e149d3a39764211d7843feff95995ca4b"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 807,
+      "title": "review(commerce): commerce-review-02-app-tests (98 files)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/807",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "review/commerce-review-02-app-tests-20261101-w4",
+        "sha": "6ab3ebba491b4e3da80763880d4ee5512a36625a"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-01T10:20:43Z",
+      "updated_at": "2026-11-13T16:49:55Z",
+      "classification": "review_shard_tracking",
+      "notes": "Permanent review-coverage shard; DO_NOT_MERGE.",
+      "merge_policy": "tracking_only",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        787,
+        806,
+        813
+      ],
+      "checks": [
+        {
+          "name": "CodeQL",
+          "conclusion": "failure",
+          "head_sha": "6ab3ebba491b4e3da80763880d4ee5512a36625a"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "failure",
+          "head_sha": "6ab3ebba491b4e3da80763880d4ee5512a36625a"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "failure",
+          "head_sha": "6ab3ebba491b4e3da80763880d4ee5512a36625a"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "failure",
+          "head_sha": "6ab3ebba491b4e3da80763880d4ee5512a36625a"
+        },
+        {
+          "name": "CI",
+          "conclusion": "failure",
+          "head_sha": "6ab3ebba491b4e3da80763880d4ee5512a36625a"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "6ab3ebba491b4e3da80763880d4ee5512a36625a"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 806,
+      "title": "review(commerce): commerce-review-01-app-main (97 files)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/806",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "review/commerce-review-01-app-main-20261101-w4",
+        "sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-01T10:20:41Z",
+      "updated_at": "2026-11-13T16:49:52Z",
+      "classification": "review_shard_tracking",
+      "notes": "Permanent review-coverage shard; DO_NOT_MERGE.",
+      "merge_policy": "tracking_only",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        787,
+        811,
+        813
+      ],
+      "checks": [
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+        },
+        {
+          "name": "Android client",
+          "conclusion": "success",
+          "head_sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "failure",
+          "head_sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "failure",
+          "head_sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+        },
+        {
+          "name": "CI",
+          "conclusion": "failure",
+          "head_sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "failure",
+          "head_sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "failure",
+          "head_sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "f1ad206d8b37ec245f3e0ac7c178619fe4b3ff9b"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 821,
+      "title": "fix(api): answer the house VAL-001 for request type-mismatch failures (D4)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/821",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-d4-type-mismatch-400-20261110",
+        "sha": "e72ff9409ed4be37c46937bb24e89d5c2dee5f53"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "445f421d67ad58bd533d42be9d5bbf6d268d9161"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 2,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-10T06:22:32Z",
+      "updated_at": "2026-11-13T12:34:05Z",
+      "classification": "api_contract_fix",
+      "notes": "Request type-mismatch response.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        816
+      ],
+      "checks": [
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "e72ff9409ed4be37c46937bb24e89d5c2dee5f53"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "e72ff9409ed4be37c46937bb24e89d5c2dee5f53"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "e72ff9409ed4be37c46937bb24e89d5c2dee5f53"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "e72ff9409ed4be37c46937bb24e89d5c2dee5f53"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "e72ff9409ed4be37c46937bb24e89d5c2dee5f53"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "e72ff9409ed4be37c46937bb24e89d5c2dee5f53"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 816,
+      "title": "docs(governance): register the 2026-11-10 deep adversarial behavioral review findings ledger (34 findings)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/816",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "review/adversarial-behavioral-deep-scan-20261110",
+        "sha": "624891063ac9c79cead99e1c666fa9045a23c51a"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "7e136440f9a834f123538e76a539acebefb7b76f"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 5,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-10T04:37:06Z",
+      "updated_at": "2026-11-13T11:30:47Z",
+      "classification": "adversarial_review_ledger",
+      "notes": "Governance findings ledger.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        817,
+        822,
+        818,
+        819,
+        820,
+        821,
+        787,
+        806,
+        813
+      ],
+      "checks": [
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "624891063ac9c79cead99e1c666fa9045a23c51a"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "624891063ac9c79cead99e1c666fa9045a23c51a"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "624891063ac9c79cead99e1c666fa9045a23c51a"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "624891063ac9c79cead99e1c666fa9045a23c51a"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "624891063ac9c79cead99e1c666fa9045a23c51a"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 835,
+      "title": "chore(actions): bump actions/setup-java from 6.1.0 to 6.2.0 in the actions group",
+      "url": "https://github.com/waelhe/app-java-v3/pull/835",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "dependabot/github_actions/main/actions-1c61709ebb",
+        "sha": "6b9c797b49316d592c5f74474c46072fed2af58f"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-13T08:20:44Z",
+      "updated_at": "2026-11-13T08:20:52Z",
+      "classification": "dependency_update",
+      "notes": "GitHub Actions dependency update.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [],
+      "checks": [
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "6b9c797b49316d592c5f74474c46072fed2af58f"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "6b9c797b49316d592c5f74474c46072fed2af58f"
+        },
+        {
+          "name": "Android client",
+          "conclusion": "success",
+          "head_sha": "6b9c797b49316d592c5f74474c46072fed2af58f"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "6b9c797b49316d592c5f74474c46072fed2af58f"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "6b9c797b49316d592c5f74474c46072fed2af58f"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "skipped",
+          "head_sha": "6b9c797b49316d592c5f74474c46072fed2af58f"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "6b9c797b49316d592c5f74474c46072fed2af58f"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 828,
+      "title": "fix(payments): own the retry transaction on the carriers' refund overload (A4/B2)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/828",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-a4-refund-requires-new-20261112",
+        "sha": "b94ba1459e6093c812711cec0f6e9be4fb7926cf"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-12T09:20:10Z",
+      "updated_at": "2026-11-13T07:30:53Z",
+      "classification": "financial_domain_fix",
+      "notes": "Retry transaction boundary.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        826,
+        816,
+        431
+      ],
+      "checks": [
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "b94ba1459e6093c812711cec0f6e9be4fb7926cf"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "b94ba1459e6093c812711cec0f6e9be4fb7926cf"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "b94ba1459e6093c812711cec0f6e9be4fb7926cf"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "b94ba1459e6093c812711cec0f6e9be4fb7926cf"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "b94ba1459e6093c812711cec0f6e9be4fb7926cf"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "b94ba1459e6093c812711cec0f6e9be4fb7926cf"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "b94ba1459e6093c812711cec0f6e9be4fb7926cf"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 831,
+      "title": "fix(ledger): serialize the delivery refund-delta critical section with a per-batch advisory xact lock (A3)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/831",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-a3-refund-delta-advisory-lock-20261112",
+        "sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-12T12:58:27Z",
+      "updated_at": "2026-11-13T07:01:06Z",
+      "classification": "financial_domain_fix",
+      "notes": "Ledger concurrency serialization.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        826,
+        818,
+        816
+      ],
+      "checks": [
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 823,
+      "title": "test(payments,disputes): pin the V42 dedup serialization and the booking scope read (E1+E4)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/823",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-e1-e4-review-closure-tests-20261110",
+        "sha": "293f04eeb656566f92720ea4944be1bb127f8869"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-10T15:18:53Z",
+      "updated_at": "2026-11-13T06:21:49Z",
+      "classification": "regression_test",
+      "notes": "Payment/dispute serialization test.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        816,
+        817
+      ],
+      "checks": [
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "293f04eeb656566f92720ea4944be1bb127f8869"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "293f04eeb656566f92720ea4944be1bb127f8869"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "293f04eeb656566f92720ea4944be1bb127f8869"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "293f04eeb656566f92720ea4944be1bb127f8869"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "293f04eeb656566f92720ea4944be1bb127f8869"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "293f04eeb656566f92720ea4944be1bb127f8869"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "293f04eeb656566f92720ea4944be1bb127f8869"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 824,
+      "title": "test(notifications): real-PostgreSQL guard on the G4 purge lock advance (Testcontainers)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/824",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-notifications-purge-testcontainers-20261111",
+        "sha": "99bd0d5b1d5da7fbaf78e639249c829f9b51a983"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-11T11:05:58Z",
+      "updated_at": "2026-11-13T06:21:14Z",
+      "classification": "regression_test",
+      "notes": "Notification purge-lock Testcontainers test.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        817,
+        761,
+        762,
+        764,
+        816
+      ],
+      "checks": [
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "conclusion": "success",
+          "head_sha": "99bd0d5b1d5da7fbaf78e639249c829f9b51a983"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "99bd0d5b1d5da7fbaf78e639249c829f9b51a983"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "99bd0d5b1d5da7fbaf78e639249c829f9b51a983"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "99bd0d5b1d5da7fbaf78e639249c829f9b51a983"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "99bd0d5b1d5da7fbaf78e639249c829f9b51a983"
+        },
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "99bd0d5b1d5da7fbaf78e639249c829f9b51a983"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "99bd0d5b1d5da7fbaf78e639249c829f9b51a983"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    },
+    {
+      "number": 820,
+      "title": "test(payments): pin the terminal-state machine law exhaustively (E2)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/820",
+      "state": "open",
+      "draft": false,
+      "head": {
+        "branch": "agent/fix-e2-terminal-transitions-exhaustive-20261110",
+        "sha": "7b43f651db05729677240addd1f28325bf5dc99d"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "445f421d67ad58bd533d42be9d5bbf6d268d9161"
+      },
+      "base_main_delta": {
+        "status": "ahead",
+        "ahead_by": 2,
+        "behind_by": 0
+      },
+      "changed_files": null,
+      "commits": null,
+      "created_at": "2026-11-10T06:03:23Z",
+      "updated_at": "2026-11-13T05:57:46Z",
+      "classification": "regression_test",
+      "notes": "Terminal-state transition coverage.",
+      "merge_policy": "normal_review_required",
+      "allowed_to_merge": false,
+      "mergeable_snapshot": null,
+      "references_prs": [
+        816
+      ],
+      "checks": [
+        {
+          "name": "CI",
+          "conclusion": "success",
+          "head_sha": "7b43f651db05729677240addd1f28325bf5dc99d"
+        },
+        {
+          "name": "Container Scan",
+          "conclusion": "success",
+          "head_sha": "7b43f651db05729677240addd1f28325bf5dc99d"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "conclusion": "success",
+          "head_sha": "7b43f651db05729677240addd1f28325bf5dc99d"
+        },
+        {
+          "name": "Integration Test",
+          "conclusion": "success",
+          "head_sha": "7b43f651db05729677240addd1f28325bf5dc99d"
+        },
+        {
+          "name": "CodeQL",
+          "conclusion": "success",
+          "head_sha": "7b43f651db05729677240addd1f28325bf5dc99d"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "conclusion": "skipped",
+          "head_sha": "7b43f651db05729677240addd1f28325bf5dc99d"
+        }
+      ],
+      "review_current_head": "not_proven_by_snapshot"
+    }
+  ],
+  "anomalies": [
+    {
+      "id": "W0-PR-001",
+      "severity": "blocker",
+      "pr": 787,
+      "summary": "Commerce candidate diverges from current main by 432 commits ahead and 1 behind; GitHub reports mergeable=false. It remains a single full-release candidate."
+    },
+    {
+      "id": "W0-PR-002",
+      "severity": "policy",
+      "prs": [
+        806,
+        807,
+        808,
+        809,
+        810,
+        811
+      ],
+      "summary": "Six permanent review shards are tracking-only and explicitly DO_NOT_MERGE."
+    },
+    {
+      "id": "W0-PR-003",
+      "severity": "dependency",
+      "pr": 837,
+      "summary": "Documentation PR is stacked on the commerce candidate branch, not directly on main."
+    },
+    {
+      "id": "W0-PR-004",
+      "severity": "ci",
+      "pr": 834,
+      "summary": "The prior CI failure at DefectKnowledgeDocsGuardTest.proportionalityCountsMatchDerivedEnumeration was corrected by commit 665e1778361920b169f134e801842ec50dd8d80a. Run 43595907733 was in_progress at capture; do not mark the failure closed until it completes."
+    }
+  ],
+  "aggregate": {
+    "open_pr_count": 23,
+    "tracking_shards": [
+      806,
+      807,
+      808,
+      809,
+      810,
+      811
+    ],
+    "stacked_prs": [
+      {
+        "number": 837,
+        "stacked_on": 787,
+        "base_branch": "integration/saleor-full-commerce-20261021",
+        "base_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+      }
+    ],
+    "commerce_candidate": {
+      "number": 787,
+      "comparison_to_current_main": {
+        "status": "diverged",
+        "ahead_by": 432,
+        "behind_by": 1
+      },
+      "mergeable": false,
+      "head_sha": "44cf56ab144b9d6abc1afc422026d3d70cf65702",
+      "base_sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+    },
+    "main_base_lineage": {
+      "current_main_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "observed_base_shas": {
+        "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6": {
+          "status": "identical",
+          "ahead_by": 0,
+          "behind_by": 0
+        },
+        "f92873c947e94c76ed3e7ea211db40a985ea3d63": {
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0
+        },
+        "445f421d67ad58bd533d42be9d5bbf6d268d9161": {
+          "status": "ahead",
+          "ahead_by": 2,
+          "behind_by": 0
+        },
+        "7e136440f9a834f123538e76a539acebefb7b76f": {
+          "status": "ahead",
+          "ahead_by": 5,
+          "behind_by": 0
+        }
+      }
+    }
+  }
+}

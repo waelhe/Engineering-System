@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "kind": "module_registry",
+  "snapshot_date": "2026-11-14",
+  "source": {
+    "repository": "waelhe/app-java-v3",
+    "ref": "main",
+    "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+    "file_path": "pom.xml",
+    "file_blob_sha": "0d53d259fd440a88e3517c34e7e6703420171439",
+    "snapshot_date": "2026-11-14"
+  },
+  "records": [
+    {
+      "module_id": "marketplace-shared",
+      "path": "marketplace-shared",
+      "pom_path": "marketplace-shared/pom.xml",
+      "reactor_order": 1,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-platform-infra",
+      "path": "marketplace-platform-infra",
+      "pom_path": "marketplace-platform-infra/pom.xml",
+      "reactor_order": 2,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-identity",
+      "path": "marketplace-identity",
+      "pom_path": "marketplace-identity/pom.xml",
+      "reactor_order": 3,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-catalog",
+      "path": "marketplace-catalog",
+      "pom_path": "marketplace-catalog/pom.xml",
+      "reactor_order": 4,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-booking",
+      "path": "marketplace-booking",
+      "pom_path": "marketplace-booking/pom.xml",
+      "reactor_order": 5,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-payments",
+      "path": "marketplace-payments",
+      "pom_path": "marketplace-payments/pom.xml",
+      "reactor_order": 6,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-pricing",
+      "path": "marketplace-pricing",
+      "pom_path": "marketplace-pricing/pom.xml",
+      "reactor_order": 7,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-reviews",
+      "path": "marketplace-reviews",
+      "pom_path": "marketplace-reviews/pom.xml",
+      "reactor_order": 8,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-messaging",
+      "path": "marketplace-messaging",
+      "pom_path": "marketplace-messaging/pom.xml",
+      "reactor_order": 9,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-search",
+      "path": "marketplace-search",
+      "pom_path": "marketplace-search/pom.xml",
+      "reactor_order": 10,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-provider",
+      "path": "marketplace-provider",
+      "pom_path": "marketplace-provider/pom.xml",
+      "reactor_order": 11,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-availability",
+      "path": "marketplace-availability",
+      "pom_path": "marketplace-availability/pom.xml",
+      "reactor_order": 12,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-notifications",
+      "path": "marketplace-notifications",
+      "pom_path": "marketplace-notifications/pom.xml",
+      "reactor_order": 13,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-ledger",
+      "path": "marketplace-ledger",
+      "pom_path": "marketplace-ledger/pom.xml",
+      "reactor_order": 14,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-disputes",
+      "path": "marketplace-disputes",
+      "pom_path": "marketplace-disputes/pom.xml",
+      "reactor_order": 15,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-media",
+      "path": "marketplace-media",
+      "pom_path": "marketplace-media/pom.xml",
+      "reactor_order": 16,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-geo",
+      "path": "marketplace-geo",
+      "pom_path": "marketplace-geo/pom.xml",
+      "reactor_order": 17,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-realestate",
+      "path": "marketplace-realestate",
+      "pom_path": "marketplace-realestate/pom.xml",
+      "reactor_order": 18,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-community",
+      "path": "marketplace-community",
+      "pom_path": "marketplace-community/pom.xml",
+      "reactor_order": 19,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-institutions",
+      "path": "marketplace-institutions",
+      "pom_path": "marketplace-institutions/pom.xml",
+      "reactor_order": 20,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-jobs",
+      "path": "marketplace-jobs",
+      "pom_path": "marketplace-jobs/pom.xml",
+      "reactor_order": 21,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-knowledge",
+      "path": "marketplace-knowledge",
+      "pom_path": "marketplace-knowledge/pom.xml",
+      "reactor_order": 22,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-console",
+      "path": "marketplace-console",
+      "pom_path": "marketplace-console/pom.xml",
+      "reactor_order": 23,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-ai",
+      "path": "marketplace-ai",
+      "pom_path": "marketplace-ai/pom.xml",
+      "reactor_order": 24,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-discovery",
+      "path": "marketplace-discovery",
+      "pom_path": "marketplace-discovery/pom.xml",
+      "reactor_order": 25,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-orders",
+      "path": "marketplace-orders",
+      "pom_path": "marketplace-orders/pom.xml",
+      "reactor_order": 26,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-delivery",
+      "path": "marketplace-delivery",
+      "pom_path": "marketplace-delivery/pom.xml",
+      "reactor_order": 27,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-lending",
+      "path": "marketplace-lending",
+      "pom_path": "marketplace-lending/pom.xml",
+      "reactor_order": 28,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-app",
+      "path": "marketplace-app",
+      "pom_path": "marketplace-app/pom.xml",
+      "reactor_order": 29,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    },
+    {
+      "module_id": "marketplace-edge",
+      "path": "marketplace-edge",
+      "pom_path": "marketplace-edge/pom.xml",
+      "reactor_order": 30,
+      "membership": "declared_in_root_maven_reactor",
+      "domain_ownership": "not_adjudicated",
+      "responsibility": "not_inferred_from_module_name; populate only after package/code and governing-document review"
+    }
+  ],
+  "anomalies": []
+}
