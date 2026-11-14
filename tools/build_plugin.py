@@ -68,20 +68,47 @@ def export_pinned_upstream(destination: Path, commit: str) -> None:
             target.chmod(member.mode & 0o666)
 
 
-def register_claude_agents(path: Path) -> None:
-    """Add local persona adapters to Claude's explicit host manifest."""
+def register_claude_agents(path: Path, agents_directory: Path, adapters_source: Path) -> None:
+    """Place Claude agent components at the plugin root and register local adapters."""
     manifest = json.loads(path.read_text(encoding="utf-8"))
-    agents = manifest.get("agents")
-    if not isinstance(agents, list):
-        raise RuntimeError("Pinned Claude manifest must expose an agents list")
-    for name in (
-        "implementation-verifier.md",
-        "knowledge-integrity-auditor.md",
-        "root-cause-investigator.md",
-    ):
-        reference = f"./.claude-plugin/agents/{name}"
-        if reference not in agents:
-            agents.append(reference)
+    references = manifest.get("agents")
+    if not isinstance(references, list) or not references:
+        raise RuntimeError("Pinned Claude manifest must expose a non-empty agents list")
+
+    stage_root = path.parent.parent
+    agents_directory.mkdir(parents=True, exist_ok=True)
+    registered: list[str] = []
+    for reference in references:
+        if not isinstance(reference, str) or not reference.startswith("./.claude-plugin/agents/"):
+            raise RuntimeError(f"Unexpected pinned Claude agent reference: {reference!r}")
+        relative = Path(reference[2:])
+        if relative.is_absolute() or ".." in relative.parts:
+            raise RuntimeError(f"Unsafe pinned Claude agent reference: {reference}")
+        source = stage_root / relative
+        if source.is_symlink() or not source.is_file():
+            raise RuntimeError(f"Pinned Claude agent file is missing or unsafe: {reference}")
+        target = agents_directory / source.name
+        if target.exists():
+            raise RuntimeError(f"Claude agent path collides with a local agent: {target.name}")
+        shutil.move(str(source), str(target))
+        registered.append(f"./agents/{target.name}")
+
+    local_adapters = (
+        ("implementation-verifier.md", "egm-implementation-verifier.md"),
+        ("knowledge-integrity-auditor.md", "egm-knowledge-integrity-auditor.md"),
+        ("root-cause-investigator.md", "egm-root-cause-investigator.md"),
+    )
+    for source_name, target_name in local_adapters:
+        source = adapters_source / source_name
+        target = agents_directory / target_name
+        if source.is_symlink() or not source.is_file():
+            raise RuntimeError(f"Local Claude adapter is missing or unsafe: {source_name}")
+        if target.exists():
+            raise RuntimeError(f"Claude adapter path already exists: {target_name}")
+        shutil.copy2(source, target)
+        registered.append(f"./agents/{target.name}")
+
+    manifest["agents"] = registered
     path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
@@ -154,7 +181,6 @@ def assemble(target: str, output: Path) -> tuple[Path, Path]:
         copy_overlay(EXTENSIONS / "skills", stage / "skills")
         copy_overlay(EXTENSIONS / "agents", stage / "agents")
         copy_overlay(EXTENSIONS / "resources", stage / "resources")
-        copy_overlay(EXTENSIONS / "claude-agents", stage / ".claude-plugin" / "agents")
 
         policy_map = {
             "engineering-charter.md": ROOT / "docs/policies/engineering-charter.md",
@@ -175,7 +201,7 @@ def assemble(target: str, output: Path) -> tuple[Path, Path]:
         claude_manifest = stage / ".claude-plugin" / "plugin.json"
         if claude_manifest.is_file():
             update_manifest(claude_manifest)
-            register_claude_agents(claude_manifest)
+            register_claude_agents(claude_manifest, stage / "agents", EXTENSIONS / "claude-agents")
 
         packer = stage / "scripts" / "pack_plugin.py"
         if not packer.is_file():
