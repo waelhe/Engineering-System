@@ -24,7 +24,16 @@ A raw model response must never be promoted directly into a verified Finding, Pa
 | Control | Test, check, guard, review or process enforcing a rule | Versioned |
 | Action | Tracked remediation/prevention work with owner and measurable acceptance | State transitions |
 | Risk Acceptance | Explicit, bounded, expiring authorization to retain a known risk | Immutable decision + lifecycle |
-| Verification | Evidence that a fix/control was exercised against exact code and environment | Append-only |
+| Verification | Evidence that a fix/control was exercised against exact code and environment, or that an approved alternate operational proof was satisfied | Append-only |
+
+## Finding closure proof modes
+
+A closed Finding declares one explicit `closure_mode`:
+
+- `code_defect`: the linked Action must have a successful Verification whose workflow and target-inclusion proof bind the same tested SHA; the proof URL is retained as a source.
+- `alternate_proof`: for a non-code or non-reproducible case, the Finding records an approved same-project Decision or Control, source-linked operational Evidence, a same-owner Action with measurable acceptance, and the test limitation. If residual risk remains, a reassessment date is required.
+
+A general Verification record is not required to contain target-branch inclusion merely because it verifies an operational Control. Target inclusion is a closure requirement for reproducible code defects.
 
 ## State dimensions are separate
 
