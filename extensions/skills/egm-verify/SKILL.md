@@ -30,6 +30,7 @@ Record repository, PR, branch, candidate HEAD SHA, tested SHA, target branch and
 - A green workflow on another SHA is not proof for the current candidate.
 - queued, in_progress, cancelled, skipped, missing or mismatched checks are not successful evidence.
 - A review tool that did not run, was rate-limited or returned no final result is not a clean review.
-- Non-reproducible or organizational cases require an explicit alternate proof contract and owner.
+- Reproducible code defects require `closure_mode: code_defect`, a successful SHA-bound workflow, source-linked target-branch inclusion evidence, and the linked Action.
+- Non-reproducible or organizational cases require `closure_mode: alternate_proof`, an approved same-project Decision/Control, source-linked operational Evidence, a same-owner Action with measurable acceptance, an explicit test limitation, and reassessment date when residual risk remains.
 
 Do not close a Finding until its required proof is linked and the knowledge validator accepts the resulting relations.
