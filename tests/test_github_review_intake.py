@@ -198,7 +198,7 @@ def test_publish_batch_filters_only_pending_signals_and_publishes_new_signal(mon
         if args[:3] == ("diff", "--cached", "--quiet"):
             return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
         if args[:3] == ("diff", "--cached", "--name-only"):
-            return subprocess.CompletedProcess(args, 0, stdout="\\0".join(sorted(staged_paths)) + "\\0", stderr="")
+            return subprocess.CompletedProcess(args, 0, stdout="\0".join(sorted(staged_paths)) + "\0", stderr="")
         if args and args[0] == "reset":
             staged_paths.discard(args[-1])
         return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
