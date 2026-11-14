@@ -127,3 +127,20 @@ def test_migration_validator_detects_missing_extra_ids_and_wrong_provenance(tmp_
     assert any("missing legacy IDs: E-01" in item for item in errors)
     assert any("unexpected legacy IDs: E-02" in item for item in errors)
     assert any("legacy_source_revision does not match pinned source" in item for item in errors)
+
+
+
+def test_migration_validator_rejects_candidate_sha_not_matching_source_revision(tmp_path: Path):
+    manifest = write_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    alternate = "d" * 40
+    payload["project_profiles"][0]["source_candidate_sha"] = alternate
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+    profile_path = tmp_path / "knowledge" / "projects" / "sample.json"
+    profile = json.loads(profile_path.read_text(encoding="utf-8"))
+    profile["candidate_sha"] = alternate
+    profile_path.write_text(json.dumps(profile), encoding="utf-8")
+
+    errors = validate_migration(tmp_path, manifest)
+
+    assert any("source_candidate_sha does not match pinned source revision" in item for item in errors)
