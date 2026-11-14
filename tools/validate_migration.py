@@ -199,6 +199,8 @@ def validate_migration(root: Path = ROOT, manifest_path: Path = MANIFEST) -> lis
             errors.append(f"{project_id}: source_baseline_sha must be a full lowercase commit SHA")
         if not isinstance(candidate, str) or not re.fullmatch(r"[0-9a-f]{40}", candidate):
             errors.append(f"{project_id}: source_candidate_sha must be a full lowercase commit SHA")
+        elif candidate != source_revision:
+            errors.append(f"{project_id}: source_candidate_sha does not match pinned source revision")
         if not isinstance(candidate_pr, int) or isinstance(candidate_pr, bool) or candidate_pr < 1:
             errors.append(f"{project_id}: candidate_pr must be a positive integer")
 
