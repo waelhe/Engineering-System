@@ -132,7 +132,7 @@ def test_publish_batch_defers_when_same_signal_is_in_a_pending_intake_pr(monkeyp
         if path.startswith("/repos/owner/repo/pulls?"):
             return [{
                 "number": 17,
-                "draft": True,
+                "draft": False,
                 "base": {"ref": "main", "repo": {"full_name": "owner/repo"}},
                 "head": {"ref": "automation/knowledge-intake-123-1", "repo": {"full_name": "owner/repo"}},
             }]
@@ -183,3 +183,51 @@ def test_review_signal_binds_author_sha_and_source_link():
     assert payload["source_id"]=="github_review-101" and payload["source_actor"]=="reviewer"
     assert payload["commit_sha"]=="b"*40
     assert json.loads(payload["body"])["state"]=="CHANGES_REQUESTED"
+
+
+
+def test_publish_batch_filters_only_pending_signals_and_publishes_new_signal(monkeypatch):
+    calls = []
+    staged_paths = {
+        "knowledge/inbox/sig-pending.json",
+        "knowledge/inbox/sig-new.json",
+    }
+
+    def fake_git(*args, **kwargs):
+        calls.append(args)
+        if args[:3] == ("diff", "--cached", "--quiet"):
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
+        if args[:3] == ("diff", "--cached", "--name-only"):
+            return subprocess.CompletedProcess(args, 0, stdout="\\0".join(sorted(staged_paths)) + "\\0", stderr="")
+        if args and args[0] == "reset":
+            staged_paths.discard(args[-1])
+        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    def fake_api_pages(path, token):
+        if path.startswith("/repos/owner/repo/pulls?"):
+            return [{
+                "number": 18,
+                "draft": False,
+                "base": {"ref": "main", "repo": {"full_name": "owner/repo"}},
+                "head": {"ref": "automation/knowledge-intake-123-1", "repo": {"full_name": "owner/repo"}},
+            }]
+        if path == "/repos/owner/repo/pulls/18/files":
+            return [{"filename": "knowledge/inbox/sig-pending.json"}]
+        raise AssertionError(f"unexpected API page: {path}")
+
+    published = []
+    monkeypatch.setattr(intake, "git", fake_git)
+    monkeypatch.setattr(intake, "api_pages", fake_api_pages)
+    monkeypatch.setattr(intake, "run_trusted_python", lambda *args: published.append(args))
+    monkeypatch.setattr(intake, "api_request", lambda *args, **kwargs: {
+        "number": 19, "html_url": "https://github.com/owner/repo/pull/19"
+    })
+
+    result = intake.publish_batch("owner/repo", "token", "automation/knowledge-intake-456-1", "main")
+
+    assert result["number"] == 19
+    assert published == [("tools/egm_knowledge.py", "index")]
+    assert ("commit", "-m", "Capture trusted GitHub review signals") in calls
+    assert ("push", "--set-upstream", "origin", "automation/knowledge-intake-456-1") in calls
+    assert "knowledge/inbox/sig-pending.json" not in staged_paths
+    assert "knowledge/inbox/sig-new.json" in staged_paths
