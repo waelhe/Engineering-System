@@ -22,7 +22,6 @@ permissions:
   contents: write
   pull-requests: write
   issues: read
-  actions: write
 
 concurrency:
   group: egm-github-review-intake-single-writer
@@ -57,12 +56,13 @@ jobs:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_PATH: ${{ github.event_path }}
           GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
           PR_NUMBER: ${{ inputs.pr_number }}
           SINCE_DAYS: ${{ inputs.since_days || '7' }}
         run: |
           set -eu
           if [ -n "$PR_NUMBER" ]; then
-            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --pr-number "$PR_NUMBER" --since-days "$SINCE_DAYS" --project-id "$EGM_PROJECT_ID"
+            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --pr-number "$PR_NUMBER" --since-days "$SINCE_DAYS"
           else
-            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --since-days "$SINCE_DAYS"
+            python tools/github_review_intake.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --since-days "$SINCE_DAYS"
           fi

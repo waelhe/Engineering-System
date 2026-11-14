@@ -261,10 +261,11 @@ def retrieve(query: str, project_id: str | None = None, limit: int = 12) -> list
 
 
 def redact_excerpt(value: str, maximum: int = 1200) -> str:
-    result = value[:maximum]
+    """Redact the complete untrusted body before applying the storage bound."""
+    redacted = value
     for pattern, replacement in SECRET_PATTERNS:
-        result = pattern.sub(replacement, result)
-    return result
+        redacted = pattern.sub(replacement, redacted)
+    return redacted[:maximum]
 
 
 def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:

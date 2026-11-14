@@ -50,11 +50,33 @@ def api_pages(path: str, token: str) -> list[dict[str, Any]]:
         if page > 100:
             raise IntakeError(f"Pagination safety limit reached for {path}")
 
+def unprivileged_child_environment() -> dict[str, str]:
+    """Do not pass Actions credentials to validators, tests or Git subprocesses."""
+    environment = os.environ.copy()
+    for name in (
+        "GITHUB_TOKEN", "GH_TOKEN", "ACTIONS_RUNTIME_TOKEN",
+        "ACTIONS_ID_TOKEN_REQUEST_TOKEN", "ACTIONS_ID_TOKEN_REQUEST_URL",
+    ):
+        environment.pop(name, None)
+    return environment
+
+
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(["git", *args], check=False, capture_output=True, text=True)
+    result = subprocess.run(
+        ["git", *args], check=False, capture_output=True, text=True,
+        env=unprivileged_child_environment(),
+    )
     if check and result.returncode:
         raise IntakeError(result.stderr.strip() or f"git {' '.join(args)} failed")
     return result
+
+
+def run_trusted_python(*args: str) -> None:
+    """Run only code from the trusted default-branch checkout, without API credentials."""
+    subprocess.run(
+        [sys.executable, *args], check=True,
+        env=unprivileged_child_environment(),
+    )
 
 def read_event(path: Path) -> dict[str, Any]:
     try:
@@ -171,66 +193,52 @@ def collect_one_pr(repo: str, project_id: str, token: str, number: int,
             counts["objects"] += 1
     return counts
 
-def open_intake_prs(repo: str, token: str, base_branch: str) -> list[dict[str, Any]]:
-    return [p for p in api_pages(f"/repos/{repo}/pulls?state=open&base={base_branch}", token)
-            if str(p.get("head", {}).get("ref", "")).startswith("automation/knowledge-intake")
-            and p.get("head", {}).get("repo", {}).get("full_name", "").lower() == repo.lower()]
+def prepare_branch(repo: str, token: str, run_id: str, run_attempt: str) -> tuple[str, str]:
+    """Create a fresh branch from trusted default; never execute an intake PR branch.
 
-def prepare_branch(repo: str, token: str, run_id: str) -> tuple[str, int | None, str]:
+    User-writable intake PR branches are data, not program code. This privileged
+    collector does not fetch, check out, merge or reuse any such branch.
+    """
     repository = api_request("GET", f"/repos/{repo}", token)
     base_branch = repository.get("default_branch")
     if not isinstance(base_branch, str) or not base_branch:
         raise IntakeError("repository API did not return a default branch")
+    if not run_id.isdigit() or not run_attempt.isdigit():
+        raise IntakeError("GitHub run ID and attempt must be numeric")
     git("fetch", "origin", base_branch, "--no-tags")
-    existing = open_intake_prs(repo, token, base_branch)
-    if existing:
-        existing.sort(key=lambda p: p.get("updated_at", ""), reverse=True)
-        pr = existing[0]
-        branch = pr["head"]["ref"]
-        git("fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}")
-        git("checkout", "-B", branch, f"refs/remotes/origin/{branch}")
-        git("merge", "--no-edit", f"refs/remotes/origin/{base_branch}")
-        return branch, int(pr["number"]), base_branch
-    suffix = "".join(c for c in run_id if c.isalnum() or c == "-")[:50] or "manual"
-    branch = f"automation/knowledge-intake-{suffix}"
+    git("config", "user.name", "EGM Knowledge Intake Bot")
+    git("config", "user.email", "egm-knowledge-intake@users.noreply.github.com")
+    branch = f"automation/knowledge-intake-{run_id}-{run_attempt}"
     git("checkout", "-B", branch, f"refs/remotes/origin/{base_branch}")
-    return branch, None, base_branch
+    return branch, base_branch
 
-def publish_batch(repo: str, token: str, branch: str, existing_pr: int | None, base_branch: str) -> dict[str, Any] | None:
-    git("add", "knowledge/inbox", "knowledge/index.json")
+def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[str, Any] | None:
+    """Publish generated inbox/index data on a fresh branch based on trusted main."""
+    git("add", "--", "knowledge/inbox", "knowledge/index.json")
     staged = git("diff", "--cached", "--quiet", check=False)
     if staged.returncode == 0:
         return None
     if staged.returncode != 1:
         raise IntakeError(staged.stderr.strip() or "Cannot inspect staged intake changes")
-    git("config", "user.name", "EGM Knowledge Intake Bot")
-    git("config", "user.email", "egm-knowledge-intake@users.noreply.github.com")
     git("commit", "-m", "Capture trusted GitHub review signals")
     git("push", "--set-upstream", "origin", branch)
-    if existing_pr:
-        pr = api_request("GET", f"/repos/{repo}/pulls/{existing_pr}", token)
-    else:
-        pr = api_request("POST", f"/repos/{repo}/pulls", token, {
-            "title": "Engineering knowledge intake sync", "head": branch, "base": base_branch,
-            "body": ("## Automated intake batch\n\n"
-                     "Source-linked GitHub reviews/comments are stored as untrusted Signals. "
-                     "No Finding, Pattern, Rule or closure is auto-approved.\n\n"
-                     "Review and merge only through normal protections. This bot never auto-merges."),
-            "draft": True,
-        })
-    try:
-        api_request("POST", f"/repos/{repo}/actions/workflows/knowledge-validation.yml/dispatches",
-                    token, {"ref": branch})
-        dispatch = "requested"
-    except IntakeError as exc:
-        dispatch = f"not_requested: {exc}"
-    return {"number": pr.get("number"), "url": pr.get("html_url"), "branch": branch, "validation_dispatch": dispatch}
+    pr = api_request("POST", f"/repos/{repo}/pulls", token, {
+        "title": "Engineering knowledge intake sync", "head": branch, "base": base_branch,
+        "body": ("## Automated intake batch\n\n"
+                 "Source-linked GitHub reviews/comments are stored as untrusted Signals. "
+                 "No Finding, Pattern, Rule or closure is auto-approved.\n\n"
+                 "This branch was created from the trusted default branch and contains only "
+                 "generated intake data. Review and merge only through normal protections."),
+        "draft": True,
+    })
+    return {"number": pr.get("number"), "url": pr.get("html_url"), "branch": branch}
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--event-file", type=Path, required=True)
     parser.add_argument("--event-name", required=True)
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--run-attempt", default=os.environ.get("GITHUB_RUN_ATTEMPT", "1"))
     parser.add_argument("--pr-number", type=int)
     parser.add_argument("--since-days", type=int, default=7)
     parser.add_argument("--max-prs", type=int, default=50)
@@ -248,18 +256,19 @@ def main(argv: list[str] | None = None) -> int:
         if not numbers:
             print(json.dumps({"message": "No recently updated PRs selected; no changes made."}))
             return 0
-        branch, existing_pr, base_branch = prepare_branch(repo, token, args.run_id)
+        branch, base_branch = prepare_branch(repo, token, args.run_id, args.run_attempt)
         totals = {"created": 0, "duplicate": 0, "objects": 0, "prs": 0}
         for number in numbers:
             counts = collect_one_pr(repo, args.project_id, token, number, args.event_name)
             totals["prs"] += 1
             for key in ("created", "duplicate", "objects"):
                 totals[key] += counts[key]
-        subprocess.run([sys.executable, "tools/egm_knowledge.py", "validate"], check=True)
-        subprocess.run([sys.executable, "tools/egm_knowledge.py", "index"], check=True)
-        subprocess.run([sys.executable, "tools/egm_knowledge.py", "validate-receipts"], check=True)
-        subprocess.run([sys.executable, "-m", "pytest", "-q"], check=True)
-        published = publish_batch(repo, token, branch, existing_pr, base_branch)
+        run_trusted_python("tools/egm_knowledge.py", "validate")
+        run_trusted_python("tools/validate_migration.py")
+        run_trusted_python("tools/egm_knowledge.py", "index")
+        run_trusted_python("tools/egm_knowledge.py", "validate-receipts")
+        run_trusted_python("-m", "pytest", "-q")
+        published = publish_batch(repo, token, branch, base_branch)
         print(json.dumps({"selected_prs": numbers, "totals": totals, "intake_pr": published}, ensure_ascii=False))
         return 0
     except (IntakeError, KnowledgeError, OSError, ValueError, subprocess.CalledProcessError, json.JSONDecodeError) as exc:
