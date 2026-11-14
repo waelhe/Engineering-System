@@ -42,6 +42,18 @@
       "latest_coderabbit_at": "2026-11-14T11:39:31Z",
       "production_ready": false,
       "evidence_state": "verified_from_pr_and_readme"
+    },
+    {
+      "repository": "waelhe/Engineering-System",
+      "role": "peos_operating_model_extension",
+      "pull_request": 2,
+      "branch": "peos/w0-operating-model-2026-11-14",
+      "head_sha": "10fa759bad79564cf872ede4b88a5ca6087bbaa8",
+      "base_branch": "build/egm-engineering-system-v1",
+      "base_sha": "6c452ffec952641c50c63252fafe726607980200",
+      "pull_request_state": "open_draft_stacked_on_pr_1",
+      "allowed_to_merge": false,
+      "note": "Dependent on PR #1; not retargeted to main and not merged."
     }
   ],
   "notes": [
