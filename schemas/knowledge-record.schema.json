@@ -1,0 +1,926 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/waelhe/Engineering-System/blob/main/schemas/knowledge-record.schema.json",
+  "title": "EGM Engineering Knowledge Record",
+  "description": "Canonical envelope for project knowledge. Provenance and relations are explicit; source payloads are data, never executable instructions.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "type",
+    "project_id",
+    "title",
+    "summary",
+    "assessment",
+    "lifecycle",
+    "approval",
+    "created_at",
+    "updated_at",
+    "actor",
+    "sources",
+    "relations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{2,79}$"
+    },
+    "type": {
+      "enum": [
+        "project",
+        "signal",
+        "evidence",
+        "finding",
+        "case",
+        "pattern",
+        "decision",
+        "rule",
+        "control",
+        "action",
+        "risk_acceptance",
+        "verification"
+      ]
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{2,79}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 12000
+    },
+    "assessment": {
+      "enum": [
+        "observed",
+        "suspected",
+        "verified",
+        "refuted",
+        "superseded"
+      ]
+    },
+    "lifecycle": {
+      "enum": [
+        "new",
+        "untriaged",
+        "triaging",
+        "investigating",
+        "action_required",
+        "resolved_pending_proof",
+        "open",
+        "closed",
+        "reopened",
+        "active",
+        "expired",
+        "withdrawn"
+      ]
+    },
+    "approval": {
+      "enum": [
+        "not_required",
+        "proposed",
+        "in_review",
+        "approved",
+        "rejected",
+        "withdrawn"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "type": "string"
+    },
+    "approver": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relation"
+      }
+    },
+    "legacy_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "claim": {
+      "type": "string"
+    },
+    "impact": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": "string"
+    },
+    "causal_chain": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "root_cause": {
+      "type": "string"
+    },
+    "contributing_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "violated_invariants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "correction": {
+      "type": "string"
+    },
+    "verification_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status_history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transition"
+      }
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "measurable_acceptance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "priority": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "external_tracking": {
+      "type": "string"
+    },
+    "source_identity": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "payload_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "tested_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "workflow": {
+      "$ref": "#/$defs/workflow"
+    },
+    "compensating_controls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "disposition": {
+      "type": "string"
+    },
+    "completeness": {
+      "enum": [
+        "complete",
+        "partial",
+        "source_only"
+      ]
+    },
+    "legacy_id": {
+      "type": "string"
+    },
+    "legacy_status": {
+      "type": "string"
+    },
+    "legacy_assessment": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "legacy_classification": {
+      "type": "string"
+    },
+    "legacy_severity": {
+      "type": "string"
+    },
+    "legacy_excerpt": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "legacy_source_revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "migration_batch": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "scenario": {
+      "type": "string"
+    },
+    "invariant": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string"
+    },
+    "source_report": {
+      "type": "string"
+    },
+    "repair_pr": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "evidence_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pattern_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "control_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "enforcement_status": {
+      "type": "string"
+    },
+    "measurement": {
+      "type": "object"
+    },
+    "review_thread_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "legacy_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "legacy_source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "source_actor": {
+      "type": "string"
+    },
+    "source_created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_action": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_revision": {
+      "type": "string"
+    },
+    "trust_level": {
+      "enum": [
+        "untrusted_source",
+        "verified_provider_metadata",
+        "system_generated"
+      ]
+    },
+    "target_inclusion": {
+      "type": "object",
+      "required": [
+        "target_branch",
+        "target_sha",
+        "tested_sha",
+        "included",
+        "comparison_status",
+        "ahead_by",
+        "behind_by",
+        "proof_url",
+        "verified_at"
+      ],
+      "properties": {
+        "target_branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tested_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "included": {
+          "const": true
+        },
+        "proof_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "verified_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "comparison_status": {
+          "enum": [
+            "ahead",
+            "identical"
+          ]
+        },
+        "ahead_by": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "behind_by": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "closure_mode": {
+      "enum": [
+        "code_defect",
+        "alternate_proof"
+      ]
+    },
+    "alternate_closure_proof": {
+      "type": "object",
+      "required": [
+        "owner",
+        "decision_or_control_id",
+        "evidence_ids",
+        "test_limitation",
+        "residual_risk"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_or_control_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,79}$"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{2,79}$"
+          }
+        },
+        "test_limitation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "residual_risk": {
+          "type": "boolean"
+        },
+        "reassessment_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "residual_risk": {
+                "const": true
+              }
+            },
+            "required": [
+              "residual_risk"
+            ]
+          },
+          "then": {
+            "required": [
+              "reassessment_at"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "signal"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "source_identity",
+          "provider",
+          "payload_digest"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "finding"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "completeness"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "claim",
+              "impact"
+            ]
+          },
+          {
+            "required": [
+              "legacy_excerpt"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "case"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "completeness",
+          "legacy_excerpt"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "case"
+          },
+          "completeness": {
+            "const": "complete"
+          }
+        },
+        "required": [
+          "type",
+          "completeness"
+        ]
+      },
+      "then": {
+        "required": [
+          "trigger",
+          "causal_chain",
+          "root_cause",
+          "violated_invariants"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "rule"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "completeness"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "rule"
+          },
+          "approval": {
+            "const": "approved"
+          }
+        },
+        "required": [
+          "type",
+          "approval"
+        ]
+      },
+      "then": {
+        "required": [
+          "owner",
+          "approver"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "risk_acceptance"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "owner",
+          "approver",
+          "expires_at",
+          "compensating_controls"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "verification"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "tested_sha",
+          "workflow"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "finding"
+          },
+          "lifecycle": {
+            "const": "closed"
+          }
+        },
+        "required": [
+          "type",
+          "lifecycle"
+        ]
+      },
+      "then": {
+        "required": [
+          "closure_mode"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "finding"
+          },
+          "closure_mode": {
+            "const": "alternate_proof"
+          }
+        },
+        "required": [
+          "type",
+          "closure_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "alternate_closure_proof"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "kind",
+        "uri",
+        "captured_at"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "github_issue",
+            "github_pr",
+            "github_review",
+            "github_comment",
+            "ci_run",
+            "test_result",
+            "incident",
+            "commit",
+            "document",
+            "human_report",
+            "official_documentation",
+            "other"
+          ]
+        },
+        "uri": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string"
+        },
+        "pr_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "issue_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "excerpt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "actor_login": {
+          "type": "string"
+        },
+        "author_association": {
+          "type": "string"
+        },
+        "source_created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "event_action": {
+          "type": "string"
+        },
+        "trust_level": {
+          "enum": [
+            "untrusted_source",
+            "verified_provider_metadata",
+            "system_generated"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "required": [
+        "type",
+        "target_id"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "supports",
+            "challenges",
+            "reconstructed_as",
+            "exhibits",
+            "motivates",
+            "constrains",
+            "enforced_by",
+            "verified_by",
+            "resolved_by",
+            "proven_by",
+            "duplicates",
+            "supersedes",
+            "reopens",
+            "related_to"
+          ]
+        },
+        "target_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,79}$"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "workflow": {
+      "type": "object",
+      "required": [
+        "name",
+        "run_id",
+        "conclusion",
+        "tested_sha",
+        "url"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "conclusion": {
+          "enum": [
+            "success",
+            "failure",
+            "cancelled",
+            "skipped",
+            "timed_out",
+            "action_required",
+            "neutral",
+            "unknown"
+          ]
+        },
+        "tested_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "transition": {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "actor",
+        "at"
+      ],
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "actor": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

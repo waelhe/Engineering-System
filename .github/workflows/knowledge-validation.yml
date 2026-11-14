@@ -1,0 +1,58 @@
+name: EGM knowledge and runtime validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository and pinned EGM submodule
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install validation dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Validate knowledge records and relations
+        run: python tools/egm_knowledge.py validate
+
+      - name: Reconcile imported records against pinned source manifest
+        run: python tools/validate_migration.py
+
+      - name: Validate execution receipts
+        run: python tools/egm_knowledge.py validate-receipts
+
+      - name: Verify generated knowledge index
+        run: python tools/egm_knowledge.py index --check
+
+      - name: Enforce append-only evidence history
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch origin "$BASE_REF"
+          python tools/knowledge_guard.py --base "origin/$BASE_REF"
+
+      - name: Run unit tests
+        run: python -m pytest
+
+      - name: Build integrated OpenAI runtime package
+        run: python tools/build_plugin.py --target openai --output "$RUNNER_TEMP/egm-system-package"
+
+      - name: Build integrated Claude runtime package
+        run: python tools/build_plugin.py --target claude --output "$RUNNER_TEMP/egm-system-claude-package"
