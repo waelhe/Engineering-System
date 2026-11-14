@@ -1,4 +1,4 @@
-"""Validate the checked-in PEOS W0 evidence snapshots.
+"""Validate the checked-in PEOS evidence snapshots.
 
 This is a deterministic consistency validator, not a live GitHub client.
 The registry files are point-in-time observations bound to repository SHAs.
@@ -170,8 +170,8 @@ def main() -> int:
         for error in errors:
             print(f"FAIL: {error}")
         return 1
-    print("PEOS W0 registry validation: PASS")
-    print("Validated 30 Maven modules, 35 canonical journeys and 23 open PRs.")
+    print("PEOS inventory validation: PASS")
+    print("Validated 30 Maven modules, 35 canonical journeys, 23 open PRs and the W1 operational evidence registry.")
     print("Historic journey labels remain marked not-revalidated; no merge is authorized.")
     return 0
 
