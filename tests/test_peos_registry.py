@@ -62,3 +62,37 @@ def test_w2_module_boundary_inventory_preserves_maven_and_modulith_graphs():
     assert all(item["domain_ownership"] == "not_adjudicated" for item in payload["records"])
     assert "catalog :: catalog-spi" in by_logical["messaging"]["allowed_dependencies"]
     assert "catalog :: catalog-spi" in by_logical["realestate"]["allowed_dependencies"]
+
+
+def test_w1_recheck_records_partial_recovery_without_claiming_operational_readiness():
+    root = Path(__file__).resolve().parents[1]
+    payload = json.loads((root / "registry/peos/app-java-v3.operations.json").read_text(encoding="utf-8"))
+    by_id = {record["id"]: record for record in payload["records"]}
+
+    railway = by_id["OPS-RAILWAY-003"]
+    assert railway["state"] == "deployment_succeeded_last_aggregate_probe_degraded"
+    http = next(item["value"] for item in railway["evidence"] if item["kind"] == "http_probe_log")
+    statuses = {item["path"]: item["status"] for item in http["probes"]}
+    assert statuses["/actuator/health/liveness"] == 200
+    assert statuses["/actuator/health/readiness"] == 200
+    assert statuses["/actuator/health"] == 503
+    eventbus = next(item["value"] for item in railway["evidence"] if item["kind"] == "application_metric")
+    assert eventbus["metric"] == "marketplace_eventbus_stale"
+    assert eventbus["value"] == 3
+
+    grafana = by_id["OPS-GRAFANA-005"]
+    assert grafana["state"] == "metrics_ingested_alert_delivery_unconfigured"
+    alerting = next(item["value"] for item in grafana["evidence"] if item["kind"] == "grafana_alerting_read")
+    assert alerting["grafana_managed_alert_rule_count"] == 0
+    assert alerting["contact_point_count"] == 0
+    assert alerting["root_notification_receiver"] == "empty"
+
+    pr = by_id["OPS-GITHUB-003"]
+    assert pr["state"] == "repair_pr_deployed_open_unreviewed"
+    details = pr["evidence"][0]["value"]
+    assert details["merged"] is False
+    assert details["review_count"] == 0
+
+    serialized = json.dumps(payload).lower()
+    assert "client_secret" not in serialized
+    assert "service_account_token" not in serialized

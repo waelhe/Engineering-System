@@ -201,6 +201,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
     required_operation_ids = {
         "OPS-RAILWAY-001", "OPS-RAILWAY-002", "OPS-GITHUB-001", "OPS-GITHUB-002",
         "OPS-REPO-001", "OPS-GRAFANA-001", "OPS-GRAFANA-002", "OPS-GRAFANA-003", "OPS-GRAFANA-004",
+        "OPS-RAILWAY-003", "OPS-GRAFANA-005", "OPS-GITHUB-003",
     }
     if len(operation_ids) != len(set(operation_ids)):
         errors.append("operations record IDs are not unique")
@@ -220,6 +221,9 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         "OPS-GRAFANA-003": "no_alert_rules",
         "OPS-GRAFANA-004": "no_notification_destination",
         "OPS-GITHUB-002": "open_incident",
+        "OPS-RAILWAY-003": "deployment_succeeded_last_aggregate_probe_degraded",
+        "OPS-GRAFANA-005": "metrics_ingested_alert_delivery_unconfigured",
+        "OPS-GITHUB-003": "repair_pr_deployed_open_unreviewed",
     }
     for record_id, expected_state in expected_states.items():
         if by_operation.get(record_id, {}).get("state") != expected_state:
