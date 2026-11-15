@@ -52,6 +52,8 @@ def test_w2_module_boundary_inventory_preserves_maven_and_modulith_graphs():
     assert by_maven["marketplace-platform-infra"]["modulith_modules"] == ["shared"]
     assert set(by_maven["marketplace-app"]["modulith_modules"]) == {"app", "admin", "config"}
     assert by_maven["marketplace-edge"]["modulith_modules"] == []
+    assert by_logical["admin"]["declaration"]["path"] == "marketplace-app/src/main/java/com/marketplace/admin/package-info.java"
+    assert by_logical["config"]["declaration"]["path"] == "marketplace-app/src/main/java/com/marketplace/config/package-info.java"
     assert by_maven["marketplace-edge"]["reactor_role"] == "standalone_edge_bff"
     assert {name for name, item in by_logical.items()
             if item["declaration"]["placement"] == "type"} == {

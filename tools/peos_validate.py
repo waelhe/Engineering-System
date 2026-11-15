@@ -113,6 +113,28 @@ def validate_registry(root: Path = ROOT) -> list[str]:
     if len([item for item in boundary_records if item.get("logical_kind") == "bounded_context"]) != 26:
         errors.append("W2 bounded-context package count must be 26")
 
+    # Validate the W2-specific JSON Schema, not only the common registry envelope.
+    try:
+        boundary_schema = read_json(root / "schemas" / "peos-module-boundaries.schema.json")
+        Draft202012Validator.check_schema(boundary_schema)
+        boundary_payload = loaded.get("boundaries", {})
+        boundary_errors = list(Draft202012Validator(boundary_schema, format_checker=FormatChecker()).iter_errors(boundary_payload))
+        for item in boundary_errors:
+            errors.append(f"app-java-v3.module-boundaries.json: {'/'.join(map(str, item.absolute_path))}: {item.message}")
+    except Exception as exc:
+        errors.append(f"invalid W2 module-boundaries schema: {exc}")
+
+    maven_by_id = {item.get("module_id"): item for item in maven_records}
+    for item in boundary_records:
+        for maven_id in item.get("maven_modules", []):
+            if maven_id not in maven_by_id or item.get("module_name") not in maven_by_id[maven_id].get("modulith_modules", []):
+                errors.append(f"W2 {item.get('module_name')}: inconsistent Maven mapping {maven_id}")
+    for item in maven_records:
+        for logical_id in item.get("modulith_modules", []):
+            found = next((record for record in boundary_records if record.get("module_name") == logical_id), None)
+            if found is None or item.get("module_id") not in found.get("maven_modules", []):
+                errors.append(f"W2 {item.get('module_id')}: inconsistent Modulith mapping {logical_id}")
+
     journeys = loaded.get("journeys", {}).get("records", [])
     journey_ids = [item.get("journey_id") for item in journeys]
     expected_ids = [f"J{i:02d}" for i in range(1, 36)]
@@ -216,8 +238,8 @@ def main() -> int:
             print(f"FAIL: {error}")
         return 1
     print("PEOS inventory validation: PASS")
-    print("Validated 30 Maven modules, 35 canonical journeys, 23 open PRs and the W1 operational evidence registry.")
-    print("Historic journey labels remain marked not-revalidated; no merge is authorized.")
+    print("Validated 30 Maven artifacts, 30 logical Modulith modules, 35 canonical journeys, 23 historical PR records and W1 operational evidence.")
+    print("Historic journey labels remain marked not-revalidated; Maven and Modulith graphs are distinct; no merge is authorized.")
     return 0
 
 

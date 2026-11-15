@@ -63,6 +63,91 @@
         "path": "PROJECT_MAP.md",
         "blob_sha": "97d40df6ceb9ced95d397cbac845889843cb5035",
         "role": "Historical execution log"
+      },
+      {
+        "path": "marketplace-shared/src/main/java/com/marketplace/shared/api/package-info.java",
+        "blob_sha": "53950327a5a4f6eb291500af9efe2172d618b840",
+        "role": "shared-api named interface"
+      },
+      {
+        "path": "marketplace-platform-infra/src/main/java/com/marketplace/shared/config/package-info.java",
+        "blob_sha": "70d243ef50630dc8c09f56d0535333545b4ca81f",
+        "role": "shared-config named interface"
+      },
+      {
+        "path": "marketplace-platform-infra/src/main/java/com/marketplace/shared/email/package-info.java",
+        "blob_sha": "8b655324a02a2276c96d5f6a638de892b70e76ff",
+        "role": "shared-email named interface"
+      },
+      {
+        "path": "marketplace-platform-infra/src/main/java/com/marketplace/shared/jpa/package-info.java",
+        "blob_sha": "8542863389c6db3bd0494252c2ec2fdb2866cc55",
+        "role": "shared-jpa named interface"
+      },
+      {
+        "path": "marketplace-platform-infra/src/main/java/com/marketplace/shared/security/package-info.java",
+        "blob_sha": "3fe5180dbc20cbb265871252c950ffb25577529c",
+        "role": "shared-security named interface"
+      },
+      {
+        "path": "marketplace-catalog/src/main/java/com/marketplace/catalog/CatalogModule.java",
+        "blob_sha": "e93aae12687738e6d1e38e64fd24f1055f6ae0f4",
+        "role": "catalog-api named interface"
+      },
+      {
+        "path": "marketplace-catalog/src/main/java/com/marketplace/catalog/spi/CatalogSpi.java",
+        "blob_sha": "1087fa02c26c915b330b1081173076fd8d2074e7",
+        "role": "catalog-spi named interface"
+      },
+      {
+        "path": "marketplace-catalog/src/main/java/com/marketplace/catalog/spi/ProductAdminSpi.java",
+        "blob_sha": "833d1ed1eebc5ba11211ecd9209a18539dce59fb",
+        "role": "catalog-spi named interface"
+      },
+      {
+        "path": "marketplace-booking/src/main/java/com/marketplace/booking/spi/BookingSpi.java",
+        "blob_sha": "d9fd0ac18044038ed496210412ee73ed6a9501af",
+        "role": "booking-spi named interface"
+      },
+      {
+        "path": "marketplace-identity/src/main/java/com/marketplace/identity/spi/IdentitySpi.java",
+        "blob_sha": "350293393c5811ec569a0758eb8b213868d28d4d",
+        "role": "identity-spi named interface"
+      },
+      {
+        "path": "marketplace-payments/src/main/java/com/marketplace/payments/spi/PaymentsSpi.java",
+        "blob_sha": "ac69741bb1914d10217bd32834277352b8949e1c",
+        "role": "payments-spi named interface"
+      },
+      {
+        "path": "marketplace-messaging/src/main/java/com/marketplace/messaging/MessagingApi.java",
+        "blob_sha": "30b7031e9d32e1bd29cefb5d24e3ba38f53450fa",
+        "role": "messaging-api named interface"
+      },
+      {
+        "path": "marketplace-search/src/main/java/com/marketplace/search/SearchModule.java",
+        "blob_sha": "96f3687f7b5197dc94f58216c72f443e66728c49",
+        "role": "search-api named interface"
+      },
+      {
+        "path": "marketplace-community/src/main/java/com/marketplace/community/spi/CommunityPostSearchPort.java",
+        "blob_sha": "b59335c21fd199ec91721ef85bc4e4bc71854d5f",
+        "role": "community post-search SPI"
+      },
+      {
+        "path": "marketplace-community/src/main/java/com/marketplace/community/spi/NeighborhoodFeedPort.java",
+        "blob_sha": "325c823bd982d5fcea8890e9eeb47be63f5e7309",
+        "role": "community neighborhood-feed SPI"
+      },
+      {
+        "path": "marketplace-community/src/main/java/com/marketplace/community/spi/NeighborhoodPostDetailPort.java",
+        "blob_sha": "ce9845d14ccea4f608d0ef3a0ff61ef7da5fb27a",
+        "role": "community post-detail SPI"
+      },
+      {
+        "path": "marketplace-discovery/src/main/java/com/marketplace/discovery/spi/DiscoverySpi.java",
+        "blob_sha": "9cd20bb29af301d7963da32cd8697da8cea25f8f",
+        "role": "discovery SPI"
       }
     ]
   },
@@ -849,7 +934,7 @@
       "declaration": {
         "annotation": "org.springframework.modulith.ApplicationModule",
         "placement": "package_info",
-        "path": "marketplace-admin/src/main/java/com/marketplace/admin/package-info.java",
+        "path": "marketplace-app/src/main/java/com/marketplace/admin/package-info.java",
         "blob_sha": "a574c916671222a57c80c60d75c95db0f9ea79fd"
       },
       "allowed_dependencies": [
@@ -876,7 +961,7 @@
       "declaration": {
         "annotation": "org.springframework.modulith.ApplicationModule",
         "placement": "package_info",
-        "path": "marketplace-config/src/main/java/com/marketplace/config/package-info.java",
+        "path": "marketplace-app/src/main/java/com/marketplace/config/package-info.java",
         "blob_sha": "ff1e751965815a9ec22c22f8339b7158ac2a0cd5"
       },
       "allowed_dependencies": [],
