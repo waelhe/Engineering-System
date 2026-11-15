@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
   "kind": "project_baseline",
-  "snapshot_date": "2026-11-14",
+  "snapshot_date": "2026-11-15",
   "records": [
     {
       "repository": "waelhe/app-java-v3",
       "role": "platform_backend",
       "default_branch": "main",
-      "main_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "main_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
       "pom_blob_sha": "0d53d259fd440a88e3517c34e7e6703420171439",
       "modules": 30,
       "language": "Java 25",
       "framework": "Spring Boot 4.1.2",
       "graphql": "Netflix DGS 12.1.0",
-      "architecture": "Maven multi-module Modular Monolith",
-      "evidence_state": "verified_from_main_files"
+      "architecture": "Maven multi-module modular monolith; W2 records the many-to-many Maven/Modulith mapping",
+      "evidence_state": "verified_from_main_files_and_CI"
     },
     {
       "repository": "waelhe/marketplace-admin",
@@ -48,26 +48,28 @@
       "role": "peos_operating_model_extension",
       "pull_request": 2,
       "branch": "peos/w0-operating-model-2026-11-14",
-      "head_sha": "0ddb6e371ed560379d4c242d48573840c6208196",
+      "head_sha": "27ff3dcef7f07b69c198359ecae478ea2054589e",
       "base_branch": "build/egm-engineering-system-v1",
       "base_sha": "6c452ffec952641c50c63252fafe726607980200",
       "pull_request_state": "open_draft_stacked_on_pr_1",
       "allowed_to_merge": false,
-      "note": "Draft PR #2 remains stacked on open PR #1. Its current-head CI is green, but it has no independent review and is not merge-authorized.",
+      "note": "Draft PR #2 remains stacked on open PR #1. This pre-W2 head snapshot does not authorize independent review or merge.",
       "latest_ci": {
-        "run_id": 43631573577,
-        "head_sha": "0ddb6e371ed560379d4c242d48573840c6208196",
+        "run_id": 43631873370,
+        "head_sha": "27ff3dcef7f07b69c198359ecae478ea2054589e",
         "conclusion": "success",
         "peos_inventory_validator": "success",
-        "pytest": "48 passed in 2.68s",
+        "pytest": "48 passed in 3.68s",
         "openai_runtime_package": "success",
         "claude_runtime_package": "success"
-      }
+      },
+      "observation": "PR #2 head measured immediately before appending W2; subsequent W2 commit and CI are recorded in the PR body."
     }
   ],
   "notes": [
     "Engineering-System PR #1 is not part of Engineering-System main; PEOS additions are stacked on its head and must not be treated as adopted until both PRs are reviewed and merged in order.",
     "The app-java-v3 journey register and W13 readiness files were authored on 2026-10-18; their states are not assumed current merely because the files remain in main.",
-    "The Admin repository is a Saleor Dashboard-derived admin surface; no assertion is made that all PAOS workflows are implemented."
+    "The Admin repository is a Saleor Dashboard-derived admin surface; no assertion is made that all PAOS workflows are implemented.",
+    "W2 module-boundary inventory is pinned to app-java-v3 main 8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26. Maven and logical Modulith module counts match numerically but their mapping is not one-to-one."
   ]
 }

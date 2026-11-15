@@ -38,6 +38,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         "journeys": ("journey_registry", "app-java-v3.journeys.json"),
         "prs": ("pull_request_registry", "app-java-v3.open-prs.json"),
         "operations": ("operations_registry", "app-java-v3.operations.json"),
+        "boundaries": ("module_boundaries_registry", "app-java-v3.module-boundaries.json"),
     }
     loaded: dict[str, dict[str, Any]] = {}
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
@@ -67,6 +68,50 @@ def validate_registry(root: Path = ROOT) -> list[str]:
     for item in modules:
         if item.get("membership") != "declared_in_root_maven_reactor":
             errors.append(f"{item.get('module_id')}: module membership is not source-backed")
+
+    boundaries = loaded.get("boundaries", {})
+    boundary_records = boundaries.get("records", [])
+    maven_records = boundaries.get("maven_modules", [])
+    if boundaries.get("source", {}).get("commit_sha") != loaded.get("modules", {}).get("source", {}).get("commit_sha"):
+        errors.append("W2 boundary registry source SHA disagrees with Maven module inventory")
+    if boundaries.get("source", {}).get("commit_sha") != "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26":
+        errors.append("W2 boundaries must remain bound to the audited backend main SHA")
+    maven_ids = [item.get("module_id") for item in maven_records]
+    if len(maven_records) != 30 or len(maven_ids) != len(set(maven_ids)):
+        errors.append("W2 must contain exactly 30 unique Maven reactor modules")
+    for item in maven_records:
+        if not SHA_RE.fullmatch(item.get("pom_blob_sha", "")):
+            errors.append(f"W2 {item.get('module_id')}: invalid POM blob SHA")
+        for dependency in item.get("internal_maven_dependencies", []):
+            if dependency not in set(maven_ids):
+                errors.append(f"W2 {item.get('module_id')}: unknown internal Maven dependency {dependency}")
+    logical_ids = [item.get("module_name") for item in boundary_records]
+    if len(boundary_records) != 30 or len(logical_ids) != len(set(logical_ids)):
+        errors.append("W2 must contain exactly 30 unique logical Modulith modules")
+    logical_set = set(logical_ids)
+    for item in boundary_records:
+        if item.get("domain_ownership") != "not_adjudicated":
+            errors.append(f"W2 {item.get('module_name')}: domain ownership must remain not_adjudicated")
+        dec = item.get("declaration", {})
+        if dec.get("placement") not in {"package_info", "type"} or not SHA_RE.fullmatch(dec.get("blob_sha", "")):
+            errors.append(f"W2 {item.get('module_name')}: module declaration source evidence invalid")
+        for dependency in item.get("allowed_dependencies", []):
+            target = dependency.split(" :: ", 1)[0]
+            if target not in logical_set:
+                errors.append(f"W2 {item.get('module_name')}: unknown allowed Modulith dependency {dependency}")
+    type_level = {item.get("module_name") for item in boundary_records if item.get("declaration", {}).get("placement") == "type"}
+    if type_level != {"availability", "disputes", "ledger", "notifications", "provider"}:
+        errors.append(f"W2 type-level declarations differ from source inventory: {sorted(type_level)}")
+    by_maven = {item.get("module_id"): item for item in maven_records}
+    if by_maven.get("marketplace-platform-infra", {}).get("modulith_modules") != ["shared"]:
+        errors.append("W2 platform-infra must map to logical shared")
+    if set(by_maven.get("marketplace-app", {}).get("modulith_modules", [])) != {"app", "admin", "config"}:
+        errors.append("W2 marketplace-app must map to app/admin/config")
+    edge = by_maven.get("marketplace-edge", {})
+    if edge.get("modulith_modules") != [] or edge.get("reactor_role") != "standalone_edge_bff":
+        errors.append("W2 edge must remain outside MarketplaceApplication Modulith verification")
+    if len([item for item in boundary_records if item.get("logical_kind") == "bounded_context"]) != 26:
+        errors.append("W2 bounded-context package count must be 26")
 
     journeys = loaded.get("journeys", {}).get("records", [])
     journey_ids = [item.get("journey_id") for item in journeys]

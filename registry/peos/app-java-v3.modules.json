@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "kind": "module_registry",
-  "snapshot_date": "2026-11-14",
+  "snapshot_date": "2026-11-15",
   "source": {
     "repository": "waelhe/app-java-v3",
     "ref": "main",
-    "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+    "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
     "file_path": "pom.xml",
     "file_blob_sha": "0d53d259fd440a88e3517c34e7e6703420171439",
-    "snapshot_date": "2026-11-14"
+    "snapshot_date": "2026-11-15"
   },
   "records": [
     {

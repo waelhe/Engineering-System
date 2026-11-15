@@ -1,0 +1,1471 @@
+{
+  "schema_version": 1,
+  "kind": "module_boundaries_registry",
+  "snapshot_date": "2026-11-15",
+  "source": {
+    "repository": "waelhe/app-java-v3",
+    "ref": "main",
+    "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+    "snapshot_date": "2026-11-15",
+    "file_path": "pom.xml",
+    "file_blob_sha": "0d53d259fd440a88e3517c34e7e6703420171439",
+    "java_version": 25,
+    "spring_boot_version": "4.1.2",
+    "spring_modulith_version": "2.1.2",
+    "dgs_version": "12.1.0",
+    "additional_source_files": [
+      {
+        "path": "marketplace-app/src/main/java/com/marketplace/MarketplaceApplication.java",
+        "blob_sha": "641a1292d315fccfa7e2fb85e9ab815014d571c4",
+        "role": "@SpringBootApplication + @Modulithic root"
+      },
+      {
+        "path": "marketplace-app/src/test/java/com/marketplace/ModulithVerificationTest.java",
+        "blob_sha": "e6789de42a78dee6060c274f0e6b6db383c290b3",
+        "role": "ApplicationModules.verify() test"
+      },
+      {
+        "path": "marketplace-app/src/test/java/com/marketplace/ModulithGuardReadinessTest.java",
+        "blob_sha": "3400f9a9cbb9f3b183433b4247d9d1618cf62cd8",
+        "role": "JDK 26+ fail-closed readiness guard"
+      },
+      {
+        "path": "marketplace-app/src/test/java/com/marketplace/ModulithDocumentationTest.java",
+        "blob_sha": "cb30da963439ae59ca1b16f80e9487b8bfc14c6a",
+        "role": "Generated Spring Modulith documentation assertions"
+      },
+      {
+        "path": "marketplace-app/src/test/java/com/marketplace/ArchitectureRulesTest.java",
+        "blob_sha": "305b5a8cdc02c4362ca2bc4388a5e00793365aed",
+        "role": "Additional ArchUnit architecture rules"
+      },
+      {
+        "path": "marketplace-edge/pom.xml",
+        "blob_sha": "fb2eae186fdbbbf7ef30dfc74aada47c4a2ed6d6",
+        "role": "Edge has zero internal Maven dependencies"
+      },
+      {
+        "path": "marketplace-edge/src/main/java/com/marketplace/edge/EdgeApplication.java",
+        "blob_sha": "4137b14838c03e61de74c6afb2eb23f0d0049063",
+        "role": "Standalone Edge Spring Boot app outside root Modulith verification"
+      },
+      {
+        "path": "SYSTEM.md",
+        "blob_sha": "5494939326a6ddaea1fb5f34adc68a89bac1d281",
+        "role": "Current project system doc; drift observed"
+      },
+      {
+        "path": "docs/architecture/ARCHITECTURE.md",
+        "blob_sha": "ef09fe5f1f1698109bbedd67531360a7c26daabb",
+        "role": "Architecture guide; drift observed"
+      },
+      {
+        "path": "PROJECT_MAP.md",
+        "blob_sha": "97d40df6ceb9ced95d397cbac845889843cb5035",
+        "role": "Historical execution log"
+      }
+    ]
+  },
+  "summary": {
+    "maven_reactor_modules": 30,
+    "logical_spring_modulith_modules": 30,
+    "bounded_context_modules": 26,
+    "application_support_modules": 3,
+    "type_level_application_module_declarations": 5,
+    "standalone_apps_outside_modulith_verification": 1
+  },
+  "records": [
+    {
+      "module_name": "shared",
+      "java_package": "com.marketplace.shared",
+      "maven_modules": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "logical_kind": "shared_contract_foundation",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-shared/src/main/java/com/marketplace/shared/package-info.java",
+        "blob_sha": "dec779241c3d3d40817eabfd956cd61dc43ecb26"
+      },
+      "allowed_dependencies": [],
+      "named_interfaces": [
+        "shared",
+        "shared-api",
+        "shared-config",
+        "shared-email",
+        "shared-jpa",
+        "shared-security"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "identity",
+      "java_package": "com.marketplace.identity",
+      "maven_modules": [
+        "marketplace-identity"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-identity/src/main/java/com/marketplace/identity/package-info.java",
+        "blob_sha": "a0285290a077c26ebc800acf29cb0b287dbc64e9"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "identity",
+        "identity-spi"
+      ],
+      "governing_adrs": [
+        "ADR-0001"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "catalog",
+      "java_package": "com.marketplace.catalog",
+      "maven_modules": [
+        "marketplace-catalog"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-catalog/src/main/java/com/marketplace/catalog/package-info.java",
+        "blob_sha": "897296abe6047ea536107872b8f11c677efbf331"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "catalog",
+        "catalog-api",
+        "catalog-spi"
+      ],
+      "governing_adrs": [
+        "ADR-0002",
+        "ADR-0012"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "booking",
+      "java_package": "com.marketplace.booking",
+      "maven_modules": [
+        "marketplace-booking"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-booking/src/main/java/com/marketplace/booking/package-info.java",
+        "blob_sha": "e03ef12b5cfb5451c590aa9d0257bf2bde8fa334"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "booking",
+        "booking-spi"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "payments",
+      "java_package": "com.marketplace.payments",
+      "maven_modules": [
+        "marketplace-payments"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-payments/src/main/java/com/marketplace/payments/package-info.java",
+        "blob_sha": "4e65505fd952d709d2d0141d3aab695b8fdafa27"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "payments",
+        "payments-spi"
+      ],
+      "governing_adrs": [
+        "ADR-0002",
+        "ADR-0013"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "pricing",
+      "java_package": "com.marketplace.pricing",
+      "maven_modules": [
+        "marketplace-pricing"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-pricing/src/main/java/com/marketplace/pricing/package-info.java",
+        "blob_sha": "4ea474d5f0c1f62782dd1efbd18b2a8d4ce2d8c5"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "pricing"
+      ],
+      "governing_adrs": [
+        "ADR-0013"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "reviews",
+      "java_package": "com.marketplace.reviews",
+      "maven_modules": [
+        "marketplace-reviews"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-reviews/src/main/java/com/marketplace/reviews/package-info.java",
+        "blob_sha": "f152c642ba56e3454b7eb8c5211d12f164aa6400"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "reviews"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "messaging",
+      "java_package": "com.marketplace.messaging",
+      "maven_modules": [
+        "marketplace-messaging"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-messaging/src/main/java/com/marketplace/messaging/package-info.java",
+        "blob_sha": "9d56a3ff28c5d183adddc936de6cd5792f85fa2c"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa",
+        "shared :: shared-config",
+        "catalog :: catalog-spi"
+      ],
+      "named_interfaces": [
+        "messaging",
+        "messaging-api"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "search",
+      "java_package": "com.marketplace.search",
+      "maven_modules": [
+        "marketplace-search"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-search/src/main/java/com/marketplace/search/package-info.java",
+        "blob_sha": "d5a70afec6ce98f50c2844e8ff53b2880c05499b"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "search",
+        "search-api"
+      ],
+      "governing_adrs": [
+        "ADR-0006"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "provider",
+      "java_package": "com.marketplace.provider",
+      "maven_modules": [
+        "marketplace-provider"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "type",
+        "path": "marketplace-provider/src/main/java/com/marketplace/provider/ProviderModule.java",
+        "blob_sha": "a2852e8f9a9c9516ba41138c57a978dbc40c6fbc"
+      },
+      "named_interface_package_descriptor": {
+        "path": "marketplace-provider/src/main/java/com/marketplace/provider/package-info.java",
+        "blob_sha": "9f199e062c62b2aa6db4d25b88e0e356bb67997f"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "provider"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "availability",
+      "java_package": "com.marketplace.availability",
+      "maven_modules": [
+        "marketplace-availability"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "type",
+        "path": "marketplace-availability/src/main/java/com/marketplace/availability/AvailabilityModule.java",
+        "blob_sha": "668309fe80bb81ac5ac06cda2c7bed4732cfb35f"
+      },
+      "named_interface_package_descriptor": {
+        "path": "marketplace-availability/src/main/java/com/marketplace/availability/package-info.java",
+        "blob_sha": "34ea8072acb07aef9991501cb871c65052b9019c"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "availability"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "notifications",
+      "java_package": "com.marketplace.notifications",
+      "maven_modules": [
+        "marketplace-notifications"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "type",
+        "path": "marketplace-notifications/src/main/java/com/marketplace/notifications/NotificationsModule.java",
+        "blob_sha": "64ea4c123f49091c22713d444fc33365a49aed94"
+      },
+      "named_interface_package_descriptor": {
+        "path": "marketplace-notifications/src/main/java/com/marketplace/notifications/package-info.java",
+        "blob_sha": "badff2666023484fcacdbe1341e6b94144901c6e"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-jpa",
+        "shared :: shared-security",
+        "shared :: shared-email"
+      ],
+      "named_interfaces": [
+        "notifications"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "ledger",
+      "java_package": "com.marketplace.ledger",
+      "maven_modules": [
+        "marketplace-ledger"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "type",
+        "path": "marketplace-ledger/src/main/java/com/marketplace/ledger/LedgerModule.java",
+        "blob_sha": "4bba62b521ae8fbdf5b442a17f72b8007af88d10"
+      },
+      "named_interface_package_descriptor": {
+        "path": "marketplace-ledger/src/main/java/com/marketplace/ledger/package-info.java",
+        "blob_sha": "8a5705bdbd400a204135c0d0ed25a7449a879838"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-jpa",
+        "shared :: shared-security"
+      ],
+      "named_interfaces": [
+        "ledger"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "disputes",
+      "java_package": "com.marketplace.disputes",
+      "maven_modules": [
+        "marketplace-disputes"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "type",
+        "path": "marketplace-disputes/src/main/java/com/marketplace/disputes/DisputesModule.java",
+        "blob_sha": "2a95d1e02babe584eab4011747a92964d703d1e6"
+      },
+      "named_interface_package_descriptor": {
+        "path": "marketplace-disputes/src/main/java/com/marketplace/disputes/package-info.java",
+        "blob_sha": "2b453904007e6f7a08e64b6c185b17560eae528f"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-jpa",
+        "shared :: shared-security"
+      ],
+      "named_interfaces": [
+        "disputes"
+      ],
+      "governing_adrs": [
+        "ADR-0009"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "media",
+      "java_package": "com.marketplace.media",
+      "maven_modules": [
+        "marketplace-media"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-media/src/main/java/com/marketplace/media/package-info.java",
+        "blob_sha": "88b0073522f1e5beb6597e2ede8b7e6f2114f7dc"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "media"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "geo",
+      "java_package": "com.marketplace.geo",
+      "maven_modules": [
+        "marketplace-geo"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-geo/src/main/java/com/marketplace/geo/package-info.java",
+        "blob_sha": "20b1e1f48256585afc3597be32de1b1a08e7b475"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "geo"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "realestate",
+      "java_package": "com.marketplace.realestate",
+      "maven_modules": [
+        "marketplace-realestate"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-realestate/src/main/java/com/marketplace/realestate/package-info.java",
+        "blob_sha": "b80a0ba694eeedfb3e9b79d9722cd6ac530de670"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa",
+        "catalog :: catalog-spi"
+      ],
+      "named_interfaces": [
+        "realestate"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "community",
+      "java_package": "com.marketplace.community",
+      "maven_modules": [
+        "marketplace-community"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-community/src/main/java/com/marketplace/community/package-info.java",
+        "blob_sha": "261ec737f6f6955716299777c9d78603cf4f67d0"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "community",
+        "community-post-search-spi",
+        "neighborhood-feed-spi",
+        "neighborhood-post-detail-spi"
+      ],
+      "governing_adrs": [
+        "ADR-0001"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "institutions",
+      "java_package": "com.marketplace.institutions",
+      "maven_modules": [
+        "marketplace-institutions"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-institutions/src/main/java/com/marketplace/institutions/package-info.java",
+        "blob_sha": "9a55d0abca50dbc6baaa46f100f421ff75402858"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "institutions"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "jobs",
+      "java_package": "com.marketplace.jobs",
+      "maven_modules": [
+        "marketplace-jobs"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-jobs/src/main/java/com/marketplace/jobs/package-info.java",
+        "blob_sha": "cd93619679507675980e915d0aa0a346633ea942"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "jobs"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "knowledge",
+      "java_package": "com.marketplace.knowledge",
+      "maven_modules": [
+        "marketplace-knowledge"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-knowledge/src/main/java/com/marketplace/knowledge/package-info.java",
+        "blob_sha": "51f159d443cd57605cb70be34ca48244586d024a"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "console",
+      "java_package": "com.marketplace.console",
+      "maven_modules": [
+        "marketplace-console"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-console/src/main/java/com/marketplace/console/package-info.java",
+        "blob_sha": "e2057d44fbb9a2f3edd4e845ecf5ee91981c396a"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "console"
+      ],
+      "governing_adrs": [
+        "ADR-0005"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "ai",
+      "java_package": "com.marketplace.ai",
+      "maven_modules": [
+        "marketplace-ai"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-ai/src/main/java/com/marketplace/ai/package-info.java",
+        "blob_sha": "5bf5cb292dec9640a7fa63ff1afa5b0ccfe3b4fb"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "discovery",
+      "java_package": "com.marketplace.discovery",
+      "maven_modules": [
+        "marketplace-discovery"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-discovery/src/main/java/com/marketplace/discovery/package-info.java",
+        "blob_sha": "5da6bb9b614a6fdc0151ecd8493a15cdad0a1bf7"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-jpa",
+        "shared :: shared-security"
+      ],
+      "named_interfaces": [
+        "discovery",
+        "discovery-spi"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "orders",
+      "java_package": "com.marketplace.orders",
+      "maven_modules": [
+        "marketplace-orders"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-orders/src/main/java/com/marketplace/orders/package-info.java",
+        "blob_sha": "193bd35075a5cec872f4bdaeef2e1accd5c3b122"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "orders"
+      ],
+      "governing_adrs": [
+        "ADR-0002",
+        "ADR-0010"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "delivery",
+      "java_package": "com.marketplace.delivery",
+      "maven_modules": [
+        "marketplace-delivery"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-delivery/src/main/java/com/marketplace/delivery/package-info.java",
+        "blob_sha": "2cd6b28debb4dd544f73e513b55bc31f5626a104"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "delivery"
+      ],
+      "governing_adrs": [
+        "ADR-0013"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "lending",
+      "java_package": "com.marketplace.lending",
+      "maven_modules": [
+        "marketplace-lending"
+      ],
+      "logical_kind": "bounded_context",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-lending/src/main/java/com/marketplace/lending/package-info.java",
+        "blob_sha": "01a255a6975961d6af23444921b01703d265b9c0"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa"
+      ],
+      "named_interfaces": [
+        "lending"
+      ],
+      "governing_adrs": [
+        "ADR-0004",
+        "ADR-0009"
+      ],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "app",
+      "java_package": "com.marketplace.app",
+      "maven_modules": [
+        "marketplace-app"
+      ],
+      "logical_kind": "application_support",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-app/src/main/java/com/marketplace/app/package-info.java",
+        "blob_sha": "d1c2a78703a1e38f281376dbb53b6e245dbeb04d"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "catalog :: catalog-api",
+        "catalog :: catalog-spi",
+        "messaging :: messaging-api",
+        "ai",
+        "community :: community-post-search-spi",
+        "discovery :: discovery-spi",
+        "community :: neighborhood-feed-spi",
+        "community :: neighborhood-post-detail-spi",
+        "identity :: identity-spi"
+      ],
+      "named_interfaces": [],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "admin",
+      "java_package": "com.marketplace.admin",
+      "maven_modules": [
+        "marketplace-app"
+      ],
+      "logical_kind": "application_support",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-admin/src/main/java/com/marketplace/admin/package-info.java",
+        "blob_sha": "a574c916671222a57c80c60d75c95db0f9ea79fd"
+      },
+      "allowed_dependencies": [
+        "shared :: shared-api",
+        "shared :: shared-security",
+        "shared :: shared-jpa",
+        "booking :: booking-spi",
+        "catalog :: catalog-spi",
+        "identity :: identity-spi",
+        "payments :: payments-spi"
+      ],
+      "named_interfaces": [],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    },
+    {
+      "module_name": "config",
+      "java_package": "com.marketplace.config",
+      "maven_modules": [
+        "marketplace-app"
+      ],
+      "logical_kind": "application_support",
+      "declaration": {
+        "annotation": "org.springframework.modulith.ApplicationModule",
+        "placement": "package_info",
+        "path": "marketplace-config/src/main/java/com/marketplace/config/package-info.java",
+        "blob_sha": "ff1e751965815a9ec22c22f8339b7158ac2a0cd5"
+      },
+      "allowed_dependencies": [],
+      "named_interfaces": [
+        "config"
+      ],
+      "governing_adrs": [],
+      "domain_ownership": "not_adjudicated",
+      "verification_scope": "MarketplaceApplication / ApplicationModules.of(MarketplaceApplication.class)"
+    }
+  ],
+  "maven_modules": [
+    {
+      "module_id": "marketplace-shared",
+      "reactor_order": 1,
+      "pom_path": "marketplace-shared/pom.xml",
+      "pom_blob_sha": "0b8990e12466826042ae82d4e2ed46080db00abc",
+      "internal_maven_dependencies": [],
+      "reactor_role": "contract_foundation",
+      "modulith_modules": [
+        "shared"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-platform-infra",
+      "reactor_order": 2,
+      "pom_path": "marketplace-platform-infra/pom.xml",
+      "pom_blob_sha": "ba6e5c6303f6dd9a1ed81a438d2ecbe0f0a6313b",
+      "internal_maven_dependencies": [
+        "marketplace-shared"
+      ],
+      "reactor_role": "infrastructure_contributor",
+      "modulith_modules": [
+        "shared"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-identity",
+      "reactor_order": 3,
+      "pom_path": "marketplace-identity/pom.xml",
+      "pom_blob_sha": "d44ef284481d721b64076899684abff979453ee9",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "identity"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-catalog",
+      "reactor_order": 4,
+      "pom_path": "marketplace-catalog/pom.xml",
+      "pom_blob_sha": "549d1729a072a7fbf1b70fe2e607d49b11b38a69",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "catalog"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-booking",
+      "reactor_order": 5,
+      "pom_path": "marketplace-booking/pom.xml",
+      "pom_blob_sha": "8eac7b35032e96de12e77f1d66c56db33d00b830",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "booking"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-payments",
+      "reactor_order": 6,
+      "pom_path": "marketplace-payments/pom.xml",
+      "pom_blob_sha": "3693b4401707047314fa14640db5d8e40b4e1b08",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "payments"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-pricing",
+      "reactor_order": 7,
+      "pom_path": "marketplace-pricing/pom.xml",
+      "pom_blob_sha": "d637c19ed84cbd7eba88feff56ff34db81d72f72",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "pricing"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-reviews",
+      "reactor_order": 8,
+      "pom_path": "marketplace-reviews/pom.xml",
+      "pom_blob_sha": "b20e66522a1a9c46275a4a355e646e2bed5ff029",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "reviews"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-messaging",
+      "reactor_order": 9,
+      "pom_path": "marketplace-messaging/pom.xml",
+      "pom_blob_sha": "abd7d9ebfa745185812b442efc1e08b970c1eea3",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra",
+        "marketplace-catalog"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "messaging"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-search",
+      "reactor_order": 10,
+      "pom_path": "marketplace-search/pom.xml",
+      "pom_blob_sha": "6c4a7dc1c17339125b606890bb9e4bf4c5ebb2b8",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "search"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-provider",
+      "reactor_order": 11,
+      "pom_path": "marketplace-provider/pom.xml",
+      "pom_blob_sha": "deb47604a2011535cd1ef0bc6ecd3041f8fa56b4",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "provider"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-availability",
+      "reactor_order": 12,
+      "pom_path": "marketplace-availability/pom.xml",
+      "pom_blob_sha": "a94c1afb9548d700e054fe1343e0c4cd89ef4bd2",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "availability"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-notifications",
+      "reactor_order": 13,
+      "pom_path": "marketplace-notifications/pom.xml",
+      "pom_blob_sha": "281dd0dda67213a3d3a83615697cb826339006a1",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "notifications"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-ledger",
+      "reactor_order": 14,
+      "pom_path": "marketplace-ledger/pom.xml",
+      "pom_blob_sha": "a683ddc20cf1cee979c76fe4d8d824da965841e8",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "ledger"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-disputes",
+      "reactor_order": 15,
+      "pom_path": "marketplace-disputes/pom.xml",
+      "pom_blob_sha": "f23c477724cd9cf80e743ee68b2a433506f71aaa",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "disputes"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-media",
+      "reactor_order": 16,
+      "pom_path": "marketplace-media/pom.xml",
+      "pom_blob_sha": "3275885924f536b6b142262479546b9f39f70dd0",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "media"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-geo",
+      "reactor_order": 17,
+      "pom_path": "marketplace-geo/pom.xml",
+      "pom_blob_sha": "038b2ce22e5eafe0d13c78eaad560735c7eb6354",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "geo"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-realestate",
+      "reactor_order": 18,
+      "pom_path": "marketplace-realestate/pom.xml",
+      "pom_blob_sha": "cec1401948f204278d3f22c50e07cdf0c07bed45",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra",
+        "marketplace-catalog"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "realestate"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-community",
+      "reactor_order": 19,
+      "pom_path": "marketplace-community/pom.xml",
+      "pom_blob_sha": "bed7709e56f3717eb1aa6a09526f678e402f83d9",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "community"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-institutions",
+      "reactor_order": 20,
+      "pom_path": "marketplace-institutions/pom.xml",
+      "pom_blob_sha": "f7a20b21954e82e3890505ed5162badbfe866fdc",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "institutions"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-jobs",
+      "reactor_order": 21,
+      "pom_path": "marketplace-jobs/pom.xml",
+      "pom_blob_sha": "c2676713be8d7b6df21888a1ac0c9a89f5ceb6fc",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "jobs"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-knowledge",
+      "reactor_order": 22,
+      "pom_path": "marketplace-knowledge/pom.xml",
+      "pom_blob_sha": "01164ca9272aa0edcbc9bb1639abe1e29cf8737b",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "knowledge"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-console",
+      "reactor_order": 23,
+      "pom_path": "marketplace-console/pom.xml",
+      "pom_blob_sha": "0e58ae78f355065937b09cc866cb6d84c4b65044",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "console"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-ai",
+      "reactor_order": 24,
+      "pom_path": "marketplace-ai/pom.xml",
+      "pom_blob_sha": "01e93fa11a265b568fec48d43c29e79c8039c2e6",
+      "internal_maven_dependencies": [
+        "marketplace-shared"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "ai"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-discovery",
+      "reactor_order": 25,
+      "pom_path": "marketplace-discovery/pom.xml",
+      "pom_blob_sha": "fded5751e09a92312e02c5e7820b29f86204f470",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "discovery"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-orders",
+      "reactor_order": 26,
+      "pom_path": "marketplace-orders/pom.xml",
+      "pom_blob_sha": "a2db6c056cd0aef2ec8646c182fcd37bd99447e2",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "orders"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-delivery",
+      "reactor_order": 27,
+      "pom_path": "marketplace-delivery/pom.xml",
+      "pom_blob_sha": "41312d05aee048132a48ac14a7810852efeffcad",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "delivery"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-lending",
+      "reactor_order": 28,
+      "pom_path": "marketplace-lending/pom.xml",
+      "pom_blob_sha": "58bee89469bb25acaa00a5f565aef02a85e5900e",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra"
+      ],
+      "reactor_role": "domain_module",
+      "modulith_modules": [
+        "lending"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-app",
+      "reactor_order": 29,
+      "pom_path": "marketplace-app/pom.xml",
+      "pom_blob_sha": "348d5d82e191397fd9a0f729271fb34f8058f565",
+      "internal_maven_dependencies": [
+        "marketplace-shared",
+        "marketplace-platform-infra",
+        "marketplace-identity",
+        "marketplace-catalog",
+        "marketplace-booking",
+        "marketplace-payments",
+        "marketplace-pricing",
+        "marketplace-reviews",
+        "marketplace-orders",
+        "marketplace-delivery",
+        "marketplace-lending",
+        "marketplace-messaging",
+        "marketplace-search",
+        "marketplace-provider",
+        "marketplace-availability",
+        "marketplace-notifications",
+        "marketplace-ledger",
+        "marketplace-disputes",
+        "marketplace-media",
+        "marketplace-geo",
+        "marketplace-realestate",
+        "marketplace-community",
+        "marketplace-institutions",
+        "marketplace-jobs",
+        "marketplace-knowledge",
+        "marketplace-console",
+        "marketplace-ai",
+        "marketplace-discovery"
+      ],
+      "reactor_role": "application_assembly",
+      "modulith_modules": [
+        "app",
+        "admin",
+        "config"
+      ],
+      "domain_ownership": "not_adjudicated"
+    },
+    {
+      "module_id": "marketplace-edge",
+      "reactor_order": 30,
+      "pom_path": "marketplace-edge/pom.xml",
+      "pom_blob_sha": "fb2eae186fdbbbf7ef30dfc74aada47c4a2ed6d6",
+      "internal_maven_dependencies": [],
+      "reactor_role": "standalone_edge_bff",
+      "modulith_modules": [],
+      "domain_ownership": "not_adjudicated"
+    }
+  ],
+  "governing_adrs": [
+    {
+      "id": "ADR-0001",
+      "path": "docs/adr/ADR-0001-account-identity-roles-and-verification.md",
+      "blob_sha": "80fba0675f173fe02e4ab3b085d4c73b5457df09",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0002",
+      "path": "docs/adr/ADR-0002-commerce-fit-gap.md",
+      "blob_sha": "2a04cff313101f6edbfbc83c9e71947fda3edfe5",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0004",
+      "path": "docs/adr/ADR-0004-lending-workflow.md",
+      "blob_sha": "6784ec05b315924da64ce36d137b1908ec62d2d0",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0005",
+      "path": "docs/adr/ADR-0005-console-planning-record.md",
+      "blob_sha": "817c53972387e658f5d670b492da08b9de74cc8c",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0006",
+      "path": "docs/adr/ADR-0006-ordering-eval-contract.md",
+      "blob_sha": "4e0726f356e1fc4bd1c76c19aee7f519b8dab500",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0009",
+      "path": "docs/adr/ADR-0009-lending-dispute-cycle-and-late-fees.md",
+      "blob_sha": "1b26c42acb7a50c2583f675ef46dabf765b5ce44",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0010",
+      "path": "docs/adr/ADR-0010-multi-seller-cart-split.md",
+      "blob_sha": "e738fc097adc6aa6067c4a4ef767d019d69b9cf7",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0011",
+      "path": "docs/adr/ADR-0011-legal-applicability-dsa-gdpr.md",
+      "blob_sha": "9b49355ea1dc66ba5fe25bf1c77c3bf61d357812",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0012",
+      "path": "docs/adr/ADR-0012-merchandise-variant-model.md",
+      "blob_sha": "3625534bd25b3712faebed13509c74ebd54b3751",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    },
+    {
+      "id": "ADR-0013",
+      "path": "docs/adr/ADR-0013-financial-allocation-decisions.md",
+      "blob_sha": "09120254568d9ac0ea0ea5dfe2f0cb4325dc1555",
+      "status": "accepted_as_recorded_in_source_header",
+      "interpretation": "Supporting decision reference only; not complete domain-ownership adjudication."
+    }
+  ],
+  "verification": {
+    "application_class": "com.marketplace.MarketplaceApplication",
+    "test_path": "marketplace-app/src/test/java/com/marketplace/ModulithVerificationTest.java",
+    "api": "ApplicationModules.of(MarketplaceApplication.class).verify()",
+    "readiness_guard": "ModulithGuardReadinessTest",
+    "ci_run_id": 43621271125,
+    "ci_head_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+    "ci_conclusion": "success",
+    "note": "Overall pinned-main CI passed. No separate human review or deployment certification is implied."
+  },
+  "anomalies": [
+    {
+      "id": "W2-DRIFT-001",
+      "severity": "documentation_drift",
+      "finding": "ARCHITECTURE.md describes all @ApplicationModule declarations as package-info.java declarations; five current ones are on root types.",
+      "resolution": "Record exact type-level sources for availability/disputes/ledger/notifications/provider; backend docs left unchanged."
+    },
+    {
+      "id": "W2-DRIFT-002",
+      "severity": "documentation_drift",
+      "finding": "ARCHITECTURE.md says domain modules may only depend on shared named interfaces; messaging and realestate allow catalog :: catalog-spi.",
+      "resolution": "Preserve current allow-lists from source; no module dependency changed."
+    },
+    {
+      "id": "W2-DRIFT-003",
+      "severity": "documentation_drift",
+      "finding": "SYSTEM.md §5 describes 24 bounded contexts and package-info-only declarations; current inventory has 26 bounded-context packages and five type-level declarations.",
+      "resolution": "Flag historical prose for reconciliation; do not modify backend source in this PEOS-only change."
+    },
+    {
+      "id": "W2-MAPPING-001",
+      "severity": "mapping_model",
+      "finding": "30 Maven artifacts and 30 logical Modulith packages are not one-to-one: shared is split across two artifacts; marketplace-app contains app/admin/config; marketplace-edge is a standalone app outside root Modulith verification.",
+      "resolution": "Keep separate Maven and logical-module graphs with many-to-many mapping."
+    }
+  ]
+}

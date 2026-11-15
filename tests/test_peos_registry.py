@@ -38,3 +38,25 @@ def test_w1_operations_snapshot_keeps_runtime_and_observability_truth():
     serialized = json.dumps(payload).lower()
     assert "client_secret" not in serialized
     assert "service_account_token" not in serialized
+
+
+def test_w2_module_boundary_inventory_preserves_maven_and_modulith_graphs():
+    root = Path(__file__).resolve().parents[1]
+    payload = json.loads((root / "registry/peos/app-java-v3.module-boundaries.json").read_text(encoding="utf-8"))
+    by_logical = {record["module_name"]: record for record in payload["records"]}
+    by_maven = {record["module_id"]: record for record in payload["maven_modules"]}
+
+    assert payload["source"]["commit_sha"] == "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+    assert len(by_logical) == 30
+    assert len(by_maven) == 30
+    assert by_maven["marketplace-platform-infra"]["modulith_modules"] == ["shared"]
+    assert set(by_maven["marketplace-app"]["modulith_modules"]) == {"app", "admin", "config"}
+    assert by_maven["marketplace-edge"]["modulith_modules"] == []
+    assert by_maven["marketplace-edge"]["reactor_role"] == "standalone_edge_bff"
+    assert {name for name, item in by_logical.items()
+            if item["declaration"]["placement"] == "type"} == {
+                "availability", "disputes", "ledger", "notifications", "provider"
+            }
+    assert all(item["domain_ownership"] == "not_adjudicated" for item in payload["records"])
+    assert "catalog :: catalog-spi" in by_logical["messaging"]["allowed_dependencies"]
+    assert "catalog :: catalog-spi" in by_logical["realestate"]["allowed_dependencies"]
