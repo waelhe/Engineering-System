@@ -6,9 +6,9 @@ The registry files are point-in-time observations bound to repository SHAs.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -181,10 +181,15 @@ def validate_registry(root: Path = ROOT) -> list[str]:
     artifact = capability_source.get("journey_registry_artifact", {})
     journey_path = root / "registry" / "peos" / "app-java-v3.journeys.json"
     try:
-        journey_bytes = journey_path.read_bytes()
-        actual_blob_sha = hashlib.sha1(
-            b"blob " + str(len(journey_bytes)).encode("ascii") + b"\0" + journey_bytes
-        ).hexdigest()
+        journey_relative_path = journey_path.relative_to(root).as_posix()
+        git_blob = subprocess.run(
+            ["git", "rev-parse", f"HEAD:{journey_relative_path}"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        actual_blob_sha = git_blob.stdout.strip()
         if artifact.get("blob_sha") != actual_blob_sha:
             errors.append("capability registry journey artifact blob SHA is stale")
         if capability_source.get("upstream_project", {}).get("commit_sha") != loaded.get("journeys", {}).get("source", {}).get("commit_sha"):

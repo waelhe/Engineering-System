@@ -106,6 +106,9 @@ def test_w3_capability_candidates_are_source_linked_and_not_current_proof():
     by_journey = {item["journey_id"]: item for item in journeys["records"]}
 
     assert capabilities["kind"] == "capability_registry"
+    assert capabilities["anomalies"] == []
+    assert capabilities["source"]["repository"] == "waelhe/app-java-v3"
+    assert capabilities["source"]["commit_sha"] == journeys["source"]["commit_sha"]
     assert len(capabilities["records"]) == 35
     assert {item["source_journey_id"] for item in capabilities["records"]} == set(by_journey)
 

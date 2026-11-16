@@ -7,7 +7,7 @@
 
 ## Purpose
 
-This is a conservative first capability index derived from the 35 canonical journey records. It creates one **candidate journey outcome** per source journey so PEOS can link user-visible outcomes to later capability decomposition, module ownership, contracts, clients and verification.
+This is a conservative first capability index derived from the 35 canonical journey records. It uses the same PEOS inventory envelope as module, journey, PR and operations registries; its `source` root identifies the upstream project snapshot, while `journey_registry_artifact` pins the exact journey-registry Git blob. It creates one **candidate journey outcome** per source journey so PEOS can link user-visible outcomes to later capability decomposition, module ownership, contracts, clients and verification.
 
 It does **not** assert that one journey equals one final domain capability. A journey may require several capabilities, and a capability may serve several journeys. The one-to-one candidate link is only an indexing seed.
 

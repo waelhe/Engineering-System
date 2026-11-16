@@ -3,6 +3,10 @@
   "kind": "capability_registry",
   "snapshot_date": "2026-11-16",
   "source": {
+    "repository": "waelhe/app-java-v3",
+    "ref": "main",
+    "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+    "snapshot_date": "2026-11-14",
     "upstream_project": {
       "repository": "waelhe/app-java-v3",
       "ref": "main",
@@ -969,5 +973,6 @@
         "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
       ]
     }
-  ]
+  ],
+  "anomalies": []
 }

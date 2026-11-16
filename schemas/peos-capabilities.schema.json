@@ -7,7 +7,8 @@
     "kind",
     "snapshot_date",
     "source",
-    "records"
+    "records",
+    "anomalies"
   ],
   "properties": {
     "schema_version": {
@@ -23,6 +24,10 @@
     "source": {
       "type": "object",
       "required": [
+        "repository",
+        "ref",
+        "commit_sha",
+        "snapshot_date",
         "upstream_project",
         "journey_registry_artifact"
       ],
@@ -71,6 +76,20 @@
               "pattern": "^[0-9a-f]{40}$"
             }
           }
+        },
+        "repository": {
+          "const": "waelhe/app-java-v3"
+        },
+        "ref": {
+          "const": "main"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "snapshot_date": {
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -169,6 +188,9 @@
           }
         }
       }
+    },
+    "anomalies": {
+      "type": "array"
     }
   },
   "additionalProperties": false
