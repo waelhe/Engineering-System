@@ -1,6 +1,7 @@
 from __future__ import annotations
 import json
 import subprocess
+from pathlib import Path
 
 import pytest
 from urllib.parse import parse_qs, urlsplit
@@ -180,6 +181,7 @@ def test_review_signal_binds_author_sha_and_source_link():
         "user":{"login":"reviewer"},"author_association":"MEMBER",
         "submitted_at":"2026-11-13T20:00:00Z","commit_id":"b"*40}
     payload=intake.source_payload("owner/repo","sample-project",{"number":9},review,"github_review","workflow_run")
+    assert payload["repository"] == "owner/repo"
     assert payload["source_id"]=="github_review-101" and payload["source_actor"]=="reviewer"
     assert payload["commit_sha"]=="b"*40
     assert json.loads(payload["body"])["state"]=="CHANGES_REQUESTED"
@@ -224,16 +226,50 @@ def test_publish_batch_filters_only_pending_signals_and_publishes_new_signal(mon
     monkeypatch.setattr(intake, "git", fake_git)
     monkeypatch.setattr(intake, "api_pages", fake_api_pages)
     monkeypatch.setattr(intake, "run_trusted_python", lambda *args: published.append(args))
-    monkeypatch.setattr(intake, "api_request", lambda *args, **kwargs: {
-        "number": 19, "html_url": "https://github.com/owner/repo/pull/19"
-    })
+    api_calls = []
+    def fake_api_request(method, path, token, payload=None):
+        api_calls.append((method, path, payload))
+        if path == "/repos/owner/repo/pulls":
+            return {
+                "number": 19,
+                "html_url": "https://github.com/owner/repo/pull/19",
+                "head": {"ref": "automation/knowledge-intake-456-1", "sha": "a" * 40},
+                "base": {"ref": "main"},
+            }
+        if path.endswith("/actions/workflows/knowledge-validation.yml/dispatches"):
+            return None
+        raise AssertionError(f"unexpected API request: {method} {path}")
+
+    pushes = []
+    monkeypatch.setattr(intake, "git_push", lambda branch, token: pushes.append((branch, token)))
+    monkeypatch.setattr(intake, "api_request", fake_api_request)
 
     result = intake.publish_batch("owner/repo", "token", "automation/knowledge-intake-456-1", "main")
 
     assert result["number"] == 19
+    assert result["validation"] == {
+        "status": "dispatched",
+        "workflow": "knowledge-validation.yml",
+        "trusted_ref": "main",
+        "head_sha": "a" * 40,
+    }
+    assert pushes == [("automation/knowledge-intake-456-1", "token")]
     assert published == [("tools/egm_knowledge.py", "index")]
     assert ("commit", "-m", "Capture trusted GitHub review signals") in calls
-    assert ("push", "--set-upstream", "origin", "automation/knowledge-intake-456-1") in calls
+    assert any(
+        method == "POST"
+        and path.endswith("/actions/workflows/knowledge-validation.yml/dispatches")
+        and payload == {
+            "ref": "main",
+            "inputs": {
+                "intake_pr_number": "19",
+                "intake_head_ref": "automation/knowledge-intake-456-1",
+                "intake_head_sha": "a" * 40,
+                "intake_base_ref": "main",
+            },
+        }
+        for method, path, payload in api_calls
+    )
     assert "knowledge/inbox/sig-pending.json" not in staged_paths
     assert "knowledge/inbox/sig-new.json" in staged_paths
     assert not (inbox / "sig-pending.json").exists()
@@ -278,3 +314,27 @@ def test_publish_batch_noops_when_no_generated_paths_exist(monkeypatch, tmp_path
     assert result is None
     assert not any(args and args[0] == "add" for args in calls)
 
+
+
+
+def test_git_push_scopes_token_to_temporary_askpass_environment(monkeypatch):
+    captured = {}
+
+    def fake_run(command, **kwargs):
+        captured["command"] = command
+        captured["environment"] = kwargs["env"]
+        askpass = Path(kwargs["env"]["GIT_ASKPASS"])
+        captured["askpass"] = askpass
+        assert askpass.is_file()
+        assert kwargs["env"]["EGM_GIT_TOKEN"] == "secret-token"
+        assert "secret-token" not in " ".join(command)
+        return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(intake.subprocess, "run", fake_run)
+    monkeypatch.setenv("GITHUB_TOKEN", "ambient-token")
+
+    intake.git_push("automation/knowledge-intake-9-1", "secret-token")
+
+    assert captured["command"] == ["git", "push", "--set-upstream", "origin", "automation/knowledge-intake-9-1"]
+    assert "GITHUB_TOKEN" not in captured["environment"]
+    assert not captured["askpass"].exists()

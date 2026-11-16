@@ -18,6 +18,7 @@ UPSTREAM = ROOT / "upstream" / "egm"
 LOCK = ROOT / "upstream" / "egm.lock.json"
 EXTENSIONS = ROOT / "extensions"
 LOCAL_NAME = "EGM Engineering System"
+PLUGIN_NAME = "egm-engineering-system"
 LOCAL_VERSION = "0.1.0"
 
 
@@ -119,7 +120,7 @@ def register_claude_agents(path: Path, agents_directory: Path, adapters_source: 
 
 def update_manifest(path: Path) -> None:
     manifest = json.loads(path.read_text(encoding="utf-8"))
-    manifest["name"] = "egm-engineering-system"
+    manifest["name"] = PLUGIN_NAME
     manifest["version"] = LOCAL_VERSION
     manifest["description"] = "An evidence-backed engineering operating system built on EGM."
     manifest["author"] = {"name": LOCAL_NAME}
@@ -153,6 +154,44 @@ def update_manifest(path: Path) -> None:
             "Verify this change against its plan, tests and exact commit SHA.",
         ]
     path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def update_claude_guide(path: Path, plugin_name: str = PLUGIN_NAME) -> None:
+    """Update slash-command references to the integrated Claude plugin namespace."""
+    if not path.is_file() or not plugin_name:
+        raise RuntimeError("Claude guide or plugin namespace is missing")
+    content = path.read_text(encoding="utf-8")
+    updated = content.replace("/egm:", f"/{plugin_name}:")
+    updated = updated.replace("`egm:egm-", f"`{plugin_name}:egm-")
+    if "/egm:" in updated or "`egm:egm-" in updated:
+        raise RuntimeError("Claude guide retains an upstream plugin namespace")
+    if f"/{plugin_name}:egm-review" not in updated or f"`{plugin_name}:egm-synthesizer`" not in updated:
+        raise RuntimeError("Claude guide is missing namespaced review entry points")
+    path.write_text(updated, encoding="utf-8")
+
+
+def apply_runtime_charter(skill_path: Path) -> None:
+    """Inject local authority into a staged copy of the pinned upstream review skill."""
+    if not skill_path.is_file():
+        raise RuntimeError("Pinned upstream egm-review skill is missing")
+    content = skill_path.read_text(encoding="utf-8")
+    anchor = "# Review, Validation & Automated Remediation\\n"
+    charter = (
+        "\\n## EGM Engineering System Runtime Charter\\n\\n"
+        "Before starting intake, preset selection, or any review stage, load and apply "
+        "the system-owned runtime charter at "
+        "`${CLAUDE_PLUGIN_ROOT}/resources/execution_instructions.md` in Claude Code/Cowork. "
+        "In other harnesses, resolve the package root from this skill directory and read "
+        "`../../resources/execution_instructions.md`. Apply its task-risk, authority, "
+        "evidence, security, and delivery rules throughout this invocation. If the charter "
+        "cannot be read, stop and report the review as blocked; do not proceed using only "
+        "the upstream defaults.\\n"
+    )
+    if content.count(anchor) != 1:
+        raise RuntimeError("Pinned egm-review skill layout changed; runtime charter was not injected")
+    if "## EGM Engineering System Runtime Charter" in content:
+        raise RuntimeError("Runtime charter was already injected into the staged EGM skill")
+    skill_path.write_text(content.replace(anchor, anchor + charter), encoding="utf-8")
 
 
 def copy_overlay(source: Path, destination: Path) -> None:
@@ -202,6 +241,8 @@ def assemble(target: str, output: Path) -> tuple[Path, Path]:
             shutil.copy2(source, stage / "resources" / name)
 
         update_manifest(stage / "plugin.json")
+        update_claude_guide(stage / "docs" / "claude.md", PLUGIN_NAME)
+        apply_runtime_charter(stage / "skills" / "egm-review" / "SKILL.md")
         update_manifest(stage / ".codex-plugin" / "plugin.json")
         claude_manifest = stage / ".claude-plugin" / "plugin.json"
         if claude_manifest.is_file():

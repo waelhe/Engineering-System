@@ -20,9 +20,9 @@ def git_bytes(*args: str) -> bytes:
     return result.stdout
 
 
-def changed_paths(base: str) -> list[tuple[str, str]]:
+def changed_paths(base: str, head: str = "HEAD") -> list[tuple[str, str]]:
     result = subprocess.run(
-        ["git", "diff", "--name-status", "-z", f"{base}...HEAD", "--", *APPEND_ONLY_PREFIXES],
+        ["git", "diff", "--no-renames", "--name-status", "-z", f"{base}...{head}", "--", *APPEND_ONLY_PREFIXES],
         check=False, capture_output=True,
     )
     if result.returncode:
@@ -45,12 +45,12 @@ def changed_paths(base: str) -> list[tuple[str, str]]:
     return changes
 
 
-def is_append_only_jsonl_update(base: str, path: str) -> bool:
+def is_append_only_jsonl_update(merge_base: str, head: str, path: str) -> bool:
     if not path.endswith(".jsonl"):
         return False
     try:
-        before = git_bytes("show", f"{base}:{path}").splitlines()
-        after = git_bytes("show", f"HEAD:{path}").splitlines()
+        before = git_bytes("show", f"{merge_base}:{path}").splitlines()
+        after = git_bytes("show", f"{head}:{path}").splitlines()
     except RuntimeError:
         return False
     if not before or not after or len(after) < len(before):
@@ -61,12 +61,15 @@ def is_append_only_jsonl_update(base: str, path: str) -> bool:
     return len(new_records) >= len(old_records) and new_records[:len(old_records)] == old_records
 
 
-def validate_changes(base: str) -> list[tuple[str, str, str]]:
+def validate_changes(base: str, head: str = "HEAD") -> list[tuple[str, str, str]]:
+    merge_base = git_bytes("merge-base", base, head).decode("ascii").strip()
+    if not merge_base:
+        raise RuntimeError("git merge-base returned an empty revision")
     violations: list[tuple[str, str, str]] = []
-    for status, path in changed_paths(base):
+    for status, path in changed_paths(base, head):
         if status == "A":
             continue
-        if status == "M" and is_append_only_jsonl_update(base, path):
+        if status == "M" and is_append_only_jsonl_update(merge_base, head, path):
             continue
         violations.append((status, path, "only new files or byte-preserving JSONL appends are allowed"))
     return violations
@@ -75,9 +78,10 @@ def validate_changes(base: str) -> list[tuple[str, str, str]]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", required=True, help="base branch ref, e.g. origin/main")
+    parser.add_argument("--head", default="HEAD", help="candidate head ref; defaults to HEAD")
     args = parser.parse_args()
     try:
-        violations = validate_changes(args.base)
+        violations = validate_changes(args.base, args.head)
     except (OSError, RuntimeError) as exc:
         print(str(exc), file=sys.stderr)
         return 2

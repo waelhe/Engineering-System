@@ -250,6 +250,27 @@ def validate_all() -> list[dict[str, str]]:
                 and compare_result_matches
             )
             proof_url_is_https = isinstance(proof_url, str) and proof_url.startswith("https://")
+            target_verification = inclusion.get("target_verification") if isinstance(inclusion, dict) else None
+            target_workflow = target_verification.get("workflow") if isinstance(target_verification, dict) else None
+            target_run_id = target_workflow.get("run_id") if isinstance(target_workflow, dict) else None
+            target_workflow_url = target_workflow.get("url") if isinstance(target_workflow, dict) else None
+            target_workflow_matches = (
+                isinstance(target_workflow, dict)
+                and target_workflow.get("conclusion") == "success"
+                and target_workflow.get("tested_sha") == target_sha
+                and isinstance(target_run_id, str)
+                and bool(target_run_id.strip())
+                and isinstance(target_workflow_url, str)
+                and target_workflow_url.startswith("https://")
+            )
+            target_workflow_source_matches = any(
+                isinstance(source, dict)
+                and source.get("kind") == "ci_run"
+                and source.get("uri") == target_workflow_url
+                and source.get("run_id") == target_run_id
+                and source.get("commit_sha") == target_sha
+                for source in verification.get("sources", [])
+            )
             if (
                 isinstance(tested_sha, str)
                 and workflow.get("tested_sha") == tested_sha
@@ -265,6 +286,8 @@ def validate_all() -> list[dict[str, str]]:
                 if (
                     compare_proof_matches
                     and proof_source_matches
+                    and target_workflow_matches
+                    and target_workflow_source_matches
                     and isinstance(inclusion.get("verified_at"), str)
                 ):
                     return True
@@ -576,8 +599,30 @@ def validate_receipts() -> list[dict[str, str]]:
             inclusion = receipt.get("target_inclusion") or {}
             if not receipt.get("target_sha"):
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "merged/deployed receipt requires target_sha"})
-            if inclusion.get("target_sha") != receipt.get("target_sha") or inclusion.get("tested_sha_is_ancestor") is not True:
-                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "target inclusion proof must identify target_sha and confirm tested SHA ancestry"})
+            target_verification = inclusion.get("target_verification") or {}
+            target_workflow = target_verification.get("workflow") or {}
+            tested_sha = receipt.get("tested_sha")
+            target_sha = receipt.get("target_sha")
+            proof_url = inclusion.get("proof_url")
+            if (
+                inclusion.get("target_sha") != target_sha
+                or inclusion.get("tested_sha") != tested_sha
+                or inclusion.get("tested_sha_is_ancestor") is not True
+                or not isinstance(tested_sha, str)
+                or not isinstance(target_sha, str)
+                or not isinstance(proof_url, str)
+                or not proof_url.endswith(f"/compare/{tested_sha}...{target_sha}")
+            ):
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "target inclusion proof must bind receipt tested_sha to the exact target_sha comparison"})
+            if (
+                target_workflow.get("conclusion") != "success"
+                or target_workflow.get("tested_sha") != target_sha
+                or not isinstance(target_workflow.get("run_id"), str)
+                or not target_workflow.get("run_id")
+                or not isinstance(target_workflow.get("url"), str)
+                or not target_workflow.get("url", "").startswith("https://")
+            ):
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "merged/deployed receipt requires successful target-SHA verification evidence"})
         if receipt.get("status") == "deployed":
             target_sha = receipt.get("target_sha")
             deployments = [

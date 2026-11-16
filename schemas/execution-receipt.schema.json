@@ -253,8 +253,10 @@
       "required": [
         "target_branch",
         "target_sha",
+        "tested_sha",
         "tested_sha_is_ancestor",
-        "proof_url"
+        "proof_url",
+        "target_verification"
       ],
       "properties": {
         "target_branch": {
@@ -263,6 +265,29 @@
         "target_sha": {
           "type": "string",
           "pattern": "^[0-9a-f]{40}$"
+        },
+        "tested_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "target_verification": {
+          "type": "object",
+          "required": ["workflow"],
+          "properties": {
+            "workflow": {
+              "type": "object",
+              "required": ["name", "run_id", "conclusion", "tested_sha", "url"],
+              "properties": {
+                "name": {"type": "string"},
+                "run_id": {"type": "string", "minLength": 1},
+                "conclusion": {"const": "success"},
+                "tested_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+                "url": {"type": "string", "format": "uri"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         },
         "tested_sha_is_ancestor": {
           "const": true

@@ -446,6 +446,14 @@
         },
         "behind_by": {
           "const": 0
+        },
+        "target_verification": {
+          "type": "object",
+          "required": ["workflow"],
+          "properties": {
+            "workflow": {"$ref": "#/$defs/workflow"}
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false

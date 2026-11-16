@@ -3,7 +3,13 @@ import subprocess
 from pathlib import Path
 
 import tools.build_plugin as build_plugin
-from tools.build_plugin import copy_overlay, register_claude_agents, update_manifest
+from tools.build_plugin import (
+    apply_runtime_charter,
+    copy_overlay,
+    register_claude_agents,
+    update_claude_guide,
+    update_manifest,
+)
 
 
 def test_manifest_identity_and_openai_surface_are_rebranded(tmp_path: Path):
@@ -121,3 +127,34 @@ def test_claude_manifest_registers_agents_from_plugin_root(tmp_path: Path):
     assert (root_agents / "egm-upstream-bootstrap_orchestrator.md").read_text(encoding="utf-8") == "upstream agent"
     assert all((root_agents / target_name).is_file() for _, target_name in local_names)
     assert not upstream_agents.exists() or not any(upstream_agents.iterdir())
+
+
+
+def test_claude_guide_uses_integrated_plugin_namespace(tmp_path: Path):
+    guide = tmp_path / "claude.md"
+    guide.write_text("Run `/egm:egm-review` and `egm:egm-synthesizer`.\n", encoding="utf-8")
+
+    update_claude_guide(guide, "egm-engineering-system")
+
+    content = guide.read_text(encoding="utf-8")
+    assert "`/egm-engineering-system:egm-review`" in content
+    assert "`egm-engineering-system:egm-synthesizer`" in content
+    assert "/egm:egm-review" not in content
+
+
+def test_upstream_review_skill_receives_runtime_charter_in_staged_copy(tmp_path: Path):
+    skill = tmp_path / "SKILL.md"
+    skill.write_text(
+        "---\nname: egm-review\n---\n\n"
+        "# Review, Validation & Automated Remediation\n\n"
+        "Pinned upstream instructions.\n",
+        encoding="utf-8",
+    )
+
+    apply_runtime_charter(skill)
+
+    content = skill.read_text(encoding="utf-8")
+    assert "EGM Engineering System Runtime Charter" in content
+    assert "`${CLAUDE_PLUGIN_ROOT}/resources/execution_instructions.md`" in content
+    assert "`../../resources/execution_instructions.md`" in content
+    assert "Pinned upstream instructions." in content

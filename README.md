@@ -67,11 +67,13 @@ Retrieval filters by project and ranks source-linked records using deterministic
 
 ## Intake a source signal
 
-Create a JSON file with project_id, provider, source_id, source_url, title and body, then run:
+Create a JSON file with project_id, provider, repository, source_id, source_url, title and body. Set repository when the provider's source IDs are scoped to a repository rather than globally unique, then run:
 
     python tools/egm_knowledge.py intake --file signal.json
+    python tools/egm_knowledge.py index
+    python tools/egm_knowledge.py index --check
 
-The intake stores a bounded, redacted excerpt plus a digest and source identity. Repeated delivery of the same payload is idempotent. Edited source content becomes a new immutable snapshot. Signals are not automatically promoted into Findings or Cases.
+The intake stores a bounded, redacted excerpt plus a digest and source identity. Repeated delivery of the same body for the same provider/repository/source ID is idempotent; a changed body creates a new immutable snapshot. The digest covers the body only, so title-only edits do not create a new snapshot. Generate the index after intake and use index --check to verify that the committed index is current. Signals are not automatically promoted into Findings or Cases.
 
 ## Build the integrated EGM plugin
 

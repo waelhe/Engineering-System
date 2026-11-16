@@ -230,8 +230,22 @@ def validate_migration(root: Path = ROOT, manifest_path: Path = MANIFEST) -> lis
         errors.append("evidence manifest must account for eight source snapshots")
     if breakdown.get("repair_reconciliations") != 5:
         errors.append("evidence manifest must account for five repair reconciliations")
-    if breakdown.get("additional_records") != ["PR-834-INDEPENDENT-REVIEW-ATTEMPT", "LEGACY-COUNTING-POLICY"]:
+    expected_additional = ["PR-834-INDEPENDENT-REVIEW-ATTEMPT", "LEGACY-COUNTING-POLICY"]
+    additional_records = breakdown.get("additional_records")
+    if additional_records != expected_additional:
         errors.append("evidence manifest additional-record inventory is incorrect")
+    evidence_family = next(
+        (item for item in manifest.get("families", []) if item.get("family") == "evidence"),
+        {},
+    )
+    expected_evidence_count = evidence_family.get("expected_count")
+    evidence_ids = evidence_family.get("expected_legacy_ids", [])
+    if type(expected_evidence_count) is not int or expected_evidence_count != 15:
+        errors.append("evidence family expected_count must equal source snapshots, repair reconciliations and additional records")
+    if not isinstance(evidence_ids, list) or not all(isinstance(item, str) for item in evidence_ids) or not set(expected_additional).issubset(set(evidence_ids)):
+        errors.append("every additional evidence record must exist in the evidence family expected_legacy_ids")
+    elif expected_evidence_count != len(evidence_ids):
+        errors.append("evidence family expected_count does not match its expected_legacy_ids inventory")
     return errors
 
 

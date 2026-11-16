@@ -28,6 +28,10 @@ For non-reproducible or non-code cases, set the Finding's `closure_mode` to `alt
 
 For reproducible code defects, set `closure_mode` to `code_defect`; the linked Verification must bind the successful workflow's tested SHA to the target-inclusion proof and its source record. The proof stores the GitHub Compare API result for `tested_sha...target_sha`: accept only `ahead` with `ahead_by > 0` or `identical` with `ahead_by = 0`, and require `behind_by = 0`. The comparison URL, base/head SHAs, recorded status and commit counts must agree.
 
+For reproducible code defects, the linked Verification must record a successful regression workflow on the exact `target_sha`, in addition to the Compare API proof that the candidate `tested_sha` is an ancestor of that target. The target workflow run must itself name the target SHA and be tied to a `ci_run` source record with the same run ID, URL and commit SHA. Ancestry alone is insufficient because a later revert does not remove the earlier fix commit from Git history.
+
+For `merged` or `deployed` Execution Receipts, `target_inclusion.tested_sha` must equal the receipt's `tested_sha`; the comparison URL must encode that exact tested/target pair; and a successful regression workflow must be recorded against the exact target SHA.
+
 ## Enforcement mapping
 
 Each approved Rule links to one or more Controls. A Control records enforcement type, scope and trigger, exact command/workflow or owner, failure behavior, evidence required to consider the control active, and known blind spots/bypass paths.

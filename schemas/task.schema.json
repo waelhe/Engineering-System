@@ -95,5 +95,40 @@
       }
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "risk_triggers": {
+            "contains": {
+              "enum": [
+                "security",
+                "identity",
+                "money",
+                "ledger",
+                "concurrency",
+                "data_migration",
+                "destructive_data",
+                "external_side_effect",
+                "public_contract",
+                "production",
+                "architecture"
+              ]
+            }
+          }
+        },
+        "required": [
+          "risk_triggers"
+        ]
+      },
+      "then": {
+        "properties": {
+          "tier": {
+            "const": "T3"
+          }
+        }
+      }
+    }
+  ]
 }

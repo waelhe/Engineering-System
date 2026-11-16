@@ -2,7 +2,7 @@
 """Safely synchronize GitHub PR reviews/comments into the EGM Signal inbox."""
 
 from __future__ import annotations
-import argparse, json, os, subprocess, sys, urllib.error, urllib.request
+import argparse, json, os, subprocess, sys, tempfile, urllib.error, urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -77,6 +77,38 @@ def run_trusted_python(*args: str) -> None:
         [sys.executable, *args], check=True,
         env=unprivileged_child_environment(),
     )
+
+
+def git_with_token(arguments: list[str], token: str) -> None:
+    """Run one Git network operation with credentials scoped to its subprocess."""
+    if not token:
+        raise IntakeError("a GitHub token is required for this Git network operation")
+    with tempfile.TemporaryDirectory(prefix="egm-git-askpass-") as temporary:
+        askpass = Path(temporary) / "askpass.sh"
+        askpass.write_text(
+            "#!/bin/sh\\n"
+            'case "$1" in\\n'
+            '  *Username*) printf "%s\\\\n" "x-access-token" ;;\\n'
+            '  *Password*) printf "%s\\\\n" "$EGM_GIT_TOKEN" ;;\\n'
+            '  *) exit 1 ;;\\n'
+            "esac\\n",
+            encoding="utf-8",
+        )
+        askpass.chmod(0o700)
+        environment = unprivileged_child_environment()
+        environment["GIT_ASKPASS"] = str(askpass)
+        environment["GIT_TERMINAL_PROMPT"] = "0"
+        environment["EGM_GIT_TOKEN"] = token
+        result = subprocess.run(
+            ["git", *arguments], check=False, capture_output=True, text=True,
+            env=environment,
+        )
+        if result.returncode:
+            raise IntakeError(result.stderr.strip() or f"git {' '.join(arguments)} failed")
+
+
+def git_push(branch: str, token: str) -> None:
+    git_with_token(["push", "--set-upstream", "origin", branch], token)
 
 def read_event(path: Path) -> dict[str, Any]:
     try:
@@ -209,7 +241,7 @@ def prepare_branch(repo: str, token: str, run_id: str, run_attempt: str) -> tupl
         raise IntakeError("repository API did not return a default branch")
     if not run_id.isdigit() or not run_attempt.isdigit():
         raise IntakeError("GitHub run ID and attempt must be numeric")
-    git("fetch", "origin", base_branch, "--no-tags")
+    git_with_token(["fetch", "origin", base_branch, "--no-tags"], token)
     git("config", "user.name", "EGM Knowledge Intake Bot")
     git("config", "user.email", "egm-knowledge-intake@users.noreply.github.com")
     branch = f"automation/knowledge-intake-{run_id}-{run_attempt}"
@@ -271,6 +303,50 @@ def stage_generated_paths() -> None:
         git("add", "--", *paths)
 
 
+def dispatch_intake_validation(
+    repo: str,
+    token: str,
+    pull_request: dict[str, Any],
+    expected_branch: str,
+    default_branch: str,
+) -> dict[str, str]:
+    """Run validation from trusted default-branch code against a pinned intake SHA."""
+    number = pull_request.get("number")
+    head = pull_request.get("head") or {}
+    base = pull_request.get("base") or {}
+    head_ref = head.get("ref")
+    head_sha = head.get("sha")
+    base_ref = base.get("ref")
+    if not isinstance(number, int) or number < 1:
+        raise IntakeError("created intake PR has no valid number")
+    if head_ref != expected_branch:
+        raise IntakeError("created intake PR head does not match the generated branch")
+    if base_ref != default_branch:
+        raise IntakeError("created intake PR base does not match the trusted default branch")
+    if not isinstance(head_sha, str) or len(head_sha) != 40 or any(c not in "0123456789abcdef" for c in head_sha):
+        raise IntakeError("created intake PR head SHA is invalid")
+    api_request(
+        "POST",
+        f"/repos/{repo}/actions/workflows/knowledge-validation.yml/dispatches",
+        token,
+        {
+            "ref": default_branch,
+            "inputs": {
+                "intake_pr_number": str(number),
+                "intake_head_ref": head_ref,
+                "intake_head_sha": head_sha,
+                "intake_base_ref": base_ref,
+            },
+        },
+    )
+    return {
+        "status": "dispatched",
+        "workflow": "knowledge-validation.yml",
+        "trusted_ref": default_branch,
+        "head_sha": head_sha,
+    }
+
+
 def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[str, Any] | None:
     """Publish generated inbox/index data on a fresh branch based on trusted main."""
     stage_generated_paths()
@@ -298,7 +374,7 @@ def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[
             run_trusted_python("tools/egm_knowledge.py", "index")
             stage_generated_paths()
     git("commit", "-m", "Capture trusted GitHub review signals")
-    git("push", "--set-upstream", "origin", branch)
+    git_push(branch, token)
     pr = api_request("POST", f"/repos/{repo}/pulls", token, {
         "title": "Engineering knowledge intake sync", "head": branch, "base": base_branch,
         "body": ("## Automated intake batch\n\n"
@@ -308,7 +384,13 @@ def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[
                  "generated intake data. Review and merge only through normal protections."),
         "draft": True,
     })
-    return {"number": pr.get("number"), "url": pr.get("html_url"), "branch": branch}
+    validation = dispatch_intake_validation(repo, token, pr, branch, base_branch)
+    return {
+        "number": pr.get("number"),
+        "url": pr.get("html_url"),
+        "branch": branch,
+        "validation": validation,
+    }
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)

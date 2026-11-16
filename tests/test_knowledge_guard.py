@@ -70,3 +70,28 @@ def test_append_only_guard_rejects_deleting_jsonl_records(tmp_path, monkeypatch)
     git(root, "add", ".")
     git(root, "commit", "-m", "delete evidence")
     assert validate_changes(base)
+
+
+
+def test_append_only_guard_uses_merge_base_when_base_advances_after_branching(tmp_path, monkeypatch):
+    root = tmp_path / "repo"
+    init_repo(root)
+    monkeypatch.chdir(root)
+    batch = root / "knowledge" / "evidence" / "history.jsonl"
+    batch.write_text('{"id":"e1"}\n', encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "initial")
+    git(root, "branch", "-M", "main")
+
+    git(root, "checkout", "-b", "intake-branch")
+    batch.write_text('{"id":"e1"}\n{"id":"branch-e2"}\n', encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "branch append")
+
+    git(root, "checkout", "main")
+    batch.write_text('{"id":"e1"}\n{"id":"main-e2"}\n', encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "base advanced")
+
+    git(root, "checkout", "intake-branch")
+    assert validate_changes("main", "HEAD") == []

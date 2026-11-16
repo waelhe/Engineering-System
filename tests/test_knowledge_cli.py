@@ -235,8 +235,24 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
             "behind_by": 0,
             "proof_url": "https://github.com/owner/repo/compare/" + tested_sha + "..." + ("c" * 40),
             "verified_at": datetime.now(timezone.utc).isoformat(),
+            "target_verification": {
+                "workflow": {
+                    "name": "target-regression",
+                    "run_id": "67890",
+                    "conclusion": "success",
+                    "tested_sha": "c" * 40,
+                    "url": "https://github.com/owner/repo/actions/runs/67890",
+                }
+            },
         },
     )
+    verification["sources"].append({
+        "kind": "ci_run",
+        "uri": verification["target_inclusion"]["target_verification"]["workflow"]["url"],
+        "run_id": "67890",
+        "commit_sha": "c" * 40,
+        "captured_at": datetime.now(timezone.utc).isoformat(),
+    })
     verification["sources"].append({
         "kind": "commit",
         "uri": verification["target_inclusion"]["proof_url"],
@@ -267,6 +283,21 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
     verification["project_id"] = finding["project_id"]
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
     assert knowledge.validate_all() == []
+
+    verification["target_inclusion"]["target_verification"]["workflow"]["tested_sha"] = tested_sha
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    errors = knowledge.validate_all()
+    assert any("closed code-defect Finding requires" in item["error"] for item in errors)
+    verification["target_inclusion"]["target_verification"]["workflow"]["tested_sha"] = "c" * 40
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    assert knowledge.validate_all() == []
+
+    verification["target_inclusion"]["target_verification"]["workflow"]["conclusion"] = "failure"
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    errors = knowledge.validate_all()
+    assert any("closed code-defect Finding requires" in item["error"] for item in errors)
+    verification["target_inclusion"]["target_verification"]["workflow"]["conclusion"] = "success"
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
 
     verification["workflow"]["conclusion"] = "failure"
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
@@ -484,3 +515,59 @@ def test_new_case_schema_does_not_require_legacy_excerpt_unless_migrated():
     case["legacy_excerpt"] = "Preserved source excerpt."
     assert knowledge.schema_errors(case, schema) == []
 
+
+
+
+def test_merged_receipt_binds_tested_sha_to_target_and_requires_target_regression(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    tested_sha = "a" * 40
+    target_sha = "b" * 40
+    receipt = {
+        "schema_version": 1,
+        "task_id": "receipt-merged-1",
+        "project_id": "sample-project",
+        "repository": "owner/repo",
+        "tier": "T1",
+        "status": "merged",
+        "head_sha": tested_sha,
+        "tested_sha": tested_sha,
+        "target_sha": target_sha,
+        "started_at": "2026-11-14T00:00:00Z",
+        "knowledge_pack": {"generated_at": "2026-11-14T00:00:00Z", "record_ids": []},
+        "checks": [{"name": "candidate-tests", "status": "success", "tested_sha": tested_sha}],
+        "reviews": [],
+        "write_boundary": ["src/"],
+        "target_inclusion": {
+            "target_branch": "main",
+            "target_sha": target_sha,
+            "tested_sha": tested_sha,
+            "tested_sha_is_ancestor": True,
+            "proof_url": f"https://github.com/owner/repo/compare/{tested_sha}...{target_sha}",
+            "target_verification": {
+                "workflow": {
+                    "name": "target-regression",
+                    "run_id": "90123",
+                    "conclusion": "success",
+                    "tested_sha": target_sha,
+                    "url": "https://github.com/owner/repo/actions/runs/90123",
+                }
+            },
+        },
+    }
+    directory = root / "knowledge/execution-receipts"
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / "merged.json"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    assert knowledge.validate_receipts() == []
+
+    receipt["target_inclusion"]["tested_sha"] = "c" * 40
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    errors = knowledge.validate_receipts()
+    assert any("bind receipt tested_sha" in item["error"] for item in errors)
+
+    receipt["target_inclusion"]["tested_sha"] = tested_sha
+    receipt["target_inclusion"]["target_verification"]["workflow"]["tested_sha"] = tested_sha
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    errors = knowledge.validate_receipts()
+    assert any("target-SHA verification" in item["error"] for item in errors)

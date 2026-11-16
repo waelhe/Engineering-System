@@ -3,6 +3,24 @@ from pathlib import Path
 
 from tools.validate_migration import validate_migration
 
+EVIDENCE_IDS = [
+    "CR-2026-10-25-26",
+    "HISTORY-2026-10-27",
+    "CR-2026-10-29",
+    "SALEOR-SHARDS-2026-11-13",
+    "ADV-2026-11-10",
+    "ADV-2026-11-12",
+    "REPAIR-PR-REVIEW-SWEEP-2026-11-13",
+    "ADV-IMPLEMENTATION-2026-11-13",
+    "REPAIR-PR-829",
+    "REPAIR-PR-819",
+    "REPAIR-PR-821",
+    "REPAIR-PR-822",
+    "REPAIR-PR-823",
+    "PR-834-INDEPENDENT-REVIEW-ATTEMPT",
+    "LEGACY-COUNTING-POLICY"
+]
+
 FAMILIES = (
     ("cases", "case", "knowledge/cases/cases.jsonl"),
     ("findings", "finding", "knowledge/findings/findings.jsonl"),
@@ -20,7 +38,7 @@ def write_fixture(root: Path):
     for name, record_type, relative in FAMILIES:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
-        ids = ["E-01"] if name == "cases" else []
+        ids = ["E-01"] if name == "cases" else (EVIDENCE_IDS if name == "evidence" else [])
         families.append({
             "family": name,
             "type": record_type,
@@ -37,6 +55,13 @@ def write_fixture(root: Path):
                 "legacy_id": "E-01", "legacy_source_revision": revision,
                 "migration_batch": "batch-1",
             })
+        elif name == "evidence":
+            for index, legacy_id in enumerate(EVIDENCE_IDS, start=1):
+                records.append({
+                    "id": f"evidence-{index:02d}", "type": "evidence", "project_id": "sample",
+                    "legacy_id": legacy_id, "legacy_source_revision": revision,
+                    "migration_batch": "batch-1",
+                })
         destination.write_text(
             "".join(json.dumps(record) + "\n" for record in records),
             encoding="utf-8",
@@ -45,7 +70,7 @@ def write_fixture(root: Path):
     manifest = {
         "schema_version": 1,
         "migration_batch": "batch-1",
-        "expected_total_records": 1,
+        "expected_total_records": 1 + len(EVIDENCE_IDS),
         "source": {"candidate_sha": revision, "candidate_is_merged": False},
         "families": families,
         "project_profiles": [{
@@ -144,3 +169,28 @@ def test_migration_validator_rejects_candidate_sha_not_matching_source_revision(
     errors = validate_migration(tmp_path, manifest)
 
     assert any("source_candidate_sha does not match pinned source revision" in item for item in errors)
+
+
+
+def test_migration_validator_reconciles_evidence_count_with_declared_inventory(tmp_path: Path):
+    manifest = write_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    evidence = next(item for item in payload["families"] if item["family"] == "evidence")
+    evidence["expected_count"] -= 1
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    errors = validate_migration(tmp_path, manifest)
+
+    assert any("evidence family expected_count" in item for item in errors)
+
+
+def test_migration_validator_requires_additional_evidence_ids_in_family_inventory(tmp_path: Path):
+    manifest = write_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    evidence = next(item for item in payload["families"] if item["family"] == "evidence")
+    evidence["expected_legacy_ids"].remove("PR-834-INDEPENDENT-REVIEW-ATTEMPT")
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    errors = validate_migration(tmp_path, manifest)
+
+    assert any("every additional evidence record" in item for item in errors)

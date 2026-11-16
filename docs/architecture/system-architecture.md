@@ -59,7 +59,7 @@ Knowledge changes are made through pull requests and checked by schema, referenc
 - Missing or inaccessible source: mark evidence incomplete; never infer success.
 - Stale SHA or workflow mismatch: verification fails.
 - Missing independent reviewer capability: review is not_run or blocked, never passed.
-- Duplicate source event: retain source identity and return the prior signal; do not create another signal.
+- Duplicate source snapshot: return the prior Signal only when both source identity and body digest match. Replaying the same identity with a changed body creates a new immutable snapshot. Title-only edits do not create a distinct snapshot because the intake digest covers the body only.
 - Similar but unproven root causes: keep separate findings and propose a pattern for review.
 - Invalid relation: block knowledge-index generation and CI.
 - Policy conflict: stop the affected transition and record the conflict.
