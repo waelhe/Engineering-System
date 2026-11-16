@@ -51,7 +51,7 @@ SECRET_PATTERNS = (
     (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "[REDACTED_AWS_ACCESS_KEY]"),
     (re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"), "[REDACTED_API_KEY]"),
     (re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{15,}\b"), "[REDACTED_SLACK_TOKEN]"),
-    (re.compile(r"""(?i)((?:\\?["'])?[a-z0-9_.-]*(?:password|passwd|secret|token)(?:\\?["'])?\s*[:=]\s*(?:\\?["'])?)([^"'\s,;}{]{8,})((?:\\?["'])?)"""), r"\1[REDACTED]\3"),
+    (re.compile(r"""(?i)((?:\\?["'])?(?<![a-z0-9_.-])[a-z0-9_.-]{0,64}(?:password|passwd|secret|token)(?:\\?["'])?\s*[:=]\s*(?:\\?["'])?)([^"'\s,;}{]{8,})((?:\\?["'])?)"""), r"\1[REDACTED]\3"),
     (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----"), "[REDACTED_PRIVATE_KEY]"),
 )
 
