@@ -175,9 +175,9 @@ def apply_runtime_charter(skill_path: Path) -> None:
     if not skill_path.is_file():
         raise RuntimeError("Pinned upstream egm-review skill is missing")
     content = skill_path.read_text(encoding="utf-8")
-    anchor = "# Review, Validation & Automated Remediation\\n"
+    anchor = "# Review, Validation & Automated Remediation\n"
     charter = (
-        "\\n## EGM Engineering System Runtime Charter\\n\\n"
+        "\n## EGM Engineering System Runtime Charter\n\n"
         "Before starting intake, preset selection, or any review stage, load and apply "
         "the system-owned runtime charter at "
         "`${CLAUDE_PLUGIN_ROOT}/resources/execution_instructions.md` in Claude Code/Cowork. "
@@ -185,7 +185,7 @@ def apply_runtime_charter(skill_path: Path) -> None:
         "`../../resources/execution_instructions.md`. Apply its task-risk, authority, "
         "evidence, security, and delivery rules throughout this invocation. If the charter "
         "cannot be read, stop and report the review as blocked; do not proceed using only "
-        "the upstream defaults.\\n"
+        "the upstream defaults.\n"
     )
     if content.count(anchor) != 1:
         raise RuntimeError("Pinned egm-review skill layout changed; runtime charter was not injected")

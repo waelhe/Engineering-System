@@ -327,6 +327,10 @@ def test_git_push_scopes_token_to_temporary_askpass_environment(monkeypatch):
         captured["askpass"] = askpass
         assert askpass.is_file()
         assert kwargs["env"]["EGM_GIT_TOKEN"] == "secret-token"
+        script = askpass.read_text(encoding="utf-8")
+        assert script.startswith("#!/bin/sh\n")
+        assert 'printf "%s\\n" "x-access-token"' in script
+        assert 'printf "%s\\n" "$EGM_GIT_TOKEN"' in script
         assert "secret-token" not in " ".join(command)
         return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
 

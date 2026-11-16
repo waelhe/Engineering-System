@@ -85,15 +85,16 @@ def git_with_token(arguments: list[str], token: str) -> None:
         raise IntakeError("a GitHub token is required for this Git network operation")
     with tempfile.TemporaryDirectory(prefix="egm-git-askpass-") as temporary:
         askpass = Path(temporary) / "askpass.sh"
-        askpass.write_text(
-            "#!/bin/sh\\n"
-            'case "$1" in\\n'
-            '  *Username*) printf "%s\\\\n" "x-access-token" ;;\\n'
-            '  *Password*) printf "%s\\\\n" "$EGM_GIT_TOKEN" ;;\\n'
-            '  *) exit 1 ;;\\n'
-            "esac\\n",
-            encoding="utf-8",
-        )
+        script = "\n".join((
+            "#!/bin/sh",
+            'case "$1" in',
+            '  *Username*) printf "%s\\n" "x-access-token" ;;',
+            '  *Password*) printf "%s\\n" "$EGM_GIT_TOKEN" ;;',
+            '  *) exit 1 ;;',
+            "esac",
+            "",
+        ))
+        askpass.write_text(script, encoding="utf-8")
         askpass.chmod(0o700)
         environment = unprivileged_child_environment()
         environment["GIT_ASKPASS"] = str(askpass)
@@ -105,7 +106,6 @@ def git_with_token(arguments: list[str], token: str) -> None:
         )
         if result.returncode:
             raise IntakeError(result.stderr.strip() or f"git {' '.join(arguments)} failed")
-
 
 def git_push(branch: str, token: str) -> None:
     git_with_token(["push", "--set-upstream", "origin", branch], token)
