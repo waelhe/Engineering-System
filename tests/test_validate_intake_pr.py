@@ -107,3 +107,11 @@ def test_intake_tree_rejects_symlink_and_executable_mode(monkeypatch):
                 "refs/remotes/origin/branch",
                 ["knowledge/inbox/sig-x.json"],
             )
+
+
+
+def test_signal_validator_binds_source_identity_to_repository_provenance():
+    path, record = sample_signal()
+    record["source_identity"] = "github:another/repository:github_review-101"
+    with pytest.raises(IntakeValidationError, match="source identity or body digest"):
+        validate_signal_record(path, json.dumps(record).encode("utf-8"))

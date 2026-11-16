@@ -100,16 +100,29 @@ def validate_signal_record(relative_path: str, content: bytes) -> None:
     source_id = record.get("source_id")
     source_identity = record.get("source_identity")
     digest = record.get("payload_digest")
+    sources = record.get("sources")
+    if not isinstance(sources, list) or len(sources) != 1 or not isinstance(sources[0], dict):
+        raise IntakeValidationError(f"Signal must retain exactly one source snapshot: {relative_path}")
+    source = sources[0]
+    repository_value = source.get("repository", "")
+    if not isinstance(repository_value, str):
+        raise IntakeValidationError(f"Signal repository identity is invalid: {relative_path}")
+    repository = repository_value.strip().lower()
+    expected_identity = (
+        ":".join((provider, repository, source_id))
+        if isinstance(provider, str) and isinstance(source_id, str)
+        else None
+    )
     if (
         not isinstance(provider, str)
         or not provider
+        or provider != provider.lower()
         or not isinstance(source_id, str)
         or not source_id
         or not isinstance(source_identity, str)
+        or source_identity != expected_identity
         or not isinstance(digest, str)
         or not DIGEST_PATTERN.fullmatch(digest)
-        or source_identity.split(":")[-1] != source_id
-        or not source_identity.startswith(provider + ":")
     ):
         raise IntakeValidationError(f"Signal source identity or body digest is invalid: {relative_path}")
     expected_id = "sig-" + hashlib.sha256(
@@ -117,13 +130,10 @@ def validate_signal_record(relative_path: str, content: bytes) -> None:
     ).hexdigest()[:24]
     if record.get("id") != expected_id or relative_path != f"knowledge/inbox/{expected_id}.json":
         raise IntakeValidationError(f"Signal ID does not match its source identity and body digest: {relative_path}")
-    sources = record.get("sources")
-    if not isinstance(sources, list) or len(sources) != 1 or not isinstance(sources[0], dict):
-        raise IntakeValidationError(f"Signal must retain exactly one source snapshot: {relative_path}")
-    source = sources[0]
     if (
         source.get("trust_level") != "untrusted_source"
         or source.get("source_id") != source_id
+        or source.get("repository", "").strip().lower() != repository
         or not isinstance(source.get("uri"), str)
         or not source["uri"].startswith(("https://", "http://"))
     ):
