@@ -245,11 +245,28 @@ def test_closed_finding_requires_successful_verification_through_resolved_action
         "captured_at": datetime.now(timezone.utc).isoformat(),
     })
     (root / "knowledge/findings/finding-closure-test.json").write_text(json.dumps(finding), encoding="utf-8")
-    (root / "knowledge/actions/action-closure-test.json").write_text(json.dumps(action), encoding="utf-8")
+    action_path = root / "knowledge/actions/action-closure-test.json"
+    action_path.write_text(json.dumps(action), encoding="utf-8")
     verification_path = root / "knowledge/verifications/verification-closure-test.json"
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
 
-    assert not any("closed Finding requires" in item["error"] for item in knowledge.validate_all())
+    assert knowledge.validate_all() == []
+
+    action["project_id"] = "unrelated-project"
+    action_path.write_text(json.dumps(action), encoding="utf-8")
+    errors = knowledge.validate_all()
+    assert any("closed code-defect Finding requires" in item["error"] for item in errors)
+
+    action["project_id"] = finding["project_id"]
+    action_path.write_text(json.dumps(action), encoding="utf-8")
+    verification["project_id"] = "unrelated-project"
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    errors = knowledge.validate_all()
+    assert any("closed code-defect Finding requires" in item["error"] for item in errors)
+
+    verification["project_id"] = finding["project_id"]
+    verification_path.write_text(json.dumps(verification), encoding="utf-8")
+    assert knowledge.validate_all() == []
 
     verification["workflow"]["conclusion"] = "failure"
     verification_path.write_text(json.dumps(verification), encoding="utf-8")
@@ -448,3 +465,22 @@ def test_jsonl_migration_batches_are_loaded_as_individual_records(tmp_path, monk
     assert index["record_count"] == 2
     assert {item["path"] for item in index["records"]} == {"knowledge/cases/migration.jsonl"}
     assert {item["id"] for item in index["records"]} == {"case-migration-one", "case-migration-two"}
+
+def test_new_case_schema_does_not_require_legacy_excerpt_unless_migrated():
+    schema = knowledge.load_schema(knowledge.RECORD_SCHEMA)
+    case = _minimal_record(
+        "case-new-current",
+        "case",
+        [],
+        completeness="partial",
+    )
+
+    assert knowledge.schema_errors(case, schema) == []
+
+    case["migration_batch"] = "historical-import-2026-11"
+    errors = knowledge.schema_errors(case, schema)
+    assert any("legacy_excerpt" in error for error in errors)
+
+    case["legacy_excerpt"] = "Preserved source excerpt."
+    assert knowledge.schema_errors(case, schema) == []
+

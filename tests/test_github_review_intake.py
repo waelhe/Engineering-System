@@ -186,7 +186,12 @@ def test_review_signal_binds_author_sha_and_source_link():
 
 
 
-def test_publish_batch_filters_only_pending_signals_and_publishes_new_signal(monkeypatch):
+def test_publish_batch_filters_only_pending_signals_and_publishes_new_signal(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "knowledge" / "inbox"
+    inbox.mkdir(parents=True)
+    (inbox / "sig-pending.json").write_text("{}", encoding="utf-8")
+    (inbox / "sig-new.json").write_text("{}", encoding="utf-8")
     calls = []
     staged_paths = {
         "knowledge/inbox/sig-pending.json",
@@ -231,6 +236,8 @@ def test_publish_batch_filters_only_pending_signals_and_publishes_new_signal(mon
     assert ("push", "--set-upstream", "origin", "automation/knowledge-intake-456-1") in calls
     assert "knowledge/inbox/sig-pending.json" not in staged_paths
     assert "knowledge/inbox/sig-new.json" in staged_paths
+    assert not (inbox / "sig-pending.json").exists()
+    assert (inbox / "sig-new.json").exists()
 
 
 def test_pending_intake_pr_ignores_removed_signal_files(monkeypatch):
@@ -252,3 +259,22 @@ def test_pending_intake_pr_ignores_removed_signal_files(monkeypatch):
     pending = intake.pending_intake_signal_paths("owner/repo", "token", "main")
 
     assert pending == {"knowledge/inbox/sig-current.json"}
+
+def test_publish_batch_noops_when_no_generated_paths_exist(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "knowledge").mkdir()
+    calls = []
+
+    def fake_git(*args, **kwargs):
+        calls.append(args)
+        if args[:3] == ("diff", "--cached", "--quiet"):
+            return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+        raise AssertionError(f"unexpected git call: {args}")
+
+    monkeypatch.setattr(intake, "git", fake_git)
+
+    result = intake.publish_batch("owner/repo", "token", "automation/knowledge-intake-456-1", "main")
+
+    assert result is None
+    assert not any(args and args[0] == "add" for args in calls)
+

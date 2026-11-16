@@ -51,7 +51,7 @@ SECRET_PATTERNS = (
     (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "[REDACTED_AWS_ACCESS_KEY]"),
     (re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"), "[REDACTED_API_KEY]"),
     (re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{15,}\b"), "[REDACTED_SLACK_TOKEN]"),
-    (re.compile(r"(?i)(password|passwd|secret|token)\s*[:=]\s*[^\s,;]{8,}"), r"\1=[REDACTED]"),
+    (re.compile(r"""(?i)((?:\\?["'])?[a-z0-9_.-]*(?:password|passwd|secret|token)(?:\\?["'])?\s*[:=]\s*(?:\\?["'])?)([^"'\s,;}{]{8,})((?:\\?["'])?)"""), r"\1[REDACTED]\3"),
     (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----"), "[REDACTED_PRIVATE_KEY]"),
 )
 
@@ -191,12 +191,18 @@ def validate_all() -> list[dict[str, str]]:
                     "error": f"relation {relation.get('type')} is not valid from {record.get('type')} to {target.get('type')}",
                 })
 
-    def has_successful_verification(action: dict[str, Any]) -> bool:
+    def has_successful_verification(action: dict[str, Any], project_id: str) -> bool:
+        if action.get("project_id") != project_id:
+            return False
         for relation in action.get("relations", []):
             if relation.get("type") != "proven_by":
                 continue
             verification = by_id.get(relation.get("target_id"))
-            if not isinstance(verification, dict) or verification.get("type") != "verification":
+            if (
+                not isinstance(verification, dict)
+                or verification.get("type") != "verification"
+                or verification.get("project_id") != project_id
+            ):
                 continue
             workflow = verification.get("workflow")
             if not isinstance(workflow, dict) or workflow.get("conclusion") != "success":
@@ -320,7 +326,7 @@ def validate_all() -> list[dict[str, str]]:
             closure_proof_valid = any(
                 isinstance(action, dict)
                 and action.get("type") == "action"
-                and has_successful_verification(action)
+                and has_successful_verification(action, record.get("project_id"))
                 for action in resolved_actions
             )
             error_message = (
@@ -370,11 +376,15 @@ def build_index() -> dict[str, Any]:
 
 
 def write_index(check: bool = False) -> bool:
-    rendered = json.dumps(build_index(), indent=2, ensure_ascii=False) + "\n"
     target = KNOWLEDGE / "index.json"
+    ensure_no_symlink(target.parent)
+    ensure_no_symlink(target)
+    rendered = json.dumps(build_index(), indent=2, ensure_ascii=False) + "\n"
     if check:
         return target.exists() and target.read_text(encoding="utf-8") == rendered
     target.parent.mkdir(parents=True, exist_ok=True)
+    ensure_no_symlink(target.parent)
+    ensure_no_symlink(target)
     target.write_text(rendered, encoding="utf-8")
     return True
 
@@ -526,7 +536,11 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
         raise KnowledgeError("intake record does not satisfy the knowledge schema: " + "; ".join(errors))
 
     target = KNOWLEDGE / "inbox" / f"{signal_id}.json"
+    ensure_no_symlink(target.parent)
+    ensure_no_symlink(target)
     target.parent.mkdir(parents=True, exist_ok=True)
+    ensure_no_symlink(target.parent)
+    ensure_no_symlink(target)
     if target.exists():
         existing = read_json(target)
         if existing.get("payload_digest") == digest and existing.get("source_identity") == source_identity:

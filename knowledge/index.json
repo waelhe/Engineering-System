@@ -365,7 +365,7 @@
       "tags": [
         "legacy-migration",
         "app-java-v3",
-        "p3"
+        "p6"
       ],
       "scope": {
         "repositories": [
@@ -375,7 +375,7 @@
       "relations": [
         {
           "type": "exhibits",
-          "target_id": "pattern-p3",
+          "target_id": "pattern-p6",
           "note": "Legacy pattern-catalog association; retained for independent review."
         }
       ],
@@ -822,7 +822,7 @@
       "title": "CodeRabbit review poll and review-coverage verifier disagree [VERIFIED]",
       "summary": "CodeRabbit review poll and review-coverage verifier disagree [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -1630,7 +1630,7 @@
       "title": "GraphQL error builder must not receive a null message [VERIFIED]",
       "summary": "GraphQL error builder must not receive a null message [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -1680,7 +1680,7 @@
       "title": "Validation field errors must be localized using the request locale [VERIFIED]",
       "summary": "Validation field errors must be localized using the request locale [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -1724,7 +1724,7 @@
       "title": "Type-mismatch ProblemDetail must preserve rejected field/value/type [VERIFIED]",
       "summary": "Type-mismatch ProblemDetail must preserve rejected field/value/type [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -1768,7 +1768,7 @@
       "title": "MessageFormat can turn fallback validation text into a runtime exception [VERIFIED]",
       "summary": "MessageFormat can turn fallback validation text into a runtime exception [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -1818,7 +1818,7 @@
       "title": "Spring Boot can retain an unresolved placeholder as literal text [VERIFIED]",
       "summary": "Spring Boot can retain an unresolved placeholder as literal text [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -1868,7 +1868,7 @@
       "title": "Mail origin with query or fragment produces malformed recovery links [VERIFIED]",
       "summary": "Mail origin with query or fragment produces malformed recovery links [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -1918,7 +1918,7 @@
       "title": "Repair-plan summary and counts drifted from the individual gate records [VERIFIED]",
       "summary": "Repair-plan summary and counts drifted from the individual gate records [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -1962,7 +1962,7 @@
       "title": "Review-intake issue creation raced between event delivery and scheduled sweep [VERIFIED]",
       "summary": "Review-intake issue creation raced between event delivery and scheduled sweep [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -2012,7 +2012,7 @@
       "title": "D11 accepted a declared workflow URL without proving the workflow run existed or passed [VERIFIED]",
       "summary": "D11 accepted a declared workflow URL without proving the workflow run existed or passed [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",
@@ -2056,7 +2056,7 @@
       "title": "Human-authored GitHub markers could control or hijack the review-intake collector [VERIFIED]",
       "summary": "Human-authored GitHub markers could control or hijack the review-intake collector [VERIFIED]",
       "assessment": "observed",
-      "lifecycle": "investigating",
+      "lifecycle": "open",
       "approval": "proposed",
       "tags": [
         "legacy-migration",

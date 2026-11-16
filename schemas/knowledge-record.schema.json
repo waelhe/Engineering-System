@@ -580,8 +580,7 @@
       },
       "then": {
         "required": [
-          "completeness",
-          "legacy_excerpt"
+          "completeness"
         ]
       }
     },
@@ -725,6 +724,27 @@
       "then": {
         "required": [
           "alternate_closure_proof"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "case"
+          },
+          "migration_batch": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "migration_batch"
+        ]
+      },
+      "then": {
+        "required": [
+          "legacy_excerpt"
         ]
       }
     }

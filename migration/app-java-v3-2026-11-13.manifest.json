@@ -261,9 +261,9 @@
       "source_artifact": {
         "repository": "waelhe/app-java-v3",
         "revision": "f49bd15d186cf8be50c04e848b197faab3dfb47d",
-        "path": "docs/governance/defect-knowledge/enforcement-map.md",
-        "url": "https://github.com/waelhe/app-java-v3/blob/f49bd15d186cf8be50c04e848b197faab3dfb47d/docs/governance/defect-knowledge/enforcement-map.md",
-        "git_blob_sha": "947590a7042730d8c0b4c8b92556d825826822aa"
+        "path": "docs/governance/defect-knowledge/rulebook.md",
+        "url": "https://github.com/waelhe/app-java-v3/blob/f49bd15d186cf8be50c04e848b197faab3dfb47d/docs/governance/defect-knowledge/rulebook.md",
+        "git_blob_sha": "eb29318e5254b6f09368acd836b2f26635cc1ff0"
       }
     }
   ],

@@ -261,9 +261,19 @@ def staged_signal_paths() -> set[str]:
     }
 
 
+def stage_generated_paths() -> None:
+    """Stage only generated paths that exist in this checkout."""
+    paths = [
+        path for path in ("knowledge/inbox", "knowledge/index.json")
+        if Path(path).exists()
+    ]
+    if paths:
+        git("add", "--", *paths)
+
+
 def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[str, Any] | None:
     """Publish generated inbox/index data on a fresh branch based on trusted main."""
-    git("add", "--", "knowledge/inbox", "knowledge/index.json")
+    stage_generated_paths()
     staged = git("diff", "--cached", "--quiet", check=False)
     if staged.returncode == 0:
         return None
@@ -286,7 +296,7 @@ def publish_batch(repo: str, token: str, branch: str, base_branch: str) -> dict[
                 git("reset", "-q", "HEAD", "--", path)
                 Path(path).unlink(missing_ok=True)
             run_trusted_python("tools/egm_knowledge.py", "index")
-            git("add", "--", "knowledge/inbox", "knowledge/index.json")
+            stage_generated_paths()
     git("commit", "-m", "Capture trusted GitHub review signals")
     git("push", "--set-upstream", "origin", branch)
     pr = api_request("POST", f"/repos/{repo}/pulls", token, {

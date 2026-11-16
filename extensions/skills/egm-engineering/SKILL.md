@@ -21,6 +21,7 @@ Use this skill as the entry point for engineering tasks. It coordinates upstream
 - T0: answer or research with only the relevant context.
 - T1: targeted investigation and verification; no design pipeline unless a real design decision is open.
 - T2: use upstream EGM brainstorm/draft/review for non-trivial feature and architecture decisions; resolve findings; require an implementation-readiness plan before source edits.
+- Claude Code harness boundary: the pinned upstream `egm-brainstorm`, `egm-draft` and `egm-review` skills disable model invocation. In Claude Code, do not claim the orchestrator invoked them autonomously. Tell the user which skill to invoke explicitly, and keep the corresponding design/review gate blocked until its actual output is available. Record the harness limitation in the execution receipt.
 - T3: use the full relevant EGM review lenses, including security, data/concurrency, architecture and readiness. Require human approvals at the authority boundaries.
 
 ## Execution
