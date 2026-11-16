@@ -20,7 +20,8 @@
         "journey_registry",
         "pull_request_registry",
         "operations_registry",
-        "module_boundaries_registry"
+        "module_boundaries_registry",
+        "capability_registry"
       ]
     },
     "snapshot_date": {

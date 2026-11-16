@@ -6,6 +6,7 @@ The registry files are point-in-time observations bound to repository SHAs.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -39,6 +40,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         "prs": ("pull_request_registry", "app-java-v3.open-prs.json"),
         "operations": ("operations_registry", "app-java-v3.operations.json"),
         "boundaries": ("module_boundaries_registry", "app-java-v3.module-boundaries.json"),
+        "capabilities": ("capability_registry", "app-java-v3.capabilities.json"),
     }
     loaded: dict[str, dict[str, Any]] = {}
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
@@ -145,6 +147,55 @@ def validate_registry(root: Path = ROOT) -> list[str]:
     for item in journeys:
         if item.get("current_main_revalidation") != "not_revalidated_at_2026-11-14-main":
             errors.append(f"{item.get('journey_id')}: historic status must not be presented as current proof")
+
+    # W3 candidate capabilities are derived from journeys; they are not approved domain ownership or current implementation claims.
+    capabilities = loaded.get("capabilities", {})
+    capability_records = capabilities.get("records", [])
+    journey_by_id = {item.get("journey_id"): item for item in journeys}
+    capability_journey_ids = [item.get("source_journey_id") for item in capability_records]
+    if sorted(capability_journey_ids) != expected_ids:
+        errors.append("capability candidates must map exactly once to each canonical journey J01..J35")
+    if len(capability_journey_ids) != len(set(capability_journey_ids)):
+        errors.append("capability candidate journey references are not unique")
+    for item in capability_records:
+        source_journey = journey_by_id.get(item.get("source_journey_id"))
+        if source_journey is None:
+            errors.append(f"{item.get('capability_id')}: unknown source journey")
+            continue
+        if item.get("title") != source_journey.get("title"):
+            errors.append(f"{item.get('capability_id')}: title differs from the source journey")
+        if item.get("documented_module_names") != source_journey.get("owning_modules_as_documented", []):
+            errors.append(f"{item.get('capability_id')}: documented module names differ from the journey source")
+        if item.get("source_journey_status_authority") != source_journey.get("status_authority"):
+            errors.append(f"{item.get('capability_id')}: source authority differs from the journey")
+        if item.get("acceptance_state") != "candidate_not_adjudicated":
+            errors.append(f"{item.get('capability_id')}: candidate cannot be promoted without adjudication")
+        if item.get("module_mapping_status") != "not_adjudicated":
+            errors.append(f"{item.get('capability_id')}: module ownership cannot be inferred from the journey snapshot")
+        verification = item.get("verification", {})
+        if any(verification.get(surface) != "not_revalidated" for surface in ("backend", "android", "admin", "provider", "production")):
+            errors.append(f"{item.get('capability_id')}: historical status must remain not_revalidated")
+        if verification.get("tested_head_sha") is not None or verification.get("workflow_run_ids"):
+            errors.append(f"{item.get('capability_id')}: no current verification evidence is recorded")
+    capability_source = capabilities.get("source", {})
+    artifact = capability_source.get("journey_registry_artifact", {})
+    journey_path = root / "registry" / "peos" / "app-java-v3.journeys.json"
+    try:
+        journey_bytes = journey_path.read_bytes()
+        actual_blob_sha = hashlib.sha1(
+            b"blob " + str(len(journey_bytes)).encode("ascii") + b"\0" + journey_bytes
+        ).hexdigest()
+        if artifact.get("blob_sha") != actual_blob_sha:
+            errors.append("capability registry journey artifact blob SHA is stale")
+        if capability_source.get("upstream_project", {}).get("commit_sha") != loaded.get("journeys", {}).get("source", {}).get("commit_sha"):
+            errors.append("capability registry upstream project SHA disagrees with journey registry")
+        capability_schema = read_json(root / "schemas" / "peos-capabilities.schema.json")
+        Draft202012Validator.check_schema(capability_schema)
+        cap_errors = list(Draft202012Validator(capability_schema, format_checker=FormatChecker()).iter_errors(capabilities))
+        for item in cap_errors:
+            errors.append(f"app-java-v3.capabilities.json: {'/'.join(map(str, item.absolute_path))}: {item.message}")
+    except Exception as exc:
+        errors.append(f"capability registry source/schema validation failed: {exc}")
     journey_anomalies = loaded.get("journeys", {}).get("anomalies", [])
     if not any(item.get("id") == "W0-JOURNEY-001" for item in journey_anomalies):
         errors.append("journey source duplicate/boundary anomaly must remain visible")
@@ -242,7 +293,7 @@ def main() -> int:
             print(f"FAIL: {error}")
         return 1
     print("PEOS inventory validation: PASS")
-    print("Validated 30 Maven artifacts, 30 logical Modulith modules, 35 canonical journeys, 23 historical PR records and W1 operational evidence.")
+    print("Validated 30 Maven artifacts, 30 logical Modulith modules, 35 historical journeys, 35 unadjudicated journey-outcome capability candidates, 23 historical PR records and W1 operational evidence.")
     print("Historic journey labels remain marked not-revalidated; Maven and Modulith graphs are distinct; no merge is authorized.")
     return 0
 

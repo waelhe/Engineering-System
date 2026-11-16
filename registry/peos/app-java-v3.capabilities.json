@@ -1,0 +1,973 @@
+{
+  "schema_version": 1,
+  "kind": "capability_registry",
+  "snapshot_date": "2026-11-16",
+  "source": {
+    "upstream_project": {
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6",
+      "snapshot_date": "2026-11-14"
+    },
+    "journey_registry_artifact": {
+      "repository": "waelhe/Engineering-System",
+      "path": "registry/peos/app-java-v3.journeys.json",
+      "blob_sha": "7f2c0adfbeb75f45667e7133afb331d046ea5766"
+    }
+  },
+  "records": [
+    {
+      "capability_id": "CAP-J01",
+      "title": "تسجيل/دخول/جلسة/خروج",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J01",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "identity",
+        "edge"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J02",
+      "title": "إثبات الحي والعضوية الجغرافية",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J02",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "geo",
+        "community",
+        "identity"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J03",
+      "title": "موجز الحي والاهتمامات",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J03",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "community",
+        "discovery",
+        "ai"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J04",
+      "title": "منشور ووسائطه",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J04",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "community",
+        "media"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J05",
+      "title": "تعليقات وتفاعلات",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J05",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "community"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J06",
+      "title": "مفقودات/إهداء/مستعمل",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J06",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "community",
+        "catalog"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J07",
+      "title": "مجموعات/فعاليات/استطلاعات",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J07",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "community"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J08",
+      "title": "خبر محلي/بث رسمي",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J08",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "knowledge",
+        "institutions"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J09",
+      "title": "توصية بعمل/خدمة",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J09",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "community",
+        "provider",
+        "reviews"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J10",
+      "title": "بلاغ وعاجل واعتراض",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J10",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "community",
+        "reviews",
+        "disputes",
+        "institutions"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J11",
+      "title": "محادثة وإشعار وجهاز Push",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J11",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "messaging",
+        "notifications"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J12",
+      "title": "بحث واكتشاف متعدد المجالات",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J12",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "search",
+        "discovery",
+        "app"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J13",
+      "title": "استكشاف دليل الأعمال",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J13",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "provider",
+        "reviews",
+        "search"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J14",
+      "title": "مطالبة صاحب العمل بالملف",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J14",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "provider",
+        "identity"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J15",
+      "title": "مراجعة وردّ وإعلان ممول",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J15",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "reviews",
+        "catalog",
+        "payments"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J16",
+      "title": "متجر وكتالوج ومتغيرات",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J16",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "catalog",
+        "provider"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J17",
+      "title": "سلة متعددة البائعين ووضع الطلب",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J17",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "orders",
+        "catalog",
+        "pricing"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J18",
+      "title": "تنفيذ الطلب (تاجر/تسليم)",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J18",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "orders",
+        "delivery"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J19",
+      "title": "إرجاع/استبدال/استرداد",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J19",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "orders",
+        "payments",
+        "ledger"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J20",
+      "title": "حجز خدمة/إقامة",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J20",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "booking",
+        "availability",
+        "payments",
+        "reviews"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J21",
+      "title": "عقار ومركبات",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J21",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "realestate",
+        "catalog"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J22",
+      "title": "وظائف وتقديم",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J22",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "jobs"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J23",
+      "title": "إعارة ورسوم",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J23",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "lending",
+        "payments",
+        "disputes"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J24",
+      "title": "توصيل مباشر",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J24",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "delivery",
+        "payments"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J25",
+      "title": "توصيل طلب متجر",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J25",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "delivery",
+        "orders"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J26",
+      "title": "إدارة الأسطول والاستثناءات",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J26",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "delivery"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J27",
+      "title": "مصادر الدفع الخمسة",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J27",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "payments"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J28",
+      "title": "دفتر وتسوية ونزاعات",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J28",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "ledger",
+        "payments"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J29",
+      "title": "فريق المزود وصلاحياته وتوفره",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J29",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "provider",
+        "availability",
+        "identity"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J30",
+      "title": "رحلات الغرض المركبة",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J30",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "عبر المجالات"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J31",
+      "title": "حل مشكلة عضو (مشرف/دعم)",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J31",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "console",
+        "disputes",
+        "community"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J32",
+      "title": "إعداد وتشغيل تجربة (مدير)",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J32",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "console",
+        "app"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J33",
+      "title": "إشعارات وحوادث (مدير)",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J33",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "notifications",
+        "institutions"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J34",
+      "title": "خصوصية وحساب",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J34",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "identity",
+        "app"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    },
+    {
+      "capability_id": "CAP-J35",
+      "title": "استعادة الخدمة (فريق الإصدار)",
+      "classification": "journey_outcome_candidate",
+      "acceptance_state": "candidate_not_adjudicated",
+      "source_journey_id": "J35",
+      "source_journey_status_authority": "historical_source_snapshot_only",
+      "documented_module_names": [
+        "عبر المنصة"
+      ],
+      "module_mapping_status": "not_adjudicated",
+      "verification": {
+        "backend": "not_revalidated",
+        "android": "not_revalidated",
+        "admin": "not_revalidated",
+        "provider": "not_revalidated",
+        "production": "not_revalidated",
+        "tested_head_sha": null,
+        "workflow_run_ids": []
+      },
+      "open_gaps": [
+        "Revalidate the source journey against the current app-java-v3 main SHA.",
+        "Adjudicate whether this journey outcome maps to one or multiple product capabilities and modules.",
+        "Attach current Backend, Android, Admin/Provider and production evidence before changing verification status."
+      ]
+    }
+  ]
+}
