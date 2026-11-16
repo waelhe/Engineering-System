@@ -37,6 +37,9 @@ jobs:
       - name: Validate execution receipts
         run: python tools/egm_knowledge.py validate-receipts
 
+      - name: Validate PEOS platform inventory snapshots
+        run: python tools/peos_validate.py
+
       - name: Verify generated knowledge index
         run: python tools/egm_knowledge.py index --check
 

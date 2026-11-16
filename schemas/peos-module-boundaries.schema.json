@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PEOS W2 Maven and Modulith boundary inventory",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "snapshot_date",
+    "source",
+    "summary",
+    "records",
+    "maven_modules",
+    "verification",
+    "governing_adrs",
+    "anomalies"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "module_boundaries_registry"
+    },
+    "snapshot_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repository",
+        "ref",
+        "commit_sha",
+        "file_blob_sha",
+        "spring_modulith_version",
+        "additional_source_files"
+      ],
+      "properties": {
+        "repository": {
+          "const": "waelhe/app-java-v3"
+        },
+        "ref": {
+          "const": "main"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "file_blob_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "spring_modulith_version": {
+          "type": "string"
+        },
+        "additional_source_files": {
+          "type": "array",
+          "minItems": 5
+        }
+      },
+      "additionalProperties": true
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "maven_reactor_modules",
+        "logical_spring_modulith_modules",
+        "bounded_context_modules",
+        "type_level_application_module_declarations"
+      ],
+      "properties": {
+        "maven_reactor_modules": {
+          "const": 30
+        },
+        "logical_spring_modulith_modules": {
+          "const": 30
+        },
+        "bounded_context_modules": {
+          "const": 26
+        },
+        "type_level_application_module_declarations": {
+          "const": 5
+        }
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 30,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "required": [
+          "module_name",
+          "java_package",
+          "maven_modules",
+          "logical_kind",
+          "declaration",
+          "allowed_dependencies",
+          "named_interfaces",
+          "domain_ownership"
+        ],
+        "properties": {
+          "module_name": {
+            "type": "string"
+          },
+          "java_package": {
+            "type": "string"
+          },
+          "maven_modules": {
+            "type": "array",
+            "minItems": 1
+          },
+          "logical_kind": {
+            "type": "string"
+          },
+          "declaration": {
+            "type": "object",
+            "required": [
+              "placement",
+              "path",
+              "blob_sha"
+            ],
+            "properties": {
+              "placement": {
+                "enum": [
+                  "package_info",
+                  "type"
+                ]
+              },
+              "path": {
+                "type": "string"
+              },
+              "blob_sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
+            }
+          },
+          "allowed_dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "named_interfaces": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "domain_ownership": {
+            "const": "not_adjudicated"
+          }
+        }
+      }
+    },
+    "maven_modules": {
+      "type": "array",
+      "minItems": 30,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "required": [
+          "module_id",
+          "pom_blob_sha",
+          "internal_maven_dependencies",
+          "reactor_role",
+          "modulith_modules"
+        ],
+        "properties": {
+          "module_id": {
+            "type": "string"
+          },
+          "pom_blob_sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "internal_maven_dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reactor_role": {
+            "type": "string"
+          },
+          "modulith_modules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object"
+    },
+    "governing_adrs": {
+      "type": "array"
+    },
+    "anomalies": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true
+}
