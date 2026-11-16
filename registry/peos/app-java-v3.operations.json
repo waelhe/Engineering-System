@@ -1,0 +1,785 @@
+{
+  "schema_version": 1,
+  "kind": "operations_registry",
+  "snapshot_date": "2026-11-15",
+  "source": {
+    "repository": "waelhe/app-java-v3",
+    "ref": "main",
+    "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+    "file_path": "docs/observability/slo.md",
+    "file_blob_sha": "2a9764455d2da983187a2bb5256136c74fd428d5",
+    "snapshot_date": "2026-11-15",
+    "capture_surfaces": [
+      "GitHub repository files and issue search",
+      "Railway project/environment read APIs",
+      "Grafana Cloud MCP and Grafana HTTP API",
+      "Railway deployment/build/deploy/HTTP logs and resource metrics",
+      "Grafana Cloud Prometheus queries, datasource health and alerting read APIs",
+      "GitHub PR metadata, reviews, checks and compare endpoints"
+    ],
+    "capture_boundary": "Read-only source/provider observation and public health-probe log inspection. No production service configuration, database, alerting route, notification destination, credentials, deployments, merges or data mutations were performed.",
+    "capture_note": "The app-java-v3 main ref advanced from the W0 baseline 5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6 after PR #835 merged at 2026-11-14T17:28:12Z. All five evidence-source file blobs were re-read at 8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26 and were byte-identical to the previously captured blob SHAs. W0 remains a historical snapshot; this W1 registry is pinned to the current main tip. W1 recheck 2026-11-15: app-java-v3 main remains pinned at 8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26; a new Railway service/project has a successful deployment from the still-open PR #839 head, but the last post-deployment public aggregate-health probe returned 503. Latest inspected application telemetry shows three incomplete event-publication rows older than six hours and high memory utilization. Historical W1 records are retained unchanged as dated evidence; new observations are appended below."
+  },
+  "evidence_sources": [
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "path": ".github/workflows/watchdog.yml",
+      "blob_sha": "9cab05f6e918fd3c4d4ab1286d987c9e0359f179"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "path": "monitoring/prometheus-rules/marketplace-alerts.yml",
+      "blob_sha": "d39f20d20cf27a148d6d566a7a281bb84d69b117"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "path": "docs/observability/slo.md",
+      "blob_sha": "2a9764455d2da983187a2bb5256136c74fd428d5"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "path": "docs/observability/runbooks.md",
+      "blob_sha": "620ba3ce2d80c7d55b76612885c9351a1c806fa0"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "path": "docs/release/rollout-strategy.md",
+      "blob_sha": "acc313b987118ddae9b88ce89d67edd9facec8ae"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "path": "marketplace-platform-infra/src/main/java/com/marketplace/shared/observability/ModulithEventBusHealthIndicator.java",
+      "blob_sha": "87373028650aa8552b1d53d8037a52aaf1628f24"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "path": "marketplace-platform-infra/src/main/java/com/marketplace/shared/cache/EventPublicationResubmission.java",
+      "blob_sha": "103687ac50aeca8007fe937d763d6c4550fac10b"
+    },
+    {
+      "system": "GitHub",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "path": "marketplace-app/src/main/resources/application-prod.yml",
+      "blob_sha": "38bb5fe86163eb3c2e8c79ebff6f02f73cee3851"
+    }
+  ],
+  "records": [
+    {
+      "id": "OPS-RAILWAY-001",
+      "system": "Railway",
+      "area": "production_runtime",
+      "state": "offline",
+      "subject": "app-java-v3 / production",
+      "evidence": [
+        {
+          "kind": "environment_status",
+          "resource_id": "60fb0197-fc76-4e72-b18d-dca7532e343d",
+          "observed_date": "2026-11-14",
+          "value": {
+            "state": "offline",
+            "active_deployments": 0,
+            "replicas": null,
+            "warning_count": 0,
+            "critical_count": 0,
+            "recent_failures_last_48h": 0
+          }
+        },
+        {
+          "kind": "service_config",
+          "resource_id": "3efcf70c-56d5-4d87-ada5-6bba32022229",
+          "value": {
+            "repository": "waelhe/app-java-v3",
+            "branch": "main",
+            "domain": "app-java-v3-production.up.railway.app",
+            "healthcheck_path": "/actuator/health/liveness",
+            "healthcheck_timeout_seconds": 300,
+            "configured_replicas": 1,
+            "region": "europe-west4-drams3a"
+          }
+        },
+        {
+          "kind": "service_latest_deployment",
+          "resource_id": "fc09d660-b4b7-4f12-8eaf-5ccffc815be2",
+          "value": {
+            "status": "FAILED",
+            "created_at": "2026-10-19T17:58:40.069Z"
+          }
+        }
+      ],
+      "interpretation": "Railway reports production OFFLINE with no active deployments. The newest November 13 listed deployment is REMOVED. A zero recent-failure count does not override the explicit offline state."
+    },
+    {
+      "id": "OPS-RAILWAY-002",
+      "system": "Railway",
+      "area": "resource_metrics_and_tracing",
+      "state": "telemetry_not_proven_live",
+      "subject": "app-java-v3 / production",
+      "evidence": [
+        {
+          "kind": "deployment_history",
+          "value": {
+            "newest_listed": {
+              "id": "62a12198-e46d-436a-9433-f2093907b781",
+              "status": "REMOVED",
+              "created_at": "2026-11-13T05:51:12.475Z",
+              "updated_at": "2026-11-13T16:32:44.340Z",
+              "branch": "main",
+              "commit_sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63"
+            }
+          }
+        },
+        {
+          "kind": "resource_metrics_24h",
+          "value": {
+            "sample_count": 289,
+            "cpu_current": 0,
+            "cpu_average": 0.00015900630911188006,
+            "cpu_max": 0.0020354233333333333,
+            "memory_current_gb": 0.982091776,
+            "memory_average_gb": 0.9822578251448814,
+            "memory_max_gb": 0.99351552,
+            "memory_limit_gb": 0.99999744
+          }
+        },
+        {
+          "kind": "tracing_configuration",
+          "value": {
+            "tracing_enabled": false,
+            "auto_instrumentation_enabled": false,
+            "auto_instrumentation_active": false
+          }
+        }
+      ],
+      "interpretation": "The metrics API returned 289 samples while environment-status reported OFFLINE. Until a live deployment and sample timestamps are reconciled, these values are not proof of current health or resource saturation."
+    },
+    {
+      "id": "OPS-GITHUB-001",
+      "system": "GitHub Actions",
+      "area": "production_watchdog",
+      "state": "workflow_configured_live_schedule_unverified",
+      "subject": ".github/workflows/watchdog.yml",
+      "evidence": [
+        {
+          "kind": "workflow_source",
+          "path": ".github/workflows/watchdog.yml",
+          "blob_sha": "9cab05f6e918fd3c4d4ab1286d987c9e0359f179",
+          "value": {
+            "schedule": "7,22,37,52 * * * *",
+            "probes": [
+              "/actuator/health/liveness",
+              "/actuator/health/readiness",
+              "/oauth2/jwks",
+              "/.well-known/openid-configuration",
+              "/actuator/modulith",
+              "/actuator/health"
+            ],
+            "incident_mechanism": "open deduplicated uptime-watchdog issue on failure and close it after healthy run"
+          }
+        },
+        {
+          "kind": "workflow_run_evidence",
+          "run_id": 39387951727,
+          "observed_at": "2026-10-20T07:46:35Z",
+          "value": {
+            "historical_run_only": true,
+            "probe_results": {
+              "/.well-known/openid-configuration": 200,
+              "/actuator/health": 503,
+              "/actuator/health/liveness": 200,
+              "/actuator/modulith": 401,
+              "/oauth2/jwks": 200,
+              "/actuator/health/readiness": 200
+            }
+          }
+        }
+      ],
+      "interpretation": "The scheduled workflow and probe contract exist in main. The latest scheduled execution was not retrievable through the available GitHub Actions read operation in this audit; current cadence and last-run health remain unverified."
+    },
+    {
+      "id": "OPS-GITHUB-002",
+      "system": "GitHub",
+      "area": "production_incident",
+      "state": "open_incident",
+      "subject": "Issue #682 — [watchdog] Production endpoints unhealthy - 2026-10-20 07:46 UTC",
+      "evidence": [
+        {
+          "kind": "issue_search",
+          "url": "https://github.com/waelhe/app-java-v3/issues/682",
+          "query": "repo:waelhe/app-java-v3 label:uptime-watchdog is:open",
+          "observed_date": "2026-11-14",
+          "value": {
+            "issue_number": 682,
+            "open": true,
+            "created_title": "[watchdog] Production endpoints unhealthy - 2026-10-20 07:46 UTC"
+          }
+        },
+        {
+          "kind": "issue_body",
+          "value": {
+            "failing_probe": "/actuator/health",
+            "http_status": 503,
+            "attempts": 3,
+            "other_probes": {
+              "liveness": 200,
+              "readiness": 200,
+              "oidc": 200,
+              "jwks": 200,
+              "modulith": 401
+            }
+          }
+        }
+      ],
+      "interpretation": "The watchdog incident remained open at this audit. It is not proof of the precise current root cause, but it is unresolved incident history and must not be silently marked recovered."
+    },
+    {
+      "id": "OPS-REPO-001",
+      "system": "app-java-v3",
+      "area": "observability_contract",
+      "state": "source_contract_present_runtime_consumer_missing",
+      "subject": "SLOs, Prometheus rules and incident runbooks",
+      "evidence": [
+        {
+          "kind": "slo_document",
+          "path": "docs/observability/slo.md",
+          "blob_sha": "2a9764455d2da983187a2bb5256136c74fd428d5",
+          "value": {
+            "documented_slos": [
+              "availability_99.5_percent_monthly",
+              "payment_success_at_least_99_percent",
+              "zero_event_publications_stale_over_6h"
+            ],
+            "thresholds": "provisional_pending_real_traffic"
+          }
+        },
+        {
+          "kind": "alert_rule_file",
+          "path": "monitoring/prometheus-rules/marketplace-alerts.yml",
+          "blob_sha": "d39f20d20cf27a148d6d566a7a281bb84d69b117",
+          "value": {
+            "source_rules_present": true,
+            "operator_loaded_rule_files_not_proven": true
+          }
+        },
+        {
+          "kind": "runbooks",
+          "path": "docs/observability/runbooks.md",
+          "blob_sha": "620ba3ce2d80c7d55b76612885c9351a1c806fa0",
+          "value": {
+            "runbook_document_present": true,
+            "interactive_incident_automation_not_proven": true
+          }
+        },
+        {
+          "kind": "release_policy",
+          "path": "docs/release/rollout-strategy.md",
+          "blob_sha": "acc313b987118ddae9b88ce89d67edd9facec8ae",
+          "value": {
+            "release_gates_documented": true,
+            "canary_and_rollback_required": true
+          }
+        }
+      ],
+      "interpretation": "Repository-side contracts and runbooks exist, with provisional thresholds. Their presence does not prove a running Prometheus rule evaluator or a working notification destination."
+    },
+    {
+      "id": "OPS-GRAFANA-001",
+      "system": "Grafana Cloud",
+      "area": "prometheus_ingestion",
+      "state": "no_series",
+      "subject": "pinkblackberry661 / default Prometheus datasource",
+      "evidence": [
+        {
+          "kind": "grafana_api_health",
+          "url": "https://pinkblackberry661.grafana.net/api/health",
+          "value": {
+            "http_status": 200,
+            "version": "13.4.0-41840432882.patch1"
+          }
+        },
+        {
+          "kind": "datasource",
+          "uid": "grafanacloud-prom",
+          "value": {
+            "name": "grafanacloud-pinkblackberry661-prom",
+            "type": "prometheus",
+            "is_default": true,
+            "read_only": true,
+            "manage_alerts": false
+          }
+        },
+        {
+          "kind": "prometheus_instant_query",
+          "datasource_uid": "grafanacloud-prom",
+          "query": "up",
+          "value": {
+            "series_count": 0
+          }
+        },
+        {
+          "kind": "metric_discovery",
+          "datasource_uid": "grafanacloud-prom",
+          "query_regex": ".*",
+          "time_window": "now-24h to now",
+          "value": {
+            "metrics_returned": 0
+          }
+        }
+      ],
+      "interpretation": "Grafana is reachable, but its default Prometheus datasource returned no series for the generic up query and no metric names in 24 hours. Application telemetry ingestion is not proven."
+    },
+    {
+      "id": "OPS-GRAFANA-002",
+      "system": "Grafana Cloud",
+      "area": "datasource_configuration",
+      "state": "incomplete_datasource_configuration",
+      "subject": "additional Prometheus datasources",
+      "evidence": [
+        {
+          "kind": "datasource",
+          "uid": "afz67bstgccu8f",
+          "value": {
+            "name": "prometheus",
+            "url_present": true,
+            "queried_up_series": 0,
+            "metric_names_returned": 0
+          }
+        },
+        {
+          "kind": "datasource",
+          "uid": "afz6bj06r4q2od",
+          "value": {
+            "name": "prometheus-1",
+            "url_present": false,
+            "query_error": "empty url"
+          }
+        },
+        {
+          "kind": "datasource",
+          "uid": "efz6bnwp3twcgb",
+          "value": {
+            "name": "prometheus-2",
+            "url_present": false,
+            "query_error": "empty url"
+          }
+        }
+      ],
+      "interpretation": "Two additional Prometheus datasource entries have no URL and cannot be queried; one extra entry with a URL returned no data. Ownership and intended use are not inferred."
+    },
+    {
+      "id": "OPS-GRAFANA-003",
+      "system": "Grafana Cloud",
+      "area": "alert_rules",
+      "state": "no_alert_rules",
+      "subject": "Grafana-managed alerting",
+      "evidence": [
+        {
+          "kind": "grafana_api",
+          "endpoint": "/api/v1/provisioning/alert-rules",
+          "value": {
+            "http_status": 200,
+            "rule_count": 0
+          }
+        },
+        {
+          "kind": "grafana_api",
+          "endpoint": "/api/ruler/grafana/api/v1/rules",
+          "value": {
+            "http_status": 200,
+            "rule_groups": 0
+          }
+        },
+        {
+          "kind": "grafana_tool_read",
+          "operation": "list_alert_rules",
+          "value": {
+            "result": null
+          }
+        }
+      ],
+      "interpretation": "No Grafana-managed or Grafana ruler rule groups were returned. The repository Prometheus rules are not observed as loaded in this Grafana stack."
+    },
+    {
+      "id": "OPS-GRAFANA-004",
+      "system": "Grafana Cloud",
+      "area": "notification_routing",
+      "state": "no_notification_destination",
+      "subject": "Grafana-managed notification route",
+      "evidence": [
+        {
+          "kind": "grafana_api",
+          "endpoint": "/api/v1/provisioning/contact-points",
+          "value": {
+            "http_status": 200,
+            "contact_point_count": 0
+          }
+        },
+        {
+          "kind": "grafana_api",
+          "endpoint": "/api/v1/provisioning/policies",
+          "value": {
+            "http_status": 200,
+            "root_receiver": "empty",
+            "routes": 0
+          }
+        },
+        {
+          "kind": "grafana_tool_read",
+          "operation": "get_contact_points",
+          "value": {
+            "contact_points": []
+          }
+        }
+      ],
+      "interpretation": "The notification policy has only the receiver named empty and no contact points; it cannot deliver alerts to a human responder."
+    },
+    {
+      "id": "OPS-RAILWAY-003",
+      "system": "Railway",
+      "area": "production_runtime_recovery",
+      "state": "deployment_succeeded_last_aggregate_probe_degraded",
+      "subject": "app-java-v3 / production after PR #839 deployment",
+      "evidence": [
+        {
+          "kind": "environment_status",
+          "resource_id": "c324c1a0-e4db-4a9a-8dc0-30ca1f3935d0",
+          "observed_at": "2026-11-15T10:49:23Z",
+          "value": {
+            "project": "meticulous-consideration",
+            "project_id": "c8985750-82a2-42eb-8431-ee0f49352818",
+            "environment": "production",
+            "service": "app-java-v3",
+            "service_id": "43b1b64b-9087-45d4-88ca-358a40c5a583",
+            "latest_deployment_status": "SUCCESS",
+            "latest_deployment_id": "abed12b2-a8d4-4cf0-9ac2-48888ba88b32",
+            "deployment_created_at": "2026-11-15T10:45:13.638Z",
+            "deployment_updated_at": "2026-11-15T10:49:23.777Z",
+            "deployment_commit": "1f46f8ae04008cb74436d99753478d1b5a828c9e",
+            "deployment_branch": "main",
+            "configured_replicas": 1,
+            "region": "europe-west4-drams3a"
+          }
+        },
+        {
+          "kind": "http_probe_log",
+          "observed_at": "2026-11-15T10:50:57Z",
+          "value": {
+            "host": "app-java-v3-production.up.railway.app",
+            "probes": [
+              {
+                "path": "/actuator/health/liveness",
+                "status": 200,
+                "timestamp": "2026-11-15T10:50:54.012Z"
+              },
+              {
+                "path": "/actuator/health/readiness",
+                "status": 200,
+                "timestamp": "2026-11-15T10:50:55.644Z"
+              },
+              {
+                "path": "/actuator/health",
+                "status": 503,
+                "timestamp": "2026-11-15T10:50:57.606Z"
+              }
+            ],
+            "limitation": "Latest provider HTTP log evidence, not a new direct HTTP probe at snapshot time; aggregate component details require authorized actuator access."
+          }
+        },
+        {
+          "kind": "resource_metrics_1h",
+          "observed_at": "2026-11-15T12:47:00Z",
+          "value": {
+            "sample_count": 61,
+            "cpu_current": 0.0013241666666666666,
+            "cpu_average": 0.0024280300546448076,
+            "cpu_max": 0.011710466666666667,
+            "cpu_limit_current": 2,
+            "memory_current_gb": 0.976891904,
+            "memory_average_gb": 0.9536524422295082,
+            "memory_max_gb": 0.98563072,
+            "memory_limit_gb": 0.99999744,
+            "memory_utilization_current_percent": 97.689419,
+            "memory_utilization_max_percent": 98.563095,
+            "oom_event_observed_in_inspected_logs": false
+          }
+        },
+        {
+          "kind": "service_config",
+          "resource_id": "43b1b64b-9087-45d4-88ca-358a40c5a583",
+          "value": {
+            "source_repository": "waelhe/app-java-v3",
+            "source_branch": "main",
+            "domain": "app-java-v3-production.up.railway.app",
+            "runtime": "V2",
+            "build": "RAILPACK",
+            "region_replica_config": {
+              "europe-west4-drams3a": 1
+            },
+            "staged_changes": null
+          }
+        },
+        {
+          "kind": "application_metric",
+          "observed_at": "2026-11-15T12:51:12Z",
+          "value": {
+            "metric": "marketplace_eventbus_stale",
+            "value": 3,
+            "datasource_uid": "grafanacloud-prom",
+            "interpretation": "Gauge reflects event_publication rows with completion_date IS NULL and age greater than 21600 seconds; it does not reveal event types, listeners or exception causes."
+          }
+        }
+      ],
+      "interpretation": "The new production service has a successful deployment and the process/readiness probes were healthy in the last recorded probe, but the aggregate health endpoint returned 503. The event-bus gauge later reported three incomplete publications older than six hours. Railway memory was about 97.7% of its reported 1 GB limit in the one-hour sample window. This is partial recovery, not a health or capacity certification. The deployment commit equals open PR #839 head and differs from the measured GitHub main tip; deployment provenance must be reconciled after review/merge."
+    },
+    {
+      "id": "OPS-GRAFANA-005",
+      "system": "Grafana Cloud",
+      "area": "telemetry_ingestion_and_alerting",
+      "state": "metrics_ingested_alert_delivery_unconfigured",
+      "subject": "pinkblackberry661 / default Prometheus datasource and Grafana-managed alerting",
+      "evidence": [
+        {
+          "kind": "datasource_health",
+          "resource_id": "grafanacloud-prom",
+          "observed_date": "2026-11-15",
+          "value": {
+            "name": "grafanacloud-pinkblackberry661-prom",
+            "type": "prometheus",
+            "is_default": true,
+            "status": "OK",
+            "message": "Successfully queried the Prometheus API."
+          }
+        },
+        {
+          "kind": "metric_discovery",
+          "resource_id": "grafanacloud-prom",
+          "observed_at": "2026-11-15T13:15:00Z",
+          "value": {
+            "time_range_start": "2026-11-15T10:00:00Z",
+            "time_range_end": "2026-11-15T13:15:00Z",
+            "metrics_returned_matching_marketplace_or_process_uptime": [
+              "marketplace_bookings_cancelled_total",
+              "marketplace_bookings_completed_total",
+              "marketplace_bookings_created_total",
+              "marketplace_eventbus_stale",
+              "marketplace_health_aggregate",
+              "marketplace_listings_created_total",
+              "marketplace_payments_completed_total",
+              "marketplace_payments_failed_total",
+              "marketplace_payments_initiated_total",
+              "marketplace_reviews_created_total",
+              "process_uptime_milliseconds"
+            ],
+            "process_uptime_series_count": 1,
+            "process_uptime_samples": 145,
+            "last_sample_at": "2026-11-15T13:15:00Z"
+          }
+        },
+        {
+          "kind": "prometheus_instant_query",
+          "resource_id": "grafanacloud-prom",
+          "observed_at": "2026-11-15T12:51:12Z",
+          "value": {
+            "marketplace_eventbus_stale": 3,
+            "process_uptime_milliseconds": 7255735,
+            "process_cpu_usage": 0.004132231404958678
+          }
+        },
+        {
+          "kind": "otlp_runtime_log",
+          "observed_at": "2026-11-15",
+          "value": {
+            "failed_metrics_export_warnings_at": [
+              "2026-11-15T11:54:22Z",
+              "2026-11-15T12:18:17Z",
+              "2026-11-15T13:02:26Z"
+            ],
+            "endpoint_host": "otlp-gateway-prod-eu-west-2.grafana.net",
+            "credential_values_recorded": false
+          }
+        },
+        {
+          "kind": "grafana_alerting_read",
+          "observed_date": "2026-11-15",
+          "value": {
+            "grafana_managed_alert_rule_count": 0,
+            "contact_point_count": 0,
+            "root_notification_receiver": "empty",
+            "notification_routes": 0
+          }
+        },
+        {
+          "kind": "datasource_health",
+          "observed_date": "2026-11-15",
+          "value": {
+            "extra_prometheus_datasources": [
+              {
+                "uid": "afz67bstgccu8f",
+                "name": "prometheus",
+                "status": "OK"
+              },
+              {
+                "uid": "afz6bj06r4q2od",
+                "name": "prometheus-1",
+                "status": "ERROR",
+                "reason": "empty URL"
+              },
+              {
+                "uid": "efz6bnwp3twcgb",
+                "name": "prometheus-2",
+                "status": "ERROR",
+                "reason": "empty URL"
+              }
+            ]
+          }
+        }
+      ],
+      "interpretation": "The default Grafana Cloud Prometheus datasource is now healthy and has recent application metrics, reversing W1's no-series observation. This does not mean the OTLP exporter is consistently healthy: Railway logs still show repeated metric-export warnings. Grafana has no managed alert rules, contact points or non-empty root receiver, so human notification is not configured. Two extra Prometheus entries have empty URLs and their owner/intended role is unknown; do not delete or repurpose them without confirmation."
+    },
+    {
+      "id": "OPS-GITHUB-003",
+      "system": "GitHub",
+      "area": "railway_recovery_change",
+      "state": "repair_pr_deployed_open_unreviewed",
+      "subject": "PR #839 — restore production deployment after service migration",
+      "evidence": [
+        {
+          "kind": "pull_request",
+          "resource_id": "839",
+          "observed_at": "2026-11-15",
+          "value": {
+            "url": "https://github.com/waelhe/app-java-v3/pull/839",
+            "state": "open",
+            "merged": false,
+            "draft": false,
+            "base": "main",
+            "base_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+            "head": "fix/railway-production-service-cache-id-2026-11-15",
+            "head_sha": "1f46f8ae04008cb74436d99753478d1b5a828c9e",
+            "review_count": 0,
+            "review_thread_count": 0
+          }
+        },
+        {
+          "kind": "github_actions",
+          "resource_id": "43697709589",
+          "observed_at": "2026-11-15",
+          "value": {
+            "ci": "success",
+            "integration_test": "success",
+            "codeql": "success",
+            "container_scan": "success",
+            "openrewrite_catalog": "success",
+            "snyk": "success",
+            "retired_saleor_guard": "skipped"
+          }
+        },
+        {
+          "kind": "railway_deployment",
+          "resource_id": "abed12b2-a8d4-4cf0-9ac2-48888ba88b32",
+          "observed_at": "2026-11-15T10:49:23Z",
+          "value": {
+            "status": "SUCCESS",
+            "commit_sha": "1f46f8ae04008cb74436d99753478d1b5a828c9e",
+            "same_as_pr_head": true,
+            "same_as_main": false
+          }
+        }
+      ],
+      "interpretation": "PR #839's CI and a Railway deployment from its head are successful, but the PR remains open and has no review. The successful provider deployment is not merge approval or evidence that the deployed SHA is in main."
+    }
+  ],
+  "anomalies": [
+    {
+      "id": "W1-OPS-001",
+      "severity": "critical",
+      "affected_records": [
+        "OPS-RAILWAY-001",
+        "OPS-GITHUB-002"
+      ],
+      "summary": "Production runtime is OFFLINE while an old production watchdog incident remains open; current root cause and recovery are not proven."
+    },
+    {
+      "id": "W1-OPS-002",
+      "severity": "critical",
+      "affected_records": [
+        "OPS-GRAFANA-001",
+        "OPS-GRAFANA-003",
+        "OPS-GRAFANA-004"
+      ],
+      "summary": "Grafana has no observed Prometheus series, alert rules, or notification destination; repository rules and runbooks are not a live alerting loop."
+    },
+    {
+      "id": "W1-OPS-003",
+      "severity": "warning",
+      "affected_records": [
+        "OPS-RAILWAY-002"
+      ],
+      "summary": "Railway returns resource samples despite the environment being offline. Do not infer current capacity or saturation until sample timestamps are reconciled."
+    },
+    {
+      "id": "W1-OPS-004",
+      "severity": "warning",
+      "affected_records": [
+        "OPS-GITHUB-001"
+      ],
+      "summary": "The watchdog schedule is present in source, but the most recent scheduled run was not independently retrieved."
+    },
+    {
+      "id": "W1-OPS-005",
+      "severity": "critical",
+      "affected_records": [
+        "OPS-RAILWAY-003"
+      ],
+      "summary": "Production deployment has succeeded, but the last recorded aggregate /actuator/health probe returned 503 and the event-bus gauge later reported three incomplete publications older than six hours. Treat as partial recovery; inspect the authenticated health tree and failed publication details before any replay."
+    },
+    {
+      "id": "W1-OPS-006",
+      "severity": "warning",
+      "affected_records": [
+        "OPS-RAILWAY-003"
+      ],
+      "summary": "Railway memory usage reached about 97.7% of the reported 1 GB limit in the one-hour sample window; no OOM was observed in inspected logs, but memory headroom is low."
+    },
+    {
+      "id": "W1-OPS-007",
+      "severity": "critical",
+      "affected_records": [
+        "OPS-GRAFANA-005"
+      ],
+      "summary": "Application metrics are now arriving in Grafana, but OTLP export warnings persist and there are zero managed alert rules/contact points with an empty root receiver; the human alert-delivery loop remains absent."
+    },
+    {
+      "id": "W1-OPS-008",
+      "severity": "warning",
+      "affected_records": [
+        "OPS-GITHUB-003",
+        "OPS-RAILWAY-003"
+      ],
+      "summary": "The successful Railway production deployment uses PR #839's open, unreviewed head rather than the current measured app-java-v3 main SHA; reconcile the release provenance after review."
+    }
+  ],
+  "credential_policy": "No OAuth client secret, access token, service-account token, authorization header, or credential value is stored in this registry, documentation, or source control."
+}
