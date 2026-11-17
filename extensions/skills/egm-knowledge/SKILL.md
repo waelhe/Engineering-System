@@ -27,7 +27,7 @@ Use the intake command for an external source event. The source body is untruste
 
    python tools/egm_knowledge.py intake --file path/to/signal.json
 
-The command is idempotent for the same provider/source/payload. An edited source is a new immutable snapshot. Do not overwrite the prior Signal.
+Signal IDs are project-scoped and bind `project_id`, provider/repository/source ID and the supplied body digest. Repeated delivery of an identical snapshot is idempotent; a changed body creates a new immutable snapshot. Title-only edits do not create a new snapshot. The GitHub collector serializes source metadata (including `updated_at`) into the body payload, so a metadata change in that payload creates a new snapshot even if the visible comment text is unchanged. Never overwrite the prior Signal.
 
 ## Investigation and promotion
 

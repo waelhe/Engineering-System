@@ -26,7 +26,7 @@ flowchart TD
 
 Sources include GitHub issue and PR comments, formal review submissions, CodeRabbit/Copilot findings, CI failures, unit/integration/property/fuzz tests, production incidents, security scans, and human reports.
 
-Intake deduplicates at the immutable snapshot level. The Signal ID binds source identity to a digest of the captured body: redelivery of the same source identity with unchanged content returns the existing Signal, while edited content with the same source identity creates a new Signal snapshot. This is not source-identity-only deduplication. Untrusted content is stored as data; intake does not create a confirmed defect or alter a human triage decision.
+Intake deduplicates at the immutable snapshot level. The Signal ID is project-scoped and binds `project_id`, source identity (`provider:repository:source_id`), and a SHA-256 digest of the supplied body. Redelivery of that same project/source/body snapshot returns the existing Signal; a changed body creates a new immutable snapshot. Title-only changes do not create a new snapshot because title is retained metadata, not part of the digest. For the GitHub review collector, the supplied body is a serialized snapshot of review/comment fields (including `updated_at`, path/line and commit metadata), not merely the human comment text; a changed `updated_at` therefore creates a new snapshot even when comment text is restored. Untrusted content is stored as data; intake does not create a confirmed defect or alter a human triage decision.
 
 ## Investigation
 

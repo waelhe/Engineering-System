@@ -73,7 +73,7 @@ Create a JSON file with project_id, provider, repository, source_id, source_url,
     python tools/egm_knowledge.py index
     python tools/egm_knowledge.py index --check
 
-The intake stores a bounded, redacted excerpt plus a digest and source identity. Repeated delivery of the same body for the same provider/repository/source ID is idempotent; a changed body creates a new immutable snapshot. The digest covers the body only, so title-only edits do not create a new snapshot. Generate the index after intake and use index --check to verify that the committed index is current. Signals are not automatically promoted into Findings or Cases.
+The intake stores a bounded, redacted excerpt plus a digest and source identity. Signal identity is scoped by project and binds `project_id`, provider/repository/source ID and the supplied body digest. Re-delivery of the same snapshot is idempotent; a changed body creates a new immutable snapshot, while title-only edits do not. The GitHub collector's serialized body includes source metadata such as `updated_at`, so metadata changes in that payload can create a new snapshot even when the comment text is unchanged. Generate the index after intake and use index --check to verify that the committed index is current. Signals are not automatically promoted into Findings or Cases.
 
 ## Build the integrated EGM plugin
 

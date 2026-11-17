@@ -1,5 +1,8 @@
 import hashlib
 import json
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -14,20 +17,20 @@ from tools.validate_intake_pr import (
 )
 
 
-def sample_signal():
+def sample_signal(project_id="sample-project"):
     provider = "github"
     repository = "owner/repo"
     source_id = "github_review-101"
     source_identity = f"{provider}:{repository}:{source_id}"
     digest = hashlib.sha256(b"source body").hexdigest()
     signal_id = "sig-" + hashlib.sha256(
-        (source_identity + ":" + digest).encode("utf-8")
+        (project_id + ":" + source_identity + ":" + digest).encode("utf-8")
     ).hexdigest()[:24]
     return f"knowledge/inbox/{signal_id}.json", {
         "schema_version": 1,
         "id": signal_id,
         "type": "signal",
-        "project_id": "sample-project",
+        "project_id": project_id,
         "title": "Review comment",
         "summary": "Source body",
         "assessment": "observed",
@@ -45,6 +48,20 @@ def sample_signal():
             "trust_level": "untrusted_source",
         }],
     }
+
+
+def test_intake_validator_package_module_exposes_cli_from_repository_root():
+    repository_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        [sys.executable, "-m", "tools.validate_intake_pr", "--help"],
+        cwd=repository_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "--head-sha" in result.stdout
 
 
 def test_intake_change_contract_accepts_only_new_signals_and_generated_index():
@@ -83,6 +100,19 @@ def test_signal_validator_rejects_id_mismatch():
     record["payload_digest"] = "0" * 64
     with pytest.raises(IntakeValidationError, match="Signal ID does not match"):
         validate_signal_record(path, json.dumps(record).encode("utf-8"))
+
+
+def test_signal_validator_binds_snapshot_identity_to_project():
+    first_path, first_record = sample_signal("sample-project")
+    second_path, second_record = sample_signal("another-project")
+
+    assert first_path != second_path
+    validate_signal_record(first_path, json.dumps(first_record).encode("utf-8"))
+    validate_signal_record(second_path, json.dumps(second_record).encode("utf-8"))
+
+    second_record["project_id"] = "sample-project"
+    with pytest.raises(IntakeValidationError, match="project, source identity and body digest"):
+        validate_signal_record(second_path, json.dumps(second_record).encode("utf-8"))
 
 
 def test_name_status_parser_handles_null_delimited_paths():

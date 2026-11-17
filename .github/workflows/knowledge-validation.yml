@@ -60,7 +60,7 @@ jobs:
           CURRENT_REF: ${{ github.ref_name }}
         run: |
           set -eu
-          python tools/validate_intake_pr.py \
+          python -m tools.validate_intake_pr \
             --pr-number "$INTAKE_PR_NUMBER" \
             --base-ref "$INTAKE_BASE_REF" \
             --head-ref "$INTAKE_HEAD_REF" \

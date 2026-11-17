@@ -163,7 +163,62 @@
             ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "success"
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "required": [
+                "tested_sha",
+                "url"
+              ],
+              "properties": {
+                "tested_sha": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "url": {
+                  "pattern": "^https://github\\.com/[^/]+/[^/]+/actions/runs/[0-9]+(?:/.*)?$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url"
+              ]
+            },
+            "then": {
+              "required": [
+                "run_id"
+              ],
+              "properties": {
+                "run_id": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "reviews": {
@@ -199,6 +254,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "reviewed_sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
           }
         },
         "additionalProperties": false
@@ -272,17 +331,38 @@
         },
         "target_verification": {
           "type": "object",
-          "required": ["workflow"],
+          "required": [
+            "workflow"
+          ],
           "properties": {
             "workflow": {
               "type": "object",
-              "required": ["name", "run_id", "conclusion", "tested_sha", "url"],
+              "required": [
+                "name",
+                "run_id",
+                "conclusion",
+                "tested_sha",
+                "url"
+              ],
               "properties": {
-                "name": {"type": "string"},
-                "run_id": {"type": "string", "minLength": 1},
-                "conclusion": {"const": "success"},
-                "tested_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-                "url": {"type": "string", "format": "uri"}
+                "name": {
+                  "type": "string"
+                },
+                "run_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "conclusion": {
+                  "const": "success"
+                },
+                "tested_sha": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
               },
               "additionalProperties": false
             }

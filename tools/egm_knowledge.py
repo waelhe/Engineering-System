@@ -6,8 +6,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -507,7 +509,8 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
     if len(source_identity) > 512:
         raise KnowledgeError("provider/repository/source identity exceeds 512 characters")
     digest = hashlib.sha256(payload["body"].encode("utf-8")).hexdigest()
-    signal_id = "sig-" + hashlib.sha256((source_identity + ":" + digest).encode("utf-8")).hexdigest()[:24]
+    snapshot_identity = ":".join((payload["project_id"], source_identity, digest))
+    signal_id = "sig-" + hashlib.sha256(snapshot_identity.encode("utf-8")).hexdigest()[:24]
     captured_at = utc_now()
     excerpt = redact_excerpt(payload["body"])
     source = {
@@ -566,10 +569,51 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
     ensure_no_symlink(target)
     if target.exists():
         existing = read_json(target)
-        if existing.get("payload_digest") == digest and existing.get("source_identity") == source_identity:
+        if (
+            existing.get("project_id") == payload["project_id"]
+            and existing.get("payload_digest") == digest
+            and existing.get("source_identity") == source_identity
+        ):
             return "duplicate", target
         raise KnowledgeError("existing Signal snapshot failed integrity comparison; do not overwrite it")
-    target.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    temporary_path: Path | None = None
+    serialized = json.dumps(record, indent=2, ensure_ascii=False) + "\n"
+    try:
+        # Prepare the complete file beside its destination, then publish it with
+        # one no-overwrite filesystem operation. Readers never see partial JSON.
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            newline="\n",
+            dir=target.parent,
+            prefix=f".{signal_id}.",
+            suffix=".tmp",
+            delete=False,
+        ) as stream:
+            temporary_path = Path(stream.name)
+            stream.write(serialized)
+            stream.flush()
+            os.fsync(stream.fileno())
+        try:
+            os.link(temporary_path, target)
+        except FileExistsError:
+            # Another intake won the race. A hard-link publication exposes only
+            # its complete file, so the normal immutable-snapshot check is safe.
+            ensure_no_symlink(target)
+            existing = read_json(target)
+            if (
+                existing.get("project_id") == payload["project_id"]
+                and existing.get("payload_digest") == digest
+                and existing.get("source_identity") == source_identity
+            ):
+                return "duplicate", target
+            raise KnowledgeError(
+                "concurrent Signal snapshot failed integrity comparison; do not overwrite it"
+            )
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
     return "created", target
 
 def validate_receipts() -> list[dict[str, str]]:
@@ -589,10 +633,31 @@ def validate_receipts() -> list[dict[str, str]]:
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "verified/merged/deployed receipt requires tested_sha"})
             if receipt.get("status") == "verified" and tested_sha != receipt.get("head_sha"):
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "verified receipt tested_sha must equal head_sha"})
-            successful = [
-                check for check in receipt.get("checks", [])
-                if check.get("status") == "success" and check.get("tested_sha") == tested_sha
-            ]
+            successful = []
+            for check in receipt.get("checks", []):
+                if (
+                    not isinstance(check, dict)
+                    or check.get("status") != "success"
+                    or check.get("tested_sha") != tested_sha
+                ):
+                    continue
+                evidence_url = check.get("url")
+                if not isinstance(evidence_url, str) or not evidence_url.startswith("https://"):
+                    continue
+                parsed_evidence_url = urlparse(evidence_url)
+                if parsed_evidence_url.scheme != "https" or not parsed_evidence_url.netloc:
+                    continue
+                actions_run = (
+                    re.fullmatch(
+                        r"/[^/]+/[^/]+/actions/runs/([0-9]+)(?:/.*)?",
+                        parsed_evidence_url.path,
+                    )
+                    if parsed_evidence_url.netloc.lower() == "github.com"
+                    else None
+                )
+                if actions_run and str(check.get("run_id") or "") != actions_run.group(1):
+                    continue
+                successful.append(check)
             if not successful:
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "no successful check is tied to receipt tested_sha"})
         if receipt.get("status") in {"merged", "deployed"}:
@@ -634,10 +699,18 @@ def validate_receipts() -> list[dict[str, str]]:
         if receipt.get("tier") in {"T2", "T3"} and receipt.get("status") in {"verified", "merged", "deployed"}:
             goldfish = [
                 review for review in receipt.get("reviews", [])
-                if "goldfish" in review.get("role", "").lower() and review.get("status") == "completed" and review.get("independence_proof")
+                if (
+                    "goldfish" in review.get("role", "").lower()
+                    and review.get("status") == "completed"
+                    and review.get("independence_proof")
+                    and review.get("reviewed_sha") == receipt.get("head_sha")
+                )
             ]
             if not goldfish:
-                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "T2/T3 receipt requires completed Goldfish review with independence evidence"})
+                errors.append({
+                    "path": path.relative_to(ROOT).as_posix(),
+                    "error": "T2/T3 receipt requires completed Goldfish review with independence evidence for receipt head_sha",
+                })
     return errors
 
 

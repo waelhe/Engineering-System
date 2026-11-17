@@ -17,7 +17,7 @@ Do not rely on conversation summaries as evidence of current repository state.
 ## Risk-tiered workflow
 
 - T0: answer or research with only the relevant context.
-- T1: investigate the local change, declare its write boundary, implement if requested, test and self-review.
+- T1: investigate the local change and declare its write boundary; make requested source edits only through `egm-implement` after an approved plan and explicit write allowlist, then test and self-review.
 - T2: retrieve context, design, obtain fresh Goldfish review, produce an actionable readiness plan, implement within its write boundary, verify and capture learning.
 - T3: perform the full EGM lifecycle with independent design and code review, adversarial failure analysis, required human approvals, environment-accurate proof and rollback/recovery evidence.
 
