@@ -64,25 +64,37 @@ def test_workflow_run_rejects_each_trust_boundary_independently(monkeypatch, cha
 
 
 def test_prepare_branch_starts_only_from_trusted_default_branch(monkeypatch):
-    calls = []
+    events = []
 
     def fake_api(method, path, token, payload=None):
         assert method == "GET"
         assert path == "/repos/owner/repo"
         return {"default_branch": "main"}
 
+    def fake_git_with_token(arguments, token):
+        events.append(("fetch", tuple(arguments), token))
+
+    def fake_git(*args, **kwargs):
+        events.append(("git", args))
+
     monkeypatch.setattr(intake, "api_request", fake_api)
-    monkeypatch.setattr(intake, "git", lambda *args, **kwargs: calls.append(args))
+    monkeypatch.setattr(intake, "git_with_token", fake_git_with_token)
+    monkeypatch.setattr(intake, "git", fake_git)
     branch, base = intake.prepare_branch("owner/repo", "secret", "12345", "2")
 
+    git_calls = [event[1] for event in events if event[0] == "git"]
     assert branch == "automation/knowledge-intake-12345-2"
     assert base == "main"
-    assert ("checkout", "-B", branch, "refs/remotes/origin/main") in calls
-    assert not any("pulls?state=open" in " ".join(call) for call in calls)
-    assert not any(call[0] == "merge" for call in calls)
-    assert calls.index(("config", "user.name", "EGM Knowledge Intake Bot")) < calls.index(
-        ("checkout", "-B", branch, "refs/remotes/origin/main")
-    )
+    assert events[0] == ("fetch", ("fetch", "origin", "main", "--no-tags"), "secret")
+    assert ("checkout", "-B", branch, "refs/remotes/origin/main") in git_calls
+    assert not any("pulls?state=open" in " ".join(call) for call in git_calls)
+    assert not any(call[0] == "merge" for call in git_calls)
+    checkout_index = next(i for i, event in enumerate(events)
+                          if event == ("git", ("checkout", "-B", branch, "refs/remotes/origin/main")))
+    config_index = next(i for i, event in enumerate(events)
+                        if event == ("git", ("config", "user.name", "EGM Knowledge Intake Bot")))
+    assert events.index(("fetch", ("fetch", "origin", "main", "--no-tags"), "secret")) < checkout_index
+    assert config_index < checkout_index
 
 
 def test_child_environment_drops_github_credentials(monkeypatch):

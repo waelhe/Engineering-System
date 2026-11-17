@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import shutil
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -136,6 +138,91 @@ def test_edited_signal_body_creates_a_new_immutable_snapshot(tmp_path, monkeypat
     assert len(list((root / "knowledge/inbox").glob("*.json"))) == 2
     records = [json.loads(path.read_text(encoding="utf-8")) for path in (root / "knowledge/inbox").glob("*.json")]
     assert len({record["payload_digest"] for record in records}) == 2
+
+
+def test_signal_snapshot_identity_is_project_scoped(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    second_profile = json.loads(
+        (root / "knowledge/projects/sample-project.json").read_text(encoding="utf-8")
+    )
+    second_profile["project_id"] = "another-project"
+    (root / "knowledge/projects/another-project.json").write_text(
+        json.dumps(second_profile), encoding="utf-8"
+    )
+    payload = {
+        "project_id": "sample-project",
+        "provider": "github",
+        "repository": "owner/repo",
+        "source_id": "review-comment-shared",
+        "source_url": "https://github.com/owner/repo/pull/8",
+        "title": "Same source",
+        "body": "Same source body",
+    }
+
+    first, first_path = knowledge.receive_signal(payload)
+    payload["project_id"] = "another-project"
+    second, second_path = knowledge.receive_signal(payload)
+
+    assert first == second == "created"
+    assert first_path != second_path
+    assert json.loads(first_path.read_text(encoding="utf-8"))["project_id"] == "sample-project"
+    assert json.loads(second_path.read_text(encoding="utf-8"))["project_id"] == "another-project"
+    assert knowledge.receive_signal(payload)[0] == "duplicate"
+
+
+def test_title_only_signal_edit_is_idempotent_by_body_snapshot(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    payload = {
+        "project_id": "sample-project",
+        "provider": "github",
+        "repository": "owner/repo",
+        "source_id": "review-comment-title-only",
+        "source_url": "https://github.com/owner/repo/pull/8",
+        "title": "Original title",
+        "body": "Unchanged source body",
+    }
+
+    created, path = knowledge.receive_signal(payload)
+    payload["title"] = "Edited title"
+    duplicate, same_path = knowledge.receive_signal(payload)
+
+    assert created == "created"
+    assert duplicate == "duplicate"
+    assert same_path == path
+    assert json.loads(path.read_text(encoding="utf-8"))["title"] == "Original title"
+    assert len(list((root / "knowledge/inbox").glob("*.json"))) == 1
+
+
+def test_concurrent_signal_intake_publishes_one_complete_immutable_snapshot(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    payload = {
+        "project_id": "sample-project",
+        "provider": "github",
+        "repository": "owner/repo",
+        "source_id": "review-comment-concurrent",
+        "source_url": "https://github.com/owner/repo/pull/9",
+        "title": "Concurrent intake",
+        "body": "A complete source payload that must never be partially written.",
+    }
+    real_link = knowledge.os.link
+    barrier = threading.Barrier(2)
+
+    def synchronized_link(source, destination):
+        barrier.wait(timeout=5)
+        return real_link(source, destination)
+
+    monkeypatch.setattr(knowledge.os, "link", synchronized_link)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(lambda _: knowledge.receive_signal(payload), range(2)))
+
+    assert sorted(outcome for outcome, _ in results) == ["created", "duplicate"]
+    signal_files = list((root / "knowledge/inbox").glob("*.json"))
+    assert len(signal_files) == 1
+    stored = json.loads(signal_files[0].read_text(encoding="utf-8"))
+    assert stored["summary"] == payload["body"]
+    assert stored["payload_digest"] == __import__("hashlib").sha256(
+        payload["body"].encode("utf-8")
+    ).hexdigest()
 
 
 def test_signal_intake_rejects_unregistered_project_without_writing(tmp_path, monkeypatch):
@@ -448,7 +535,13 @@ def test_verified_receipt_requires_tested_sha_to_equal_head_sha(tmp_path, monkey
         "tested_sha": tested_sha,
         "started_at": "2026-11-14T00:00:00Z",
         "knowledge_pack": {"generated_at": "2026-11-14T00:00:00Z", "record_ids": []},
-        "checks": [{"name": "unit-tests", "status": "success", "tested_sha": tested_sha}],
+        "checks": [{
+            "name": "unit-tests",
+            "status": "success",
+            "run_id": "12345",
+            "tested_sha": tested_sha,
+            "url": "https://github.com/owner/repo/actions/runs/12345",
+        }],
         "reviews": [],
         "write_boundary": ["src/"],
     }
@@ -465,6 +558,60 @@ def test_verified_receipt_requires_tested_sha_to_equal_head_sha(tmp_path, monkey
     path.write_text(json.dumps(receipt), encoding="utf-8")
     assert knowledge.validate_receipts() == []
 
+    receipt["checks"][0]["url"] = None
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any("url" in item["error"] or "successful check" in item["error"]
+               for item in knowledge.validate_receipts())
+
+    receipt["checks"][0]["url"] = "https://github.com/owner/repo/actions/runs/12345"
+    receipt["checks"][0]["run_id"] = "99999"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any("no successful check" in item["error"]
+               for item in knowledge.validate_receipts())
+
+
+
+def test_t2_receipt_requires_goldfish_review_for_exact_head_sha(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    head_sha = "e" * 40
+    receipt = {
+        "schema_version": 1,
+        "task_id": "receipt-t2-review-sha",
+        "project_id": "sample-project",
+        "repository": "owner/repo",
+        "tier": "T2",
+        "status": "verified",
+        "head_sha": head_sha,
+        "tested_sha": head_sha,
+        "started_at": "2026-11-17T00:00:00Z",
+        "knowledge_pack": {"generated_at": "2026-11-17T00:00:00Z", "record_ids": []},
+        "checks": [{
+            "name": "validation",
+            "status": "success",
+            "run_id": "123456",
+            "tested_sha": head_sha,
+            "url": "https://github.com/owner/repo/actions/runs/123456",
+        }],
+        "reviews": [{
+            "role": "Goldfish",
+            "status": "completed",
+            "independence_proof": "separate review context and reviewer identity",
+            "reviewed_sha": "f" * 40,
+        }],
+        "write_boundary": ["tools/"],
+    }
+    directory = root / "knowledge/execution-receipts"
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / "t2.json"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    errors = knowledge.validate_receipts()
+    assert any("reviewed_sha" in item["error"] or "for receipt head_sha" in item["error"]
+               for item in errors)
+
+    receipt["reviews"][0]["reviewed_sha"] = head_sha
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert knowledge.validate_receipts() == []
 
 
 def test_retrieval_ranks_exact_tags_and_scope(tmp_path, monkeypatch):
@@ -534,7 +681,13 @@ def test_merged_receipt_binds_tested_sha_to_target_and_requires_target_regressio
         "target_sha": target_sha,
         "started_at": "2026-11-14T00:00:00Z",
         "knowledge_pack": {"generated_at": "2026-11-14T00:00:00Z", "record_ids": []},
-        "checks": [{"name": "candidate-tests", "status": "success", "tested_sha": tested_sha}],
+        "checks": [{
+            "name": "candidate-tests",
+            "status": "success",
+            "run_id": "56789",
+            "tested_sha": tested_sha,
+            "url": "https://github.com/owner/repo/actions/runs/56789",
+        }],
         "reviews": [],
         "write_boundary": ["src/"],
         "target_inclusion": {

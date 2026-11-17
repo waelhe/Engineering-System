@@ -19,6 +19,7 @@ HEAD_REF_PATTERN = re.compile(r"^automation/knowledge-intake-[0-9]+-[0-9]+$")
 HEAD_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 SIGNAL_PATH_PATTERN = re.compile(r"^knowledge/inbox/sig-[0-9a-f]{24}\.json$")
 DIGEST_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+PROJECT_ID_PATTERN = re.compile(r"^[a-z][a-z0-9-]{2,79}$")
 
 
 class IntakeValidationError(RuntimeError):
@@ -96,6 +97,7 @@ def validate_signal_record(relative_path: str, content: bytes) -> None:
         or record.get("approval") != "not_required"
     ):
         raise IntakeValidationError(f"intake Signal cannot carry a promoted state: {relative_path}")
+    project_id = record.get("project_id")
     provider = record.get("provider")
     source_id = record.get("source_id")
     source_identity = record.get("source_identity")
@@ -114,7 +116,9 @@ def validate_signal_record(relative_path: str, content: bytes) -> None:
         else None
     )
     if (
-        not isinstance(provider, str)
+        not isinstance(project_id, str)
+        or not PROJECT_ID_PATTERN.fullmatch(project_id)
+        or not isinstance(provider, str)
         or not provider
         or provider != provider.lower()
         or not isinstance(source_id, str)
@@ -126,10 +130,12 @@ def validate_signal_record(relative_path: str, content: bytes) -> None:
     ):
         raise IntakeValidationError(f"Signal source identity or body digest is invalid: {relative_path}")
     expected_id = "sig-" + hashlib.sha256(
-        (source_identity + ":" + digest).encode("utf-8")
+        (project_id + ":" + source_identity + ":" + digest).encode("utf-8")
     ).hexdigest()[:24]
     if record.get("id") != expected_id or relative_path != f"knowledge/inbox/{expected_id}.json":
-        raise IntakeValidationError(f"Signal ID does not match its source identity and body digest: {relative_path}")
+        raise IntakeValidationError(
+            f"Signal ID does not match its project, source identity and body digest: {relative_path}"
+        )
     if (
         source.get("trust_level") != "untrusted_source"
         or source.get("source_id") != source_id

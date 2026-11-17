@@ -6,7 +6,7 @@
 
 ## Imported entity families
 
-The source corpus is normalized into the canonical knowledge model. IDs are preserved in \`legacy_id\`; full source section text and exact GitHub line permalinks are preserved.
+The source corpus is normalized into the canonical knowledge model. IDs are preserved in \`legacy_id\`; source excerpts, revisions and available source links are retained. Immutable line-level permalinks are not available for every imported source and are tracked as provenance limitations rather than claimed implicitly.
 
 | Source family | Records | Destination |
 |---|---:|---|
@@ -52,5 +52,7 @@ The 34 findings from ADV-2026-11-10 (32 confirmed, 2 suspected) plus W7/W8 and G
 3. Re-run the source PR #834 final-head CI and review status; PR #834 is still unmerged in the source snapshot.
 4. Implement live GitHub review/CI intake in this repository using least-privilege capture and trusted-base processing.
 5. Run the independent review sample and produce an automated source/destination no-loss reconciliation.
+
+Provenance exception: Evidence \`evidence-source-cr-2026-10-25-26\` retains a URL to a moving \`integration/saleor-full-commerce-20261021\` branch with no line anchor. The migration manifest pins \`review-findings-index-2026-11-13.json\` at source revision \`f49bd15d186cf8be50c04e848b197faab3dfb47d\` (Git blob \`71a4def1d68893069b69b02714556594d0e4f4cf\`), but that pinned index only repeats the mutable Markdown URL; it does not preserve the linked Markdown file's exact blob. Treat this Evidence record as partial provenance until the original source blob or an immutable source revision/line permalink is recovered.
 
 The import deliberately preserves uncertainty rather than manufacturing closure. No legacy source data was deleted or edited.
