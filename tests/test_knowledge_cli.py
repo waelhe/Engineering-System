@@ -571,6 +571,33 @@ def test_verified_receipt_requires_tested_sha_to_equal_head_sha(tmp_path, monkey
 
 
 
+def test_queued_receipt_check_may_have_no_run_evidence_yet():
+    receipt = {
+        "schema_version": 1,
+        "task_id": "receipt-queued-check",
+        "project_id": "sample-project",
+        "repository": "owner/repo",
+        "tier": "T0",
+        "status": "in_progress",
+        "head_sha": "a" * 40,
+        "started_at": "2026-11-17T00:00:00Z",
+        "knowledge_pack": {"generated_at": "2026-11-17T00:00:00Z", "record_ids": []},
+        "checks": [{
+            "name": "build",
+            "status": "queued",
+            "run_id": None,
+            "tested_sha": None,
+            "url": None,
+        }],
+        "reviews": [],
+        "write_boundary": [],
+    }
+
+    assert knowledge.schema_errors(
+        receipt, knowledge.load_schema(knowledge.RECEIPT_SCHEMA)
+    ) == []
+
+
 def test_t2_receipt_requires_goldfish_review_for_exact_head_sha(tmp_path, monkeypatch):
     root = isolate_store(tmp_path, monkeypatch)
     head_sha = "e" * 40
