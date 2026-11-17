@@ -117,7 +117,7 @@ Keep the current Modular Monolith, PostgreSQL/PostGIS, Redis, Maven, Spring Modu
 - **W1 — Operational truth:** validate deployment identity, liveness/readiness, config, observability consumers, alerts, runbooks and recovery evidence.
 - **W2 — Capability and journey linking:** map each capability/journey to domains, modules, contracts, clients, tests and known gaps.
 - **W3 — PR queue control:** classify all open PRs, refresh bases, settle dependencies and review policy without opening duplicate work.
-- **W4 — Critical-risk closure:** sequence money, identity, privacy, API and concurrency risks from evidence.
+- **W4 — Critical-risk closure:** sequence money, identity, privacy, API and concurrency risks from evidence. The 2026-11-17 SHA-bound risk snapshot is [W4 critical-risk prioritization](w4-critical-risk-prioritization-2026-11-17.md); the validator rejects unproven closure claims.
 - **W5 — Commerce and backend outcomes:** complete the governed commerce candidate and remaining cross-domain backend journeys.
 - **W6 — Android and PAOS/Admin:** close client/provider/operator journeys against exact contracts.
 - **W7 — Operational maturity:** deployment/smoke, SLO consumption, alert routing, resilience and recovery.

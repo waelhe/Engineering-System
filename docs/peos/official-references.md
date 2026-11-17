@@ -21,3 +21,5 @@ A proposal for a new tool must include: (1) the concrete gap in this repository,
 ## Evidence rule
 
 For every technical claim in a PR, record the repository commit SHA, file path or API endpoint, the upstream documentation URL and the exact tested version. If a source has not been checked against the pinned version, mark the claim as unverified rather than transferring behavior from a newer release.
+
+| Object storage erasure / S3 versioning | https://docs.aws.amazon.com/AmazonS3/latest/userguide/DeletingObjectVersions.html ; https://docs.aws.amazon.com/AmazonS3/latest/userguide/DeletingObjects.html ; https://docs.aws.amazon.com/AmazonS3/latest/userguide/troubleshooting-versioning.html | For versioning-enabled or suspended buckets, a key-only delete is not proof of permanent version erasure; use version IDs and account for delete markers and retention. | Verify the actual provider, bucket versioning and Object Lock settings before choosing a permanent-erasure implementation. |

@@ -134,3 +134,56 @@ def test_w3_schema_rejects_promoting_historical_candidate_to_verified():
     payload["records"][0]["acceptance_state"] = "verified"
     assert list(Draft202012Validator(schema).iter_errors(payload))
 
+
+def test_w4_critical_risk_snapshot_is_exact_sha_bound_and_conservative():
+    root = Path(__file__).resolve().parents[1]
+    payload = json.loads((root / "registry/peos/app-java-v3.critical-risks.json").read_text(encoding="utf-8"))
+    assert payload["kind"] == "critical_risk_registry"
+    assert payload["source"]["commit_sha"] == "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+    assert len(payload["records"]) == 7
+    by_id = {item["risk_id"]: item for item in payload["records"]}
+    assert len(by_id) == 7
+    for item in payload["records"]:
+        assert item["pull_request"]["head_sha"] == item["checks"]["head_sha"]
+        assert item["closure_evidence"] is None
+        assert item["status"] != "closed_verified"
+        if item["review"]["approval_on_current_head"]:
+            assert item["review"]["latest_sha"] == item["pull_request"]["head_sha"]
+
+    a1 = by_id["W4-A1-001"]
+    assert a1["status"] == "blocked_owner_decision"
+    assert a1["pull_request"]["number"] == 832
+    assert any("owner-gate recommendation" in fact for fact in a1["assessment"]["confirmed_facts"])
+
+    a3 = by_id["W4-A3-001"]
+    assert a3["status"] == "partial_candidate"
+    assert a3["pull_request"]["behind_by"] == 2
+    assert any("recognize()" in gap for gap in a3["assessment"]["blocking_gaps"])
+
+    g3 = by_id["W4-G3-001"]
+    assert g3["status"] == "partial_candidate"
+    assert any("version" in gap.lower() for gap in g3["assessment"]["blocking_gaps"])
+    assert any("provider" in unknown for unknown in g3["assessment"]["unknowns"])
+
+
+def test_w4_schema_rejects_closing_a_risk_without_post_merge_evidence():
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads((root / "schemas/peos-critical-risks.schema.json").read_text(encoding="utf-8"))
+    payload = json.loads((root / "registry/peos/app-java-v3.critical-risks.json").read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    assert not list(Draft202012Validator(schema).iter_errors(payload))
+
+    payload["records"][0]["status"] = "closed_verified"
+    assert list(Draft202012Validator(schema).iter_errors(payload))
+
+    payload["records"][0]["status"] = "blocked_owner_decision"
+    payload["records"][0]["closure_evidence"] = {
+        "merged_pr_number": 832,
+        "merge_commit_sha": "1" * 40,
+        "verified_main_sha": payload["source"]["commit_sha"],
+        "main_contains_merge_commit": True,
+        "post_merge_workflow_url": "https://github.com/waelhe/app-java-v3/actions/runs/1",
+        "post_merge_conclusion": "success"
+    }
+    assert list(Draft202012Validator(schema).iter_errors(payload))
+

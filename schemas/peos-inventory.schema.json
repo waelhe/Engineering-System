@@ -21,7 +21,8 @@
         "pull_request_registry",
         "operations_registry",
         "module_boundaries_registry",
-        "capability_registry"
+        "capability_registry",
+        "critical_risk_registry"
       ]
     },
     "snapshot_date": {

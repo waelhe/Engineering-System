@@ -41,6 +41,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         "operations": ("operations_registry", "app-java-v3.operations.json"),
         "boundaries": ("module_boundaries_registry", "app-java-v3.module-boundaries.json"),
         "capabilities": ("capability_registry", "app-java-v3.capabilities.json"),
+        "risks": ("critical_risk_registry", "app-java-v3.critical-risks.json"),
     }
     loaded: dict[str, dict[str, Any]] = {}
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
@@ -285,6 +286,42 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         if by_operation.get(record_id, {}).get("state") != expected_state:
             errors.append(f"{record_id}: state must remain explicitly {expected_state} until reverified")
 
+    # W4 risk data references authoritative source/PR evidence; it is not a second EGM findings store.
+    risk_registry = loaded.get("risks", {})
+    risk_records = risk_registry.get("records", [])
+    risk_ids = [item.get("risk_id") for item in risk_records]
+    if len(risk_records) != 7:
+        errors.append(f"W4 must carry exactly 7 audited critical-risk records, found {len(risk_records)}")
+    if len(risk_ids) != len(set(risk_ids)):
+        errors.append("W4 critical-risk IDs are not unique")
+    if risk_registry.get("source", {}).get("commit_sha") != boundaries.get("source", {}).get("commit_sha"):
+        errors.append("W4 critical-risk source SHA must match the pinned W2 backend source SHA")
+    for item in risk_records:
+        pr = item.get("pull_request", {})
+        checks = item.get("checks", {})
+        review = item.get("review", {})
+        if pr.get("head_sha") != checks.get("head_sha"):
+            errors.append(f"{item.get('risk_id')}: CI evidence is not bound to the exact PR head")
+        if review.get("approval_on_current_head") is True and review.get("latest_sha") != pr.get("head_sha"):
+            errors.append(f"{item.get('risk_id')}: claimed exact-head review SHA does not match the PR head")
+        if item.get("status") == "closed_verified":
+            closure = item.get("closure_evidence") or {}
+            if not closure.get("main_contains_merge_commit") or closure.get("post_merge_conclusion") != "success":
+                errors.append(f"{item.get('risk_id')}: closed risk lacks merged-main and successful post-merge evidence")
+            if closure.get("verified_main_sha") != risk_registry.get("source", {}).get("commit_sha"):
+                errors.append(f"{item.get('risk_id')}: closure evidence main SHA differs from the W4 source snapshot")
+        elif item.get("closure_evidence") is not None:
+            errors.append(f"{item.get('risk_id')}: non-closed risk cannot carry closure evidence")
+
+    try:
+        risk_schema = read_json(root / "schemas" / "peos-critical-risks.schema.json")
+        Draft202012Validator.check_schema(risk_schema)
+        risk_errors = list(Draft202012Validator(risk_schema, format_checker=FormatChecker()).iter_errors(risk_registry))
+        for item in risk_errors:
+            errors.append(f"app-java-v3.critical-risks.json: {'/'.join(map(str, item.absolute_path))}: {item.message}")
+    except Exception as exc:
+        errors.append(f"invalid W4 critical-risk schema: {exc}")
+
     return errors
 
 
@@ -298,8 +335,8 @@ def main() -> int:
             print(f"FAIL: {error}")
         return 1
     print("PEOS inventory validation: PASS")
-    print("Validated 30 Maven artifacts, 30 logical Modulith modules, 35 historical journeys, 35 unadjudicated journey-outcome capability candidates, 23 historical PR records and W1 operational evidence.")
-    print("Historic journey labels remain marked not-revalidated; Maven and Modulith graphs are distinct; no merge is authorized.")
+    print("Validated 30 Maven artifacts, 30 logical Modulith modules, 35 historical journeys, 35 unadjudicated capability candidates, 23 historical PR records, W1 operations and 7 W4 critical-risk records.")
+    print("Historic journey labels remain not-revalidated; Maven and Modulith graphs are distinct; W4 closure requires merged-main and exact-SHA post-merge proof; no merge is authorized.")
     return 0
 
 
