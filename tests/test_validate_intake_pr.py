@@ -132,7 +132,7 @@ def test_validate_intake_pr_enforces_append_only_guard_before_materializing_data
         if args[0] == "rev-parse":
             return head_sha
         if args[0] == "diff":
-            return f"A\\0{signal_path}\\0M\\0knowledge/index.json\\0"
+            return f"A\0{signal_path}\0M\0knowledge/index.json\0"
         raise AssertionError(f"unexpected git command before append-only rejection: {args}")
 
     monkeypatch.setattr(intake_validation, "git", fake_git)
