@@ -3,6 +3,8 @@ import json
 
 import pytest
 
+import tools.validate_intake_pr as intake_validation
+
 from tools.validate_intake_pr import (
     IntakeValidationError,
     parse_name_status_z,
@@ -115,3 +117,47 @@ def test_signal_validator_binds_source_identity_to_repository_provenance():
     record["source_identity"] = "github:another/repository:github_review-101"
     with pytest.raises(IntakeValidationError, match="source identity or body digest"):
         validate_signal_record(path, json.dumps(record).encode("utf-8"))
+
+
+
+def test_validate_intake_pr_enforces_append_only_guard_before_materializing_data(monkeypatch):
+    signal_path, _ = sample_signal()
+    head_sha = "a" * 40
+    calls = []
+
+    def fake_git(*args, check=True, binary=False):
+        calls.append(args)
+        if args[0] == "fetch":
+            return b"" if binary else ""
+        if args[0] == "rev-parse":
+            return head_sha
+        if args[0] == "diff":
+            return f"A\\0{signal_path}\\0M\\0knowledge/index.json\\0"
+        raise AssertionError(f"unexpected git command before append-only rejection: {args}")
+
+    monkeypatch.setattr(intake_validation, "git", fake_git)
+    monkeypatch.setattr(
+        intake_validation,
+        "validate_changes",
+        lambda base, head: [
+            ("M", "knowledge/evidence/history.jsonl",
+             "only new files or byte-preserving JSONL appends are allowed")
+        ],
+    )
+    monkeypatch.setattr(
+        intake_validation,
+        "run_trusted_validation",
+        lambda: pytest.fail("trusted validation must not run after append-only rejection"),
+    )
+
+    with pytest.raises(IntakeValidationError, match="append-only knowledge guard failed"):
+        intake_validation.validate_intake_pr(
+            17,
+            "main",
+            "automation/knowledge-intake-123-1",
+            head_sha,
+            "main",
+            "main",
+        )
+
+    assert any(command[0] == "diff" for command in calls)
