@@ -1,5 +1,8 @@
 import hashlib
 import json
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -45,6 +48,20 @@ def sample_signal(project_id="sample-project"):
             "trust_level": "untrusted_source",
         }],
     }
+
+
+def test_intake_validator_package_module_exposes_cli_from_repository_root():
+    repository_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        [sys.executable, "-m", "tools.validate_intake_pr", "--help"],
+        cwd=repository_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "--head-sha" in result.stdout
 
 
 def test_intake_change_contract_accepts_only_new_signals_and_generated_index():
