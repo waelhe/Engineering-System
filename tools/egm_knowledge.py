@@ -647,12 +647,24 @@ def validate_receipts() -> list[dict[str, str]]:
                 parsed_evidence_url = urlparse(evidence_url)
                 if parsed_evidence_url.scheme != "https" or not parsed_evidence_url.netloc:
                     continue
+                try:
+                    evidence_hostname = parsed_evidence_url.hostname
+                    evidence_port = parsed_evidence_url.port
+                except ValueError:
+                    continue
+                is_github_web_origin = (
+                    evidence_hostname is not None
+                    and evidence_hostname.lower() == "github.com"
+                    and evidence_port in {None, 443}
+                    and parsed_evidence_url.username is None
+                    and parsed_evidence_url.password is None
+                )
                 actions_run = (
                     re.fullmatch(
                         r"/[^/]+/[^/]+/actions/runs/([0-9]+)(?:/.*)?",
                         parsed_evidence_url.path,
                     )
-                    if parsed_evidence_url.netloc.lower() == "github.com"
+                    if is_github_web_origin
                     else None
                 )
                 if actions_run and str(check.get("run_id") or "") != actions_run.group(1):
