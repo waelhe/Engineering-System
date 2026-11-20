@@ -563,11 +563,15 @@ def test_verified_receipt_requires_tested_sha_to_equal_head_sha(tmp_path, monkey
     assert any("url" in item["error"] or "successful check" in item["error"]
                for item in knowledge.validate_receipts())
 
-    receipt["checks"][0]["url"] = "https://github.com/owner/repo/actions/runs/12345"
+    receipt["checks"][0]["url"] = "https://github.com:443/owner/repo/actions/runs/12345"
     receipt["checks"][0]["run_id"] = "99999"
     path.write_text(json.dumps(receipt), encoding="utf-8")
     assert any("no successful check" in item["error"]
                for item in knowledge.validate_receipts())
+
+    receipt["checks"][0]["run_id"] = "12345"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert knowledge.validate_receipts() == []
 
 
 
