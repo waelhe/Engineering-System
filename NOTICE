@@ -1,0 +1,7 @@
+# Notices
+
+This repository uses the open-source Elephant-Goldfish Model (EGM) from Google as a pinned Git submodule at upstream/egm.
+
+The upstream EGM source remains licensed under Apache License 2.0 and retains its original notices. The pinned version and known release-verification limitations are recorded in upstream/egm.lock.json.
+
+EGM is not an officially supported Google product. This repository and its local engineering-system extensions are independently maintained.

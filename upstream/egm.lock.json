@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "name": "google/elephant-goldfish-model",
+  "license": "Apache-2.0",
+  "baseline": {
+    "tag": "v0.1.1",
+    "tagObject": "0c00c16fcae1c0985c2faeaaf4f651ac529f2ddf",
+    "commit": "dea7761de06ce5b51c177ebb9bba0469f24af5a4",
+    "tree": "bced316be84d2568734bf718d40abb0cd4439f1f",
+    "releaseDate": "2026-11-06"
+  },
+  "releaseAssets": {
+    "egm-openai-0.1.1.zip": {
+      "sha256": "4fda088376452a2c66f79db6a367a94270255a4e369aa0eb49c05c15261f9098"
+    },
+    "egm-claude-0.1.1.zip": {
+      "sha256": "893945da23df29ffb7e47ee3713fc7dfd790e9d6e52cb22fcecd4be74593f8d6"
+    }
+  },
+  "provenance": {
+    "tagSignature": "unsigned",
+    "releaseNotes": "https://github.com/google/elephant-goldfish-model/releases/tag/v0.1.1",
+    "source": "https://github.com/google/elephant-goldfish-model",
+    "knownLimitations": [
+      "Upstream release notes state native end-to-end verification of exact release ZIPs remains open in issue #60.",
+      "The annotated release tag is reported by GitHub as unsigned/unverified.",
+      "Release archive checksums do not prove source-commit authenticity."
+    ]
+  },
+  "updatePolicy": {
+    "automaticUpdates": false,
+    "requirements": [
+      "review upstream changelog and source diff",
+      "inspect changes to skills, agents, resources and harness adapters",
+      "run offline package tests",
+      "run supported native harness probes for brainstorm, draft and review",
+      "record host/model versions and child-context isolation evidence",
+      "update this lock only after review"
+    ]
+  }
+}
