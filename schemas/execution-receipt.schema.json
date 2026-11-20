@@ -198,7 +198,7 @@
             "if": {
               "properties": {
                 "url": {
-                  "pattern": "^https://github\\.com/[^/]+/[^/]+/actions/runs/[0-9]+(?:/.*)?$",
+                  "pattern": "^https://github\\.com(?::443)?/[^/]+/[^/]+/actions/runs/[0-9]+(?:/.*)?$",
                   "type": "string"
                 }
               },
