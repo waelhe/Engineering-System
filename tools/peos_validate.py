@@ -399,6 +399,10 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         or not isinstance(stacked_ahead, int)
         or stacked_ahead < 0
         or stacked_proof.get("behind_by") != 0
+        or not isinstance(stacked_proof.get("compare_url"), str)
+        or not stacked_proof.get("compare_url", "").endswith(
+            f"/compare/{stacked.get('base_sha')}...{w3_records.get(787, {}).get('head_sha')}"
+        )
         or (stacked_proof.get("comparison_status") == "ahead" and stacked_ahead <= 0)
         or (stacked_proof.get("comparison_status") == "identical" and stacked_ahead != 0)
         or (stacked_relation == "stacked_base_behind_candidate" and stacked_ahead <= 0)
