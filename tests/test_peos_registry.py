@@ -194,6 +194,7 @@ def test_w5_w6_w7_snapshots_are_schema_valid_and_keep_unknowns_explicit():
     schema = json.loads((root / "schemas/peos-current-evidence.schema.json").read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
     paths = {
+        "w3_pr_queue_snapshot": "registry/peos/app-java-v3.w3-pr-queue.json",
         "w5_backend_commerce_snapshot": "registry/peos/app-java-v3.w5-backend-commerce.json",
         "w6_client_delivery_snapshot": "registry/peos/clients.w6-current.json",
         "w7_operations_snapshot": "registry/peos/operations.w7-current.json",
@@ -205,6 +206,15 @@ def test_w5_w6_w7_snapshots_are_schema_valid_and_keep_unknowns_explicit():
         assert payload["snapshot_date"] == "2026-11-21"
         assert not list(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(payload))
         payloads[kind] = payload
+
+    w3 = payloads["w3_pr_queue_snapshot"]
+    w3_by_number = {item["pr_number"]: item for item in w3["records"]}
+    assert len(w3_by_number) == 25
+    assert w3_by_number[787]["merge_policy"] == "single_full_commerce_candidate"
+    assert all(w3_by_number[number]["merge_policy"] == "tracking_only_do_not_merge" for number in range(806, 812))
+    assert w3_by_number[837]["base_relation"] == "stacked_base_behind_candidate"
+    assert w3_by_number[840]["draft"] is True
+    assert w3["special_rules"]["stacked_prs"][0]["ahead_by"] == 8
 
     w5 = {item["pr_number"]: item for item in payloads["w5_backend_commerce_snapshot"]["records"]}
     assert w5[787]["state"] == "open"
