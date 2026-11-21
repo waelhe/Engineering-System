@@ -313,7 +313,11 @@
         "target_branch",
         "target_sha",
         "tested_sha",
+        "candidate_inclusion",
         "tested_sha_is_ancestor",
+        "comparison_status",
+        "ahead_by",
+        "behind_by",
         "proof_url",
         "target_verification"
       ],
@@ -329,6 +333,57 @@
           "type": "string",
           "pattern": "^[0-9a-f]{40}$"
         },
+        "candidate_inclusion": {
+          "type": "object",
+          "required": [
+            "head_sha",
+            "tested_sha",
+            "head_sha_is_ancestor",
+            "comparison_status",
+            "ahead_by",
+            "behind_by",
+            "proof_url"
+          ],
+          "properties": {
+            "head_sha": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "tested_sha": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "head_sha_is_ancestor": {
+              "const": true
+            },
+            "comparison_status": {
+              "enum": ["ahead", "identical"]
+            },
+            "ahead_by": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "behind_by": {
+              "const": 0
+            },
+            "proof_url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://"
+            }
+          },
+          "additionalProperties": false
+        },
+        "comparison_status": {
+          "enum": ["ahead", "identical"]
+        },
+        "ahead_by": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "behind_by": {
+          "const": 0
+        },
         "target_verification": {
           "type": "object",
           "required": [
@@ -342,7 +397,8 @@
                 "run_id",
                 "conclusion",
                 "tested_sha",
-                "url"
+                "url",
+                "source"
               ],
               "properties": {
                 "name": {
@@ -362,6 +418,39 @@
                 "url": {
                   "type": "string",
                   "format": "uri"
+                },
+                "source": {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "uri",
+                    "run_id",
+                    "commit_sha",
+                    "captured_at"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "ci_run"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "format": "uri",
+                      "pattern": "^https://"
+                    },
+                    "run_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "commit_sha": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{40}$"
+                    },
+                    "captured_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "additionalProperties": false
                 }
               },
               "additionalProperties": false
