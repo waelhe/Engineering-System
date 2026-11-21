@@ -319,7 +319,9 @@
         "ahead_by",
         "behind_by",
         "proof_url",
-        "target_verification"
+        "target_verification",
+        "target_branch_proof",
+        "proof_url"
       ],
       "properties": {
         "target_branch": {
@@ -357,7 +359,10 @@
               "const": true
             },
             "comparison_status": {
-              "enum": ["ahead", "identical"]
+              "enum": [
+                "ahead",
+                "identical"
+              ]
             },
             "ahead_by": {
               "type": "integer",
@@ -375,7 +380,10 @@
           "additionalProperties": false
         },
         "comparison_status": {
-          "enum": ["ahead", "identical"]
+          "enum": [
+            "ahead",
+            "identical"
+          ]
         },
         "ahead_by": {
           "type": "integer",
@@ -464,6 +472,39 @@
         "proof_url": {
           "type": "string",
           "minLength": 1
+        },
+        "target_branch_proof": {
+          "type": "object",
+          "required": [
+            "kind",
+            "branch",
+            "commit_sha",
+            "uri",
+            "captured_at"
+          ],
+          "properties": {
+            "kind": {
+              "const": "github_branch_ref"
+            },
+            "branch": {
+              "type": "string",
+              "minLength": 1
+            },
+            "commit_sha": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "uri": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://api\\.github\\.com/"
+            },
+            "captured_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
