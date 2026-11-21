@@ -18,7 +18,7 @@ Capture exact repository, PR, branch and tested SHA; workflow name, run ID, job/
 
 A workflow must be complete and successful. queued, in_progress, cancelled, skipped, missing, or mismatched runs do not satisfy a successful-proof claim. Every Verification is CI-backed and records the workflow evidence required by its schema; it may document a control or operational check without target-branch inclusion. A manual operational observation without a CI workflow is source-linked Evidence and must be attached to an approved Decision or Control, not recorded as a Verification. Target-branch inclusion proof is required specifically when closing a reproducible code-defect Finding.
 
-A `verified` Execution Receipt must have `tested_sha` equal to its `head_sha`: the claim is that the declared candidate itself was tested. A `merged` or `deployed` receipt may retain an earlier `tested_sha` only when it also records the target SHA and a verifiable ancestry/inclusion proof. A passing run on an unrelated revision is not proof for the candidate.
+A `verified` Execution Receipt must have `tested_sha` equal to its `head_sha`: the claim is that the declared candidate itself was tested. A `merged` or `deployed` receipt may retain an earlier `tested_sha` only when it also records verifiable ancestry/inclusion proofs. The `target_inclusion.candidate_inclusion` proof must bind the reviewed receipt `head_sha` to `tested_sha` using the exact GitHub Compare API pair `head_sha...tested_sha`; accept only `ahead` with `ahead_by > 0` or `identical` with `ahead_by = 0`, and require `behind_by = 0`. This permits a tested merge commit that contains the reviewed candidate without treating an unrelated successful run as proof. The separate target-inclusion proof binds that same `tested_sha` to the final `target_sha`. A passing run on an unrelated revision is not proof for the candidate.
 
 ## Code-defect closure
 
@@ -30,7 +30,7 @@ For reproducible code defects, set `closure_mode` to `code_defect`; the linked V
 
 For reproducible code defects, the linked Verification must record a successful regression workflow on the exact `target_sha`, in addition to the Compare API proof that the candidate `tested_sha` is an ancestor of that target. The target workflow run must itself name the target SHA and be tied to a `ci_run` source record with the same run ID, URL and commit SHA. Ancestry alone is insufficient because a later revert does not remove the earlier fix commit from Git history.
 
-For `merged` or `deployed` Execution Receipts, `target_inclusion.tested_sha` must equal the receipt's `tested_sha`; the comparison URL must encode that exact tested/target pair; and a successful regression workflow must be recorded against the exact target SHA.
+For `merged` or `deployed` Execution Receipts, both comparisons are mandatory: `target_inclusion.candidate_inclusion` must prove receipt `head_sha` is included in receipt `tested_sha`, and `target_inclusion` must prove receipt `tested_sha` is included in receipt `target_sha`. Each comparison URL must encode its exact base/head pair and its recorded status/counts must agree. The successful regression workflow must be recorded against the exact target SHA and include a `ci_run` source record whose `run_id`, `uri` and `commit_sha` exactly match the workflow's run ID, URL and target SHA.
 
 ## Enforcement mapping
 
