@@ -680,7 +680,34 @@ def validate_receipts() -> list[dict[str, str]]:
             target_workflow = target_verification.get("workflow") or {}
             tested_sha = receipt.get("tested_sha")
             target_sha = receipt.get("target_sha")
+            candidate_inclusion = inclusion.get("candidate_inclusion") or {}
+            candidate_head_sha = receipt.get("head_sha")
+            candidate_proof_url = candidate_inclusion.get("proof_url")
+            candidate_comparison_status = candidate_inclusion.get("comparison_status")
+            candidate_ahead_by = candidate_inclusion.get("ahead_by")
+            if (
+                candidate_inclusion.get("head_sha") != candidate_head_sha
+                or candidate_inclusion.get("tested_sha") != tested_sha
+                or candidate_inclusion.get("head_sha_is_ancestor") is not True
+                or not isinstance(candidate_head_sha, str)
+                or not isinstance(tested_sha, str)
+                or not isinstance(candidate_proof_url, str)
+                or not candidate_proof_url.endswith(f"/compare/{candidate_head_sha}...{tested_sha}")
+                or candidate_inclusion.get("behind_by") != 0
+                or candidate_comparison_status not in {"ahead", "identical"}
+                or (
+                    candidate_comparison_status == "ahead"
+                    and (not isinstance(candidate_ahead_by, int) or candidate_ahead_by <= 0)
+                )
+                or (
+                    candidate_comparison_status == "identical"
+                    and candidate_ahead_by != 0
+                )
+            ):
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "candidate inclusion proof must bind receipt head_sha to the exact tested_sha comparison"})
             proof_url = inclusion.get("proof_url")
+            comparison_status = inclusion.get("comparison_status")
+            ahead_by = inclusion.get("ahead_by")
             if (
                 inclusion.get("target_sha") != target_sha
                 or inclusion.get("tested_sha") != tested_sha
@@ -689,17 +716,34 @@ def validate_receipts() -> list[dict[str, str]]:
                 or not isinstance(target_sha, str)
                 or not isinstance(proof_url, str)
                 or not proof_url.endswith(f"/compare/{tested_sha}...{target_sha}")
+                or inclusion.get("behind_by") != 0
+                or comparison_status not in {"ahead", "identical"}
+                or (
+                    comparison_status == "ahead"
+                    and (not isinstance(ahead_by, int) or ahead_by <= 0)
+                )
+                or (
+                    comparison_status == "identical"
+                    and ahead_by != 0
+                )
             ):
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "target inclusion proof must bind receipt tested_sha to the exact target_sha comparison"})
+            target_source = target_workflow.get("source") or {}
+            target_run_id = target_workflow.get("run_id")
+            target_run_url = target_workflow.get("url")
             if (
                 target_workflow.get("conclusion") != "success"
                 or target_workflow.get("tested_sha") != target_sha
-                or not isinstance(target_workflow.get("run_id"), str)
-                or not target_workflow.get("run_id")
-                or not isinstance(target_workflow.get("url"), str)
-                or not target_workflow.get("url", "").startswith("https://")
+                or not isinstance(target_run_id, str)
+                or not target_run_id
+                or not isinstance(target_run_url, str)
+                or not target_run_url.startswith("https://")
+                or target_source.get("kind") != "ci_run"
+                or target_source.get("run_id") != target_run_id
+                or target_source.get("uri") != target_run_url
+                or target_source.get("commit_sha") != target_sha
             ):
-                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "merged/deployed receipt requires successful target-SHA verification evidence"})
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "merged/deployed receipt requires a successful target-SHA workflow bound to a matching ci_run source record"})
         if receipt.get("status") == "deployed":
             target_sha = receipt.get("target_sha")
             deployments = [
