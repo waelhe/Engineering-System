@@ -1,6 +1,9 @@
 # W3 — Journey-outcome capability candidates
 
 **Snapshot:** 2026-11-16  
+
+> **Phase-label note:** this file retains its original W3 capture filename and historical title. In the current operating-model phase map, capability/journey indexing is part of W2; W3 denotes PR queue control and is documented separately in [the 2026-11-21 W3 queue snapshot](w3-pr-queue-2026-11-21.md). The historical file and registry are retained unchanged as evidence of the earlier capture.
+
 **Upstream project source:** `waelhe/app-java-v3/main` at `5809a8c3e2b351b3b807b9ed26cf211a2fd3f1b6`  
 **Journey source snapshot:** `2026-11-14`  
 **Registry:** `registry/peos/app-java-v3.capabilities.json`
