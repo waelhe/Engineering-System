@@ -753,7 +753,11 @@ def validate_receipts() -> list[dict[str, str]]:
                 )
                 or (
                     candidate_comparison_status == "identical"
-                    and candidate_ahead_by != 0
+                    and (candidate_ahead_by != 0 or candidate_head_sha != tested_sha)
+                )
+                or (
+                    candidate_comparison_status == "ahead"
+                    and candidate_head_sha == tested_sha
                 )
             ):
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "candidate inclusion proof must bind receipt head_sha to the exact tested_sha comparison"})
@@ -776,7 +780,11 @@ def validate_receipts() -> list[dict[str, str]]:
                 )
                 or (
                     comparison_status == "identical"
-                    and ahead_by != 0
+                    and (ahead_by != 0 or tested_sha != target_sha)
+                )
+                or (
+                    comparison_status == "ahead"
+                    and tested_sha == target_sha
                 )
             ):
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "target inclusion proof must bind receipt tested_sha to the exact target_sha comparison"})
