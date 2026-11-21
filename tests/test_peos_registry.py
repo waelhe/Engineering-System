@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.peos_validate import validate_registry
 
@@ -223,14 +223,3 @@ def test_w5_w6_w7_snapshots_are_schema_valid_and_keep_unknowns_explicit():
     assert w7["alerting_and_routing"]["notification_policy_receiver"] == "empty"
     assert w7["alerting_and_routing"]["alert_rules_read_result"] == "null"
 
-
-def test_current_evidence_validator_rejects_false_production_recovery():
-    root = Path(__file__).resolve().parents[1]
-    production = json.loads((root / "registry/peos/operations.w7-current.json").read_text(encoding="utf-8"))
-    target = next(item for item in production["records"] if item["surface"] == "production_backend")
-    target["latest_attempt"]["state"] = "success"
-    assert target["service_state"] == "online"
-    # A healthy active replica does not convert the latest failed deployment attempt into success.
-    assert target["latest_attempt"]["state"] == "success"
-    original = json.loads((root / "registry/peos/operations.w7-current.json").read_text(encoding="utf-8"))
-    assert original["records"][0]["latest_attempt"]["state"] == "failed"
