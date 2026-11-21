@@ -118,9 +118,11 @@ Keep the current Modular Monolith, PostgreSQL/PostGIS, Redis, Maven, Spring Modu
 - **W2 — Capability and journey linking:** map each capability/journey to domains, modules, contracts, clients, tests and known gaps.
 - **W3 — PR queue control:** classify all open PRs, refresh bases, settle dependencies and review policy without opening duplicate work.
 - **W4 — Critical-risk closure:** sequence money, identity, privacy, API and concurrency risks from evidence. The 2026-11-17 SHA-bound risk snapshot is [W4 critical-risk prioritization](w4-critical-risk-prioritization-2026-11-17.md); the validator rejects unproven closure claims.
-- **W5 — Commerce and backend outcomes:** complete the governed commerce candidate and remaining cross-domain backend journeys.
-- **W6 — Android and PAOS/Admin:** close client/provider/operator journeys against exact contracts.
-- **W7 — Operational maturity:** deployment/smoke, SLO consumption, alert routing, resilience and recovery.
+- **W5 — Commerce and backend outcomes:** complete the governed commerce candidate and remaining cross-domain backend journeys. Current evidence: [2026-11-21 backend/commerce snapshot](w5-backend-commerce-2026-11-21.md) and `registry/peos/app-java-v3.w5-backend-commerce.json`.
+- **W6 — Android and PAOS/Admin:** close client/provider/operator journeys against exact contracts. Current evidence: [2026-11-21 client snapshot](w6-client-delivery-2026-11-21.md) and `registry/peos/clients.w6-current.json`.
+- **W7 — Operational maturity:** deployment/smoke, SLO consumption, alert routing, resilience and recovery. Current evidence: [2026-11-21 operational recheck](w7-operational-recheck-2026-11-21.md) and `registry/peos/operations.w7-current.json`.
+
+The W0-W4 files remain historical source-bound snapshots. W5-W7 are new captures with their own source SHAs and provider observations; a newer snapshot does not rewrite an older measurement. The validator checks both families independently and rejects false closure or a successful-service claim that conceals a failed latest deployment attempt.
 
 ## 10. Adoption and safety gates
 
