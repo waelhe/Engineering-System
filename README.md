@@ -28,6 +28,7 @@ PEOS is the platform engineering control plane; EGM remains the single canonical
 
 - [PEOS operating model](docs/peos/operating-model.md)
 - [W3 current pull-request queue — 2026-11-21](docs/peos/w3-pr-queue-2026-11-21.md)
+- Read-only W3 recapture: `GITHUB_TOKEN=... python tools/capture_w3_pr_queue.py` (add `--check` to compare or `--write` to replace the snapshot after review).
 - [W5 backend and commerce evidence — 2026-11-21](docs/peos/w5-backend-commerce-2026-11-21.md)
 - [W6 client evidence — 2026-11-21](docs/peos/w6-client-delivery-2026-11-21.md)
 - [W7 operational evidence — 2026-11-21](docs/peos/w7-operational-recheck-2026-11-21.md)
