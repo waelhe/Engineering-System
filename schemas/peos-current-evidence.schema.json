@@ -33,7 +33,6 @@
         "type": "object",
         "required": [
           "system",
-          "reference",
           "capture_method"
         ],
         "properties": {
@@ -60,7 +59,19 @@
             "minLength": 10
           }
         },
-        "additionalProperties": true
+        "additionalProperties": true,
+        "anyOf": [
+          {
+            "required": [
+              "repository"
+            ]
+          },
+          {
+            "required": [
+              "reference"
+            ]
+          }
+        ]
       }
     },
     "records": {
