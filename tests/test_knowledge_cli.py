@@ -820,8 +820,20 @@ def test_merged_receipt_binds_tested_sha_to_target_and_requires_target_regressio
             "target_branch": "main",
             "target_sha": target_sha,
             "tested_sha": tested_sha,
+            "candidate_inclusion": {
+                "head_sha": tested_sha,
+                "tested_sha": tested_sha,
+                "head_sha_is_ancestor": True,
+                "comparison_status": "identical",
+                "ahead_by": 0,
+                "behind_by": 0,
+                "proof_url": f"https://api.github.com/repos/owner/repo/compare/{tested_sha}...{tested_sha}",
+            },
             "tested_sha_is_ancestor": True,
-            "proof_url": f"https://github.com/owner/repo/compare/{tested_sha}...{target_sha}",
+            "comparison_status": "ahead",
+            "ahead_by": 1,
+            "behind_by": 0,
+            "proof_url": f"https://api.github.com/repos/owner/repo/compare/{tested_sha}...{target_sha}",
             "target_verification": {
                 "workflow": {
                     "name": "target-regression",
@@ -829,6 +841,13 @@ def test_merged_receipt_binds_tested_sha_to_target_and_requires_target_regressio
                     "conclusion": "success",
                     "tested_sha": target_sha,
                     "url": "https://github.com/owner/repo/actions/runs/90123",
+                    "source": {
+                        "kind": "ci_run",
+                        "uri": "https://github.com/owner/repo/actions/runs/90123",
+                        "run_id": "90123",
+                        "commit_sha": target_sha,
+                        "captured_at": "2026-11-14T00:30:00Z",
+                    },
                 }
             },
         },
@@ -843,10 +862,10 @@ def test_merged_receipt_binds_tested_sha_to_target_and_requires_target_regressio
     receipt["target_inclusion"]["tested_sha"] = "c" * 40
     path.write_text(json.dumps(receipt), encoding="utf-8")
     errors = knowledge.validate_receipts()
-    assert any("bind receipt tested_sha" in item["error"] for item in errors)
+    assert any("target inclusion proof must bind" in item["error"] for item in errors)
 
     receipt["target_inclusion"]["tested_sha"] = tested_sha
     receipt["target_inclusion"]["target_verification"]["workflow"]["tested_sha"] = tested_sha
     path.write_text(json.dumps(receipt), encoding="utf-8")
     errors = knowledge.validate_receipts()
-    assert any("target-SHA verification" in item["error"] for item in errors)
+    assert any("matching ci_run source record" in item["error"] for item in errors)
