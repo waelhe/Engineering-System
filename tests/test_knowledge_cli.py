@@ -613,6 +613,13 @@ def test_merged_receipt_binds_reviewed_head_tested_sha_and_target_run_source(tmp
             "target_branch": "main",
             "target_sha": target_sha,
             "tested_sha": tested_sha,
+            "target_branch_proof": {
+                "kind": "github_branch_ref",
+                "branch": "main",
+                "commit_sha": target_sha,
+                "uri": "https://api.github.com/repos/owner/repo/branches/main",
+                "captured_at": "2026-11-20T01:00:00Z",
+            },
             "candidate_inclusion": {
                 "head_sha": head_sha,
                 "tested_sha": tested_sha,
@@ -651,6 +658,25 @@ def test_merged_receipt_binds_reviewed_head_tested_sha_and_target_run_source(tmp
     path.write_text(json.dumps(receipt), encoding="utf-8")
 
     assert knowledge.validate_receipts() == []
+
+    receipt["target_inclusion"]["target_branch_proof"]["branch"] = "release"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any("target branch proof" in item["error"] for item in knowledge.validate_receipts())
+    receipt["target_inclusion"]["target_branch_proof"]["branch"] = "main"
+
+    receipt["target_inclusion"]["candidate_inclusion"]["comparison_status"] = "identical"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any("candidate inclusion proof" in item["error"] for item in knowledge.validate_receipts())
+    receipt["target_inclusion"]["candidate_inclusion"]["comparison_status"] = "ahead"
+
+    receipt["target_inclusion"]["candidate_inclusion"]["proof_url"] = (
+        f"https://evil.example/repos/owner/repo/compare/{head_sha}...{tested_sha}"
+    )
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any("candidate inclusion proof" in item["error"] for item in knowledge.validate_receipts())
+    receipt["target_inclusion"]["candidate_inclusion"]["proof_url"] = (
+        f"https://api.github.com/repos/owner/repo/compare/{head_sha}...{tested_sha}"
+    )
 
     receipt["target_inclusion"]["candidate_inclusion"]["head_sha"] = "d" * 40
     path.write_text(json.dumps(receipt), encoding="utf-8")
