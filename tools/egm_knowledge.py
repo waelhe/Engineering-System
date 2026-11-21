@@ -616,6 +616,53 @@ def receive_signal(payload: dict[str, Any]) -> tuple[str, Path]:
             temporary_path.unlink(missing_ok=True)
     return "created", target
 
+def _valid_github_compare_url(
+    value: object, repository: str, base_sha: str, head_sha: str
+) -> bool:
+    if not all(isinstance(item, str) and item for item in (value, repository, base_sha, head_sha)):
+        return False
+    parsed = urlparse(value)
+    try:
+        port = parsed.port
+    except ValueError:
+        return False
+    owner, repo_name = repository.split("/", 1) if "/" in repository else ("", "")
+    expected_path = f"/repos/{owner}/{repo_name}/compare/{base_sha}...{head_sha}"
+    return (
+        parsed.scheme == "https"
+        and parsed.hostname == "api.github.com"
+        and port in {None, 443}
+        and parsed.username is None
+        and parsed.password is None
+        and parsed.path == expected_path
+        and not parsed.params
+        and not parsed.query
+        and not parsed.fragment
+    )
+
+
+def _valid_github_actions_run_url(value: object, repository: str, run_id: str) -> bool:
+    if not all(isinstance(item, str) and item for item in (value, repository, run_id)):
+        return False
+    parsed = urlparse(value)
+    try:
+        port = parsed.port
+    except ValueError:
+        return False
+    owner, repo_name = repository.split("/", 1) if "/" in repository else ("", "")
+    return (
+        parsed.scheme == "https"
+        and parsed.hostname == "github.com"
+        and port in {None, 443}
+        and parsed.username is None
+        and parsed.password is None
+        and parsed.path == f"/{owner}/{repo_name}/actions/runs/{run_id}"
+        and not parsed.params
+        and not parsed.query
+        and not parsed.fragment
+    )
+
+
 def validate_receipts() -> list[dict[str, str]]:
     schema = load_schema(RECEIPT_SCHEMA)
     directory = KNOWLEDGE / "execution-receipts"
@@ -625,8 +672,13 @@ def validate_receipts() -> list[dict[str, str]]:
     errors: list[dict[str, str]] = []
     for path in sorted(directory.rglob("*.json")):
         receipt = read_json(path)
-        for message in schema_errors(receipt, schema):
+        receipt_schema_errors = schema_errors(receipt, schema)
+        for message in receipt_schema_errors:
             errors.append({"path": path.relative_to(ROOT).as_posix(), "error": message})
+        # Do not run semantic checks against malformed nested structures. One invalid
+        # receipt must not crash validation of the remaining immutable receipts.
+        if receipt_schema_errors or not isinstance(receipt, dict):
+            continue
         if receipt.get("status") in {"verified", "merged", "deployed"}:
             tested_sha = receipt.get("tested_sha")
             if not tested_sha:
@@ -692,7 +744,7 @@ def validate_receipts() -> list[dict[str, str]]:
                 or not isinstance(candidate_head_sha, str)
                 or not isinstance(tested_sha, str)
                 or not isinstance(candidate_proof_url, str)
-                or not candidate_proof_url.endswith(f"/compare/{candidate_head_sha}...{tested_sha}")
+                or not _valid_github_compare_url(candidate_proof_url, receipt.get("repository"), candidate_head_sha, tested_sha)
                 or candidate_inclusion.get("behind_by") != 0
                 or candidate_comparison_status not in {"ahead", "identical"}
                 or (
@@ -715,7 +767,7 @@ def validate_receipts() -> list[dict[str, str]]:
                 or not isinstance(tested_sha, str)
                 or not isinstance(target_sha, str)
                 or not isinstance(proof_url, str)
-                or not proof_url.endswith(f"/compare/{tested_sha}...{target_sha}")
+                or not _valid_github_compare_url(proof_url, receipt.get("repository"), tested_sha, target_sha)
                 or inclusion.get("behind_by") != 0
                 or comparison_status not in {"ahead", "identical"}
                 or (
@@ -737,7 +789,7 @@ def validate_receipts() -> list[dict[str, str]]:
                 or not isinstance(target_run_id, str)
                 or not target_run_id
                 or not isinstance(target_run_url, str)
-                or not target_run_url.startswith("https://")
+                or not _valid_github_actions_run_url(target_run_url, receipt.get("repository"), target_run_id)
                 or target_source.get("kind") != "ci_run"
                 or target_source.get("run_id") != target_run_id
                 or target_source.get("uri") != target_run_url
