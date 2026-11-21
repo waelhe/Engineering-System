@@ -357,7 +357,7 @@ def test_w3_api_pagination_reads_every_page(monkeypatch):
 
     def fake_api_get(path, token):
         calls.append(path)
-        if "page=1" in path:
+        if path.endswith("&page=1"):
             return [{"number": index} for index in range(100)]
         return [{"number": 101}]
 
