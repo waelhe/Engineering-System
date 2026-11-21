@@ -19,7 +19,8 @@
       "enum": [
         "w5_backend_commerce_snapshot",
         "w6_client_delivery_snapshot",
-        "w7_operations_snapshot"
+        "w7_operations_snapshot",
+        "w3_pr_queue_snapshot"
       ]
     },
     "snapshot_date": {
