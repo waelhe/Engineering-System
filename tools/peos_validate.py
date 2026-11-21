@@ -322,11 +322,103 @@ def validate_registry(root: Path = ROOT) -> list[str]:
     except Exception as exc:
         errors.append(f"invalid W4 critical-risk schema: {exc}")
 
+    # W5-W7 are separately dated current-evidence snapshots. Keep W0-W4 historical pins intact.
+    current_schema_path = root / "schemas" / "peos-current-evidence.schema.json"
+    current_schema: dict[str, Any] | None = None
+    try:
+        current_schema = read_json(current_schema_path)
+        Draft202012Validator.check_schema(current_schema)
+    except Exception as exc:
+        errors.append(f"invalid PEOS current-evidence schema: {exc}")
+
+    current_snapshots = [
+        ("w5_backend_commerce_snapshot", "app-java-v3.w5-backend-commerce.json"),
+        ("w6_client_delivery_snapshot", "clients.w6-current.json"),
+        ("w7_operations_snapshot", "operations.w7-current.json"),
+    ]
+    current_payloads: dict[str, dict[str, Any]] = {}
+    for expected_kind, filename in current_snapshots:
+        try:
+            payload = read_json(root / "registry" / "peos" / filename)
+            if current_schema is not None:
+                current_errors = list(
+                    Draft202012Validator(
+                        current_schema, format_checker=FormatChecker()
+                    ).iter_errors(payload)
+                )
+                for item in current_errors:
+                    errors.append(
+                        f"{filename}: {'/'.join(map(str, item.absolute_path))}: {item.message}"
+                    )
+            if payload.get("kind") != expected_kind:
+                errors.append(f"{filename}: expected kind {expected_kind}")
+            ids = [record.get("id") for record in payload.get("records", [])]
+            if len(ids) != len(set(ids)):
+                errors.append(f"{filename}: current evidence record IDs are not unique")
+            current_payloads[expected_kind] = payload
+        except ValueError as exc:
+            errors.append(str(exc))
+
+    w5 = current_payloads.get("w5_backend_commerce_snapshot", {})
+    w5_source = next(
+        (item for item in w5.get("sources", []) if item.get("repository") == "waelhe/app-java-v3"),
+        {},
+    )
+    w5_records = {item.get("pr_number"): item for item in w5.get("records", [])}
+    if w5_source.get("ref") != "main" or w5_source.get("commit_sha") != "8ab2c667aef190b58d88cb116d8ce004bf948cf9":
+        errors.append("W5 must remain pinned to the measured app-java-v3 main SHA")
+    if w5.get("open_pr_count") != 25:
+        errors.append("W5 open-PR count must reflect the 2026-11-21 GitHub capture")
+    if w5_records.get(787, {}).get("state") != "open":
+        errors.append("W5 must preserve PR #787 as the single open full-commerce candidate")
+    if w5_records.get(787, {}).get("head_sha") != "aa05af4494615fa299abba78091970c5a3a25c56":
+        errors.append("W5 PR #787 head SHA does not match the 2026-11-21 capture")
+    if w5_records.get(842, {}).get("state") != "merged":
+        errors.append("W5 must record PR #842 as merged, not as an open candidate")
+    if w5_records.get(840, {}).get("checks") is None or not any(
+        item.get("conclusion") == "failure" for item in w5_records.get(840, {}).get("checks", [])
+    ):
+        errors.append("W5 must retain the observed failed workflow evidence for PR #840")
+    if w5_records.get(832, {}).get("state") != "open":
+        errors.append("W5 A1 PR #832 must remain open pending the owner accounting decision")
+
+    w6 = current_payloads.get("w6_client_delivery_snapshot", {})
+    w6_records = {item.get("surface"): item for item in w6.get("records", [])}
+    android = w6_records.get("android", {})
+    admin = w6_records.get("admin", {})
+    if android.get("repository") != "waelhe/mobile-marketplace" or android.get("main_sha") != "3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4":
+        errors.append("W6 Android record must be pinned to the measured mobile-marketplace main SHA")
+    if not str(android.get("runtime", "")).startswith("Expo SDK") or "React Native" not in android.get("runtime", ""):
+        errors.append("W6 must represent the measured mobile stack as Expo/React Native")
+    if android.get("journey_state") != "not_revalidated":
+        errors.append("W6 mobile journeys must remain not_revalidated without current E2E proof")
+    if admin.get("repository") != "waelhe/marketplace-admin" or admin.get("main_sha") != "982ecf3667d2242cab941737cb6a0bceaee7ffcb":
+        errors.append("W6 Admin record must be pinned to the measured marketplace-admin main SHA")
+    if admin.get("journey_state") != "not_revalidated":
+        errors.append("W6 Admin journeys must remain not_revalidated without current E2E proof")
+
+    w7 = current_payloads.get("w7_operations_snapshot", {})
+    w7_records = {item.get("surface"): item for item in w7.get("records", [])}
+    production = w7_records.get("production_backend", {})
+    grafana = w7_records.get("alerting_and_routing", {})
+    if production.get("service_state") != "online" or production.get("replicas_running") != 1:
+        errors.append("W7 must preserve the observed live Railway service and replica state")
+    if production.get("latest_attempt", {}).get("state") != "failed":
+        errors.append("W7 must not hide the latest failed Railway deployment attempt")
+    if production.get("latest_attempt", {}).get("failure_stage") != "BUILD_IMAGE":
+        errors.append("W7 must preserve the measured Railway BUILD_IMAGE failure stage")
+    if production.get("staged_changes") != 0:
+        errors.append("W7 must record the observed absence of staged Railway changes")
+    if grafana.get("contact_points_returned") != 0 or grafana.get("notification_policy_receiver") != "empty":
+        errors.append("W7 must retain the empty Grafana contact-point/receiver evidence")
+    if grafana.get("alert_rules_read_result") != "null":
+        errors.append("W7 must not silently convert the unresolved Grafana alert-rule response into a zero count")
+
     return errors
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate PEOS W0 inventory snapshots.")
+    parser = argparse.ArgumentParser(description="Validate historical W0-W4 and current W5-W7 PEOS evidence snapshots.")
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     errors = validate_registry(args.root)
@@ -335,8 +427,8 @@ def main() -> int:
             print(f"FAIL: {error}")
         return 1
     print("PEOS inventory validation: PASS")
-    print("Validated 30 Maven artifacts, 30 logical Modulith modules, 35 historical journeys, 35 unadjudicated capability candidates, 23 historical PR records, W1 operations and 7 W4 critical-risk records.")
-    print("Historic journey labels remain not-revalidated; Maven and Modulith graphs are distinct; W4 closure requires merged-main and exact-SHA post-merge proof; no merge is authorized.")
+    print("Validated W0-W4 historical inventories plus W5 backend/commerce, W6 client delivery and W7 operations snapshots.")
+    print("Historical journey labels remain not-revalidated; Maven and Modulith graphs are distinct; W4 closure requires merged-main and exact-SHA proof; W5-W7 remain SHA/date-bound; no merge or deployment is authorized.")
     return 0
 
 
