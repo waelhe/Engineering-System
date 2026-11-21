@@ -332,6 +332,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         errors.append(f"invalid PEOS current-evidence schema: {exc}")
 
     current_snapshots = [
+        ("w3_pr_queue_snapshot", "app-java-v3.w3-pr-queue.json"),
         ("w5_backend_commerce_snapshot", "app-java-v3.w5-backend-commerce.json"),
         ("w6_client_delivery_snapshot", "clients.w6-current.json"),
         ("w7_operations_snapshot", "operations.w7-current.json"),
@@ -358,6 +359,36 @@ def validate_registry(root: Path = ROOT) -> list[str]:
             current_payloads[expected_kind] = payload
         except ValueError as exc:
             errors.append(str(exc))
+
+    w3 = current_payloads.get("w3_pr_queue_snapshot", {})
+    w3_source = next(
+        (item for item in w3.get("sources", []) if item.get("repository") == "waelhe/app-java-v3"),
+        {},
+    )
+    w3_records = {item.get("pr_number"): item for item in w3.get("records", [])}
+    if w3_source.get("ref") != "main" or w3_source.get("commit_sha") != "8ab2c667aef190b58d88cb116d8ce004bf948cf9":
+        errors.append("W3 must remain pinned to the measured app-java-v3 main SHA")
+    if w3.get("open_pr_count") != 25 or len(w3_records) != 25:
+        errors.append("W3 must preserve the complete 25-PR open queue from the 2026-11-21 capture")
+    if w3_records.get(787, {}).get("merge_policy") != "single_full_commerce_candidate":
+        errors.append("W3 PR #787 must remain the single full-commerce release candidate")
+    if w3_records.get(787, {}).get("head_sha") != "aa05af4494615fa299abba78091970c5a3a25c56":
+        errors.append("W3 PR #787 head SHA does not match the queue capture")
+    for number in range(806, 812):
+        if w3_records.get(number, {}).get("merge_policy") != "tracking_only_do_not_merge":
+            errors.append(f"W3 PR #{number} must remain a tracking-only, do-not-merge review shard")
+    stacked = w3_records.get(837, {})
+    stacked_proof = (w3.get("special_rules", {}).get("stacked_prs") or [{}])[0]
+    if (
+        stacked.get("base_relation") != "stacked_base_behind_candidate"
+        or stacked.get("base_sha") != "44cf56ab144b9d6abc1afc422026d3d70cf65702"
+        or stacked_proof.get("comparison_status") != "ahead"
+        or stacked_proof.get("ahead_by") != 8
+        or stacked_proof.get("behind_by") != 0
+    ):
+        errors.append("W3 PR #837 must retain the measured eight-commit lag behind the current #787 head")
+    if w3_records.get(840, {}).get("draft") is not True:
+        errors.append("W3 PR #840 must remain Draft until its failed workflows are repaired")
 
     w5 = current_payloads.get("w5_backend_commerce_snapshot", {})
     w5_source = next(
