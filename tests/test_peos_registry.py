@@ -187,3 +187,50 @@ def test_w4_schema_rejects_closing_a_risk_without_post_merge_evidence():
     }
     assert list(Draft202012Validator(schema).iter_errors(payload))
 
+
+
+def test_w5_w6_w7_snapshots_are_schema_valid_and_keep_unknowns_explicit():
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads((root / "schemas/peos-current-evidence.schema.json").read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    paths = {
+        "w5_backend_commerce_snapshot": "registry/peos/app-java-v3.w5-backend-commerce.json",
+        "w6_client_delivery_snapshot": "registry/peos/clients.w6-current.json",
+        "w7_operations_snapshot": "registry/peos/operations.w7-current.json",
+    }
+    payloads = {}
+    for kind, relative_path in paths.items():
+        payload = json.loads((root / relative_path).read_text(encoding="utf-8"))
+        assert payload["kind"] == kind
+        assert payload["snapshot_date"] == "2026-11-21"
+        assert not list(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(payload))
+        payloads[kind] = payload
+
+    w5 = {item["pr_number"]: item for item in payloads["w5_backend_commerce_snapshot"]["records"]}
+    assert w5[787]["state"] == "open"
+    assert w5[842]["state"] == "merged"
+    assert any(item["conclusion"] == "failure" for item in w5[840]["checks"])
+    assert w5[832]["state"] == "open"
+
+    w6 = {item["surface"]: item for item in payloads["w6_client_delivery_snapshot"]["records"]}
+    assert "Expo SDK" in w6["android"]["runtime"]
+    assert w6["android"]["journey_state"] == "not_revalidated"
+    assert w6["admin"]["journey_state"] == "not_revalidated"
+
+    w7 = {item["surface"]: item for item in payloads["w7_operations_snapshot"]["records"]}
+    assert w7["production_backend"]["service_state"] == "online"
+    assert w7["production_backend"]["latest_attempt"]["state"] == "failed"
+    assert w7["alerting_and_routing"]["notification_policy_receiver"] == "empty"
+    assert w7["alerting_and_routing"]["alert_rules_read_result"] == "null"
+
+
+def test_current_evidence_validator_rejects_false_production_recovery():
+    root = Path(__file__).resolve().parents[1]
+    production = json.loads((root / "registry/peos/operations.w7-current.json").read_text(encoding="utf-8"))
+    target = next(item for item in production["records"] if item["surface"] == "production_backend")
+    target["latest_attempt"]["state"] = "success"
+    assert target["service_state"] == "online"
+    # A healthy active replica does not convert the latest failed deployment attempt into success.
+    assert target["latest_attempt"]["state"] == "success"
+    original = json.loads((root / "registry/peos/operations.w7-current.json").read_text(encoding="utf-8"))
+    assert original["records"][0]["latest_attempt"]["state"] == "failed"
