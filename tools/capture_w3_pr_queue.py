@@ -149,6 +149,9 @@ def build_snapshot(
         number = pull.get("number")
         if not isinstance(number, int):
             raise CaptureError("Open PR inventory contains an invalid PR number")
+        base_repository = ((pull.get("base") or {}).get("repo") or {}).get("full_name")
+        if not isinstance(base_repository, str) or base_repository.lower() != repository.lower():
+            raise CaptureError(f"PR #{number} base repository does not match configured project {repository}")
         if number in seen:
             raise CaptureError(f"Duplicate PR #{number} in GitHub response")
         seen.add(number)
