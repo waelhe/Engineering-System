@@ -233,3 +233,135 @@ def test_w5_w6_w7_snapshots_are_schema_valid_and_keep_unknowns_explicit():
     assert w7["alerting_and_routing"]["notification_policy_receiver"] == "empty"
     assert w7["alerting_and_routing"]["alert_rules_read_result"] == "null"
 
+
+
+def _w3_pull(number, base_branch="main", base_sha="1" * 40, head_branch=None, head_sha=None):
+    head_branch = head_branch or f"feature/pr-{number}"
+    head_sha = head_sha or (f"{number:040x}"[-40:])
+    return {
+        "number": number,
+        "title": f"PR {number}",
+        "html_url": f"https://github.com/waelhe/app-java-v3/pull/{number}",
+        "state": "open",
+        "draft": False,
+        "mergeable": True,
+        "changed_files": 2,
+        "commits": 1,
+        "updated_at": "2026-11-21T10:00:00Z",
+        "base": {
+            "ref": base_branch,
+            "sha": base_sha,
+            "repo": {"full_name": "waelhe/app-java-v3"},
+        },
+        "head": {
+            "ref": head_branch,
+            "sha": head_sha,
+            "repo": {"full_name": "waelhe/app-java-v3"},
+        },
+    }
+
+
+def test_w3_capture_preserves_governed_queue_and_quarantines_new_prs():
+    from tools.capture_w3_pr_queue import build_snapshot
+
+    main_sha = "a" * 40
+    candidate_sha = "b" * 40
+    candidate_branch = "integration/saleor-full-commerce-20261021"
+    pulls = [
+        _w3_pull(787, head_branch=candidate_branch, head_sha=candidate_sha),
+        *[
+            _w3_pull(number)
+            for number in (806, 807, 808, 809, 810, 811)
+        ],
+        _w3_pull(
+            837,
+            base_branch=candidate_branch,
+            base_sha="c" * 40,
+            head_branch="docs/stacked",
+            head_sha="d" * 40,
+        ),
+        _w3_pull(999),
+    ]
+    previous = {
+        "records": [
+            {
+                "pr_number": number,
+                "category": "commerce_review_shard" if 806 <= number <= 811 else "review",
+                "merge_policy": "tracking_only_do_not_merge" if 806 <= number <= 811 else "ordinary_review_required",
+                "assessment": "Retain approved prior classification.",
+            }
+            for number in (787, 806, 807, 808, 809, 810, 811, 837)
+        ]
+    }
+    snapshot = build_snapshot(
+        "waelhe/app-java-v3",
+        main_sha,
+        pulls,
+        previous,
+        {
+            "status": "ahead",
+            "ahead_by": 3,
+            "behind_by": 0,
+            "html_url": f"https://github.com/waelhe/app-java-v3/compare/{'c' * 40}...{candidate_sha}",
+        },
+        "2026-11-21",
+    )
+    by_number = {item["pr_number"]: item for item in snapshot["records"]}
+    assert snapshot["open_pr_count"] == 9
+    assert by_number[787]["merge_policy"] == "single_full_commerce_candidate"
+    assert all(by_number[number]["merge_policy"] == "tracking_only_do_not_merge" for number in range(806, 812))
+    assert by_number[837]["base_relation"] == "stacked_base_behind_candidate"
+    assert snapshot["special_rules"]["stacked_prs"][0]["candidate_head_sha"] == candidate_sha
+    assert by_number[999]["category"] == "unclassified"
+    assert by_number[999]["merge_policy"] == "not_authorized_pending_adjudication"
+
+
+def test_w3_capture_fails_closed_when_a_governed_pr_disappears_or_stack_is_invalid():
+    from tools.capture_w3_pr_queue import CaptureError, build_snapshot
+
+    main_sha = "a" * 40
+    candidate_sha = "b" * 40
+    candidate_branch = "integration/saleor-full-commerce-20261021"
+    numbers = [787, 806, 807, 808, 809, 810, 811, 837]
+    pulls = [
+        _w3_pull(
+            number,
+            base_branch=candidate_branch if number == 837 else "main",
+            base_sha="c" * 40 if number == 837 else main_sha,
+            head_branch=candidate_branch if number == 787 else f"feature/{number}",
+            head_sha=candidate_sha if number == 787 else f"{number:040x}"[-40:],
+        )
+        for number in numbers
+    ]
+    previous = {"records": [{"pr_number": number, "category": "existing", "merge_policy": "ordinary_review_required"} for number in numbers]}
+    try:
+        build_snapshot("waelhe/app-java-v3", main_sha, pulls[:-1], previous)
+        assert False, "missing governed PR must fail closed"
+    except CaptureError as exc:
+        assert "Governed PRs" in str(exc)
+
+    try:
+        build_snapshot(
+            "waelhe/app-java-v3", main_sha, pulls, previous,
+            {"status": "diverged", "ahead_by": 2, "behind_by": 1},
+        )
+        assert False, "diverged stacked PR must fail closed"
+    except CaptureError as exc:
+        assert "ancestor" in str(exc)
+
+
+def test_w3_api_pagination_reads_every_page(monkeypatch):
+    from tools import capture_w3_pr_queue
+
+    calls = []
+
+    def fake_api_get(path, token):
+        calls.append(path)
+        if "page=1" in path:
+            return [{"number": index} for index in range(100)]
+        return [{"number": 101}]
+
+    monkeypatch.setattr(capture_w3_pr_queue, "api_get", fake_api_get)
+    results = capture_w3_pr_queue.api_pages("/repos/waelhe/app-java-v3/pulls?state=open", "token")
+    assert len(results) == 101
+    assert calls[-1].endswith("page=2")
