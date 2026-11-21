@@ -780,6 +780,35 @@ def validate_receipts() -> list[dict[str, str]]:
                 )
             ):
                 errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "target inclusion proof must bind receipt tested_sha to the exact target_sha comparison"})
+            branch_proof = inclusion.get("target_branch_proof") or {}
+            branch_name = inclusion.get("target_branch")
+            branch_commit_sha = branch_proof.get("commit_sha")
+            branch_uri = branch_proof.get("uri")
+            owner, repo_name = (
+                receipt.get("repository", "").split("/", 1)
+                if isinstance(receipt.get("repository"), str) and "/" in receipt.get("repository")
+                else ("", "")
+            )
+            parsed_branch_uri = urlparse(branch_uri) if isinstance(branch_uri, str) else None
+            try:
+                branch_port = parsed_branch_uri.port if parsed_branch_uri else None
+            except ValueError:
+                branch_port = -1
+            if (
+                branch_proof.get("kind") != "github_branch_ref"
+                or branch_proof.get("branch") != branch_name
+                or branch_commit_sha != target_sha
+                or parsed_branch_uri is None
+                or parsed_branch_uri.scheme != "https"
+                or parsed_branch_uri.hostname != "api.github.com"
+                or branch_port not in {None, 443}
+                or parsed_branch_uri.username is not None
+                or parsed_branch_uri.password is not None
+                or parsed_branch_uri.path != f"/repos/{owner}/{repo_name}/branches/{branch_name}"
+                or parsed_branch_uri.query
+                or parsed_branch_uri.fragment
+            ):
+                errors.append({"path": path.relative_to(ROOT).as_posix(), "error": "target branch proof must bind declared target_branch and target_sha to the exact repository GitHub Branch API reference"})
             target_source = target_workflow.get("source") or {}
             target_run_id = target_workflow.get("run_id")
             target_run_url = target_workflow.get("url")
