@@ -665,9 +665,27 @@ def test_merged_receipt_binds_reviewed_head_tested_sha_and_target_run_source(tmp
     receipt["target_inclusion"]["target_branch_proof"]["branch"] = "main"
 
     receipt["target_inclusion"]["candidate_inclusion"]["comparison_status"] = "identical"
+    receipt["target_inclusion"]["candidate_inclusion"]["ahead_by"] = 0
     path.write_text(json.dumps(receipt), encoding="utf-8")
     assert any("candidate inclusion proof" in item["error"] for item in knowledge.validate_receipts())
     receipt["target_inclusion"]["candidate_inclusion"]["comparison_status"] = "ahead"
+    receipt["target_inclusion"]["candidate_inclusion"]["ahead_by"] = 2
+
+    receipt["target_inclusion"]["comparison_status"] = "identical"
+    receipt["target_inclusion"]["ahead_by"] = 0
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any("target inclusion proof" in item["error"] for item in knowledge.validate_receipts())
+    receipt["target_inclusion"]["comparison_status"] = "ahead"
+    receipt["target_inclusion"]["ahead_by"] = 3
+
+    receipt["target_inclusion"]["target_branch_proof"]["uri"] = (
+        "https://evil.example/repos/owner/repo/branches/main"
+    )
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any("target branch proof" in item["error"] for item in knowledge.validate_receipts())
+    receipt["target_inclusion"]["target_branch_proof"]["uri"] = (
+        "https://api.github.com/repos/owner/repo/branches/main"
+    )
 
     receipt["target_inclusion"]["candidate_inclusion"]["proof_url"] = (
         f"https://evil.example/repos/owner/repo/compare/{head_sha}...{tested_sha}"
