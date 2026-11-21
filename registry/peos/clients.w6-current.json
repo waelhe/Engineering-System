@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "kind": "w6_client_delivery_snapshot",
+  "snapshot_date": "2026-11-21",
+  "sources": [
+    {
+      "system": "github",
+      "repository": "waelhe/marketplace-admin",
+      "ref": "main",
+      "commit_sha": "982ecf3667d2242cab941737cb6a0bceaee7ffcb",
+      "capture_method": "GitHub repository metadata, package manifest, README and commit workflow-run lookup"
+    },
+    {
+      "system": "github",
+      "repository": "waelhe/mobile-marketplace",
+      "ref": "main",
+      "commit_sha": "3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4",
+      "capture_method": "GitHub repository metadata, package manifest, README and commit workflow-run lookup"
+    }
+  ],
+  "records": [
+    {
+      "id": "W6-ADMIN-001",
+      "surface": "admin",
+      "repository": "waelhe/marketplace-admin",
+      "main_sha": "982ecf3667d2242cab941737cb6a0bceaee7ffcb",
+      "latest_commit_date": "2026-10-20T22:25:25Z",
+      "open_pr_count": 0,
+      "package_name": "saleor-dashboard",
+      "package_version": "3.23.39",
+      "framework_source": "Saleor Dashboard downstream copy",
+      "observed_controls": [
+        "Platform integration is documented in PLATFORM_INTEGRATION.md.",
+        "A weekly scheduled dashboard-build workflow is present and is configured to open/update a contract-drift issue on scheduled failure and close it after a successful scheduled run."
+      ],
+      "workflow_evidence": "No workflow runs were returned for the queried main commit SHA; scheduled-control runtime success is therefore not confirmed.",
+      "journey_state": "not_revalidated",
+      "assessment": "The admin codebase exists and contains the downstream integration controls. This snapshot does not certify completion of the full PAOS operator workspace or its end-to-end journeys."
+    },
+    {
+      "id": "W6-ANDROID-001",
+      "surface": "android",
+      "repository": "waelhe/mobile-marketplace",
+      "visibility": "private",
+      "main_sha": "3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4",
+      "latest_commit_date": "2026-10-03T08:59:14Z",
+      "open_pr_count": 0,
+      "package_manager": "npm",
+      "runtime": "Expo SDK ~57.0.26 / React Native 0.86.3",
+      "app_version": "1.0.0",
+      "ota_configured": true,
+      "ota_channels": [
+        "development",
+        "preview",
+        "production"
+      ],
+      "observed_controls": [
+        "expo-updates is present at ~57.0.24.",
+        "appVersion is configured as runtimeVersion policy.",
+        "EAS development, preview and production channels are configured."
+      ],
+      "workflow_evidence": "No GitHub Actions workflow runs were returned for the queried main commit SHA.",
+      "journey_state": "not_revalidated",
+      "assessment": "The current repository is an Expo/React Native app, not a Kotlin/Jetpack Compose project. Its README is still the default Expo starter guide. This is a repository-evidence observation, not a claim that all product screens are absent; complete user journeys have not been revalidated."
+    }
+  ],
+  "anomalies": [
+    "Both client repositories had zero open PRs at capture.",
+    "No current workflow run evidence was returned for either queried client main SHA.",
+    "Historical Android implementation labels from W0 are not current evidence and must not be reused."
+  ],
+  "assessment": "W6 is not complete: Admin and mobile repositories exist, but no current client journey matrix is proven against the 2026-11-21 backend contracts. Revalidate the admin generated GraphQL contract, mobile navigation/auth/catalog/cart/checkout/inbox flows, and client-side tests against the exact backend contract SHA before claiming product readiness."
+}
