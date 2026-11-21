@@ -859,6 +859,13 @@ def test_merged_receipt_binds_tested_sha_to_target_and_requires_target_regressio
         "head_sha": tested_sha,
         "tested_sha": tested_sha,
         "target_sha": target_sha,
+            "target_branch_proof": {
+                "kind": "github_branch_ref",
+                "branch": "main",
+                "commit_sha": target_sha,
+                "uri": "https://api.github.com/repos/owner/repo/branches/main",
+                "captured_at": "2026-11-14T00:15:00Z",
+            },
         "started_at": "2026-11-14T00:00:00Z",
         "knowledge_pack": {"generated_at": "2026-11-14T00:00:00Z", "record_ids": []},
         "checks": [{
