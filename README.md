@@ -27,6 +27,7 @@ The system combines EGM's context-rich design and fresh-context review workflow 
 PEOS is the platform engineering control plane; EGM remains the single canonical knowledge, review, verification and learning engine. PEOS does not add a separate database or production service.
 
 - [PEOS operating model](docs/peos/operating-model.md)
+- [W3 current pull-request queue — 2026-11-21](docs/peos/w3-pr-queue-2026-11-21.md)
 - [W5 backend and commerce evidence — 2026-11-21](docs/peos/w5-backend-commerce-2026-11-21.md)
 - [W6 client evidence — 2026-11-21](docs/peos/w6-client-delivery-2026-11-21.md)
 - [W7 operational evidence — 2026-11-21](docs/peos/w7-operational-recheck-2026-11-21.md)
