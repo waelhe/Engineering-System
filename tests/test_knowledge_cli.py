@@ -575,6 +575,101 @@ def test_verified_receipt_requires_tested_sha_to_equal_head_sha(tmp_path, monkey
 
 
 
+def test_merged_receipt_binds_reviewed_head_tested_sha_and_target_run_source(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    head_sha = "a" * 40
+    tested_sha = "b" * 40
+    target_sha = "c" * 40
+    target_run_id = "987654321"
+    target_run_url = f"https://github.com/owner/repo/actions/runs/{target_run_id}"
+    receipt = {
+        "schema_version": 1,
+        "task_id": "receipt-merged-proof",
+        "project_id": "sample-project",
+        "repository": "owner/repo",
+        "tier": "T2",
+        "status": "merged",
+        "head_sha": head_sha,
+        "tested_sha": tested_sha,
+        "target_sha": target_sha,
+        "started_at": "2026-11-20T00:00:00Z",
+        "completed_at": "2026-11-20T01:00:00Z",
+        "knowledge_pack": {"generated_at": "2026-11-20T00:00:00Z", "record_ids": []},
+        "checks": [{
+            "name": "candidate-ci",
+            "status": "success",
+            "run_id": "123456789",
+            "tested_sha": tested_sha,
+            "url": "https://github.com/owner/repo/actions/runs/123456789",
+        }],
+        "reviews": [{
+            "role": "Goldfish",
+            "status": "completed",
+            "independence_proof": "Fresh isolated review context with source-read evidence.",
+            "reviewed_sha": head_sha,
+        }],
+        "write_boundary": ["tools/"],
+        "target_inclusion": {
+            "target_branch": "main",
+            "target_sha": target_sha,
+            "tested_sha": tested_sha,
+            "candidate_inclusion": {
+                "head_sha": head_sha,
+                "tested_sha": tested_sha,
+                "head_sha_is_ancestor": True,
+                "comparison_status": "ahead",
+                "ahead_by": 2,
+                "behind_by": 0,
+                "proof_url": f"https://api.github.com/repos/owner/repo/compare/{head_sha}...{tested_sha}",
+            },
+            "tested_sha_is_ancestor": True,
+            "comparison_status": "ahead",
+            "ahead_by": 3,
+            "behind_by": 0,
+            "proof_url": f"https://api.github.com/repos/owner/repo/compare/{tested_sha}...{target_sha}",
+            "target_verification": {
+                "workflow": {
+                    "name": "Target branch regression",
+                    "run_id": target_run_id,
+                    "conclusion": "success",
+                    "tested_sha": target_sha,
+                    "url": target_run_url,
+                    "source": {
+                        "kind": "ci_run",
+                        "uri": target_run_url,
+                        "run_id": target_run_id,
+                        "commit_sha": target_sha,
+                        "captured_at": "2026-11-20T01:00:00Z",
+                    },
+                },
+            },
+        },
+    }
+    directory = root / "knowledge/execution-receipts"
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / "merged.json"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    assert knowledge.validate_receipts() == []
+
+    receipt["target_inclusion"]["candidate_inclusion"]["head_sha"] = "d" * 40
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any(
+        "candidate inclusion proof must bind" in item["error"]
+        for item in knowledge.validate_receipts()
+    )
+
+    receipt["target_inclusion"]["candidate_inclusion"]["head_sha"] = head_sha
+    receipt["target_inclusion"]["target_verification"]["workflow"]["source"]["uri"] = (
+        "https://github.com/owner/repo/actions/runs/111"
+    )
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any(
+        "matching ci_run source record" in item["error"]
+        for item in knowledge.validate_receipts()
+    )
+
+
 def test_queued_receipt_check_may_have_no_run_evidence_yet():
     receipt = {
         "schema_version": 1,
