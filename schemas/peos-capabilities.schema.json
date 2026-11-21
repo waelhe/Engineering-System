@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PEOS candidate capability registry",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "snapshot_date",
+    "source",
+    "records",
+    "anomalies"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "capability_registry"
+    },
+    "snapshot_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repository",
+        "ref",
+        "commit_sha",
+        "snapshot_date",
+        "upstream_project",
+        "journey_registry_artifact"
+      ],
+      "properties": {
+        "upstream_project": {
+          "type": "object",
+          "required": [
+            "repository",
+            "ref",
+            "commit_sha",
+            "snapshot_date"
+          ],
+          "properties": {
+            "repository": {
+              "const": "waelhe/app-java-v3"
+            },
+            "ref": {
+              "const": "main"
+            },
+            "commit_sha": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "snapshot_date": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        },
+        "journey_registry_artifact": {
+          "type": "object",
+          "required": [
+            "repository",
+            "path",
+            "blob_sha"
+          ],
+          "properties": {
+            "repository": {
+              "const": "waelhe/Engineering-System"
+            },
+            "path": {
+              "const": "registry/peos/app-java-v3.journeys.json"
+            },
+            "blob_sha": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          }
+        },
+        "repository": {
+          "const": "waelhe/app-java-v3"
+        },
+        "ref": {
+          "const": "main"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "snapshot_date": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 35,
+      "maxItems": 35,
+      "items": {
+        "type": "object",
+        "required": [
+          "capability_id",
+          "title",
+          "classification",
+          "acceptance_state",
+          "source_journey_id",
+          "source_journey_status_authority",
+          "documented_module_names",
+          "module_mapping_status",
+          "verification",
+          "open_gaps"
+        ],
+        "properties": {
+          "capability_id": {
+            "type": "string",
+            "pattern": "^CAP-J[0-9]{2}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "classification": {
+            "const": "journey_outcome_candidate"
+          },
+          "acceptance_state": {
+            "const": "candidate_not_adjudicated"
+          },
+          "source_journey_id": {
+            "type": "string",
+            "pattern": "^J[0-9]{2}$"
+          },
+          "source_journey_status_authority": {
+            "const": "historical_source_snapshot_only"
+          },
+          "documented_module_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "module_mapping_status": {
+            "const": "not_adjudicated"
+          },
+          "verification": {
+            "type": "object",
+            "required": [
+              "backend",
+              "android",
+              "admin",
+              "provider",
+              "production",
+              "tested_head_sha",
+              "workflow_run_ids"
+            ],
+            "properties": {
+              "backend": {
+                "const": "not_revalidated"
+              },
+              "android": {
+                "const": "not_revalidated"
+              },
+              "admin": {
+                "const": "not_revalidated"
+              },
+              "provider": {
+                "const": "not_revalidated"
+              },
+              "production": {
+                "const": "not_revalidated"
+              },
+              "tested_head_sha": {
+                "type": "null"
+              },
+              "workflow_run_ids": {
+                "type": "array",
+                "maxItems": 0
+              }
+            }
+          },
+          "open_gaps": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "anomalies": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": false
+}
