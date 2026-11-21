@@ -695,6 +695,16 @@ def test_merged_receipt_binds_reviewed_head_tested_sha_and_target_run_source(tmp
         for item in knowledge.validate_receipts()
     )
 
+    receipt["target_inclusion"]["target_verification"]["workflow"]["source"]["uri"] = target_run_url
+    receipt["target_inclusion"]["target_verification"]["workflow"]["url"] = (
+        "https://evil.example/owner/repo/actions/runs/" + target_run_id
+    )
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert any(
+        "successful target-SHA workflow" in item["error"]
+        for item in knowledge.validate_receipts()
+    )
+
 
 def test_queued_receipt_check_may_have_no_run_evidence_yet():
     receipt = {
@@ -895,3 +905,30 @@ def test_merged_receipt_binds_tested_sha_to_target_and_requires_target_regressio
     path.write_text(json.dumps(receipt), encoding="utf-8")
     errors = knowledge.validate_receipts()
     assert any("matching ci_run source record" in item["error"] for item in errors)
+
+
+def test_malformed_receipt_nested_fields_are_reported_without_crashing(tmp_path, monkeypatch):
+    root = isolate_store(tmp_path, monkeypatch)
+    directory = root / "knowledge/execution-receipts"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "malformed.json").write_text(json.dumps({
+        "schema_version": 1,
+        "task_id": "malformed",
+        "project_id": "sample-project",
+        "repository": "owner/repo",
+        "tier": "T2",
+        "status": "merged",
+        "head_sha": "a" * 40,
+        "tested_sha": "b" * 40,
+        "target_sha": "c" * 40,
+        "started_at": "2026-11-20T00:00:00Z",
+        "completed_at": "2026-11-20T01:00:00Z",
+        "knowledge_pack": {"generated_at": "2026-11-20T00:00:00Z", "record_ids": []},
+        "checks": [],
+        "reviews": [],
+        "write_boundary": [],
+        "target_inclusion": {"target_verification": None},
+    }), encoding="utf-8")
+    errors = knowledge.validate_receipts()
+    assert errors
+    assert any("target_inclusion" in item["error"] or "required" in item["error"] for item in errors)
