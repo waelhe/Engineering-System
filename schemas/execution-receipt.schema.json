@@ -496,7 +496,7 @@
             "uri": {
               "type": "string",
               "format": "uri",
-              "pattern": "^https://api\\.github\\.com/"
+              "pattern": "^https://"
             },
             "captured_at": {
               "type": "string",
