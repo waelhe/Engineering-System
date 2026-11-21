@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "kind": "w7_operations_snapshot",
+  "snapshot_date": "2026-11-21",
+  "sources": [
+    {
+      "system": "railway",
+      "reference": "project:c8985750-82a2-42eb-8431-ee0f49352818/environment:c324c1a0-e4db-4a9a-8dc0-30ca1f3935d0/service:43b1b64b-9087-45d4-88ca-358a40c5a583",
+      "capture_method": "Railway describe-environment, environment-status, service metrics, deployment list and build logs"
+    },
+    {
+      "system": "grafana-cloud",
+      "reference": "linked Grafana Cloud tenant",
+      "capture_method": "Grafana Cloud datasource list, alert rule read, notification routing and contact-point read"
+    }
+  ],
+  "records": [
+    {
+      "id": "W7-RAILWAY-001",
+      "surface": "production_backend",
+      "project_name": "meticulous-consideration",
+      "project_id": "c8985750-82a2-42eb-8431-ee0f49352818",
+      "environment": "production",
+      "environment_id": "c324c1a0-e4db-4a9a-8dc0-30ca1f3935d0",
+      "service": "app-java-v3",
+      "service_id": "43b1b64b-9087-45d4-88ca-358a40c5a583",
+      "source_repository": "waelhe/app-java-v3",
+      "source_branch": "main",
+      "service_state": "online",
+      "replicas_running": 1,
+      "replicas_total": 1,
+      "active_success_deployment": {
+        "id": "abed12b2-a8d4-4cf0-9ac2-48888ba88b32",
+        "commit_sha": "1f46f8ae04008cb74436d99753478d1b5a828c9e",
+        "created_at": "2026-11-15T10:45:13.638Z"
+      },
+      "latest_attempt": {
+        "id": "b725182f-91d9-4dcc-a811-7922ac6a7eaa",
+        "state": "failed",
+        "commit_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+        "created_at": "2026-11-20T14:02:55.482Z",
+        "failure_stage": "BUILD_IMAGE",
+        "reason": "Dockerfile cache mount ID lacks the required cacheKey prefix at line 26."
+      },
+      "recent_failed_deployments": 2,
+      "staged_changes": 0,
+      "assessment": "The currently active production deployment is successful, but the latest deployment attempt failed. These states are not contradictory: the previous successful deployment remains live while the newer main commit failed to build."
+    },
+    {
+      "id": "W7-RAILWAY-002",
+      "surface": "production_resources",
+      "service_id": "43b1b64b-9087-45d4-88ca-358a40c5a583",
+      "sample_window_hours": 24,
+      "sample_count": 1441,
+      "cpu_current": 0,
+      "cpu_average": 0.0015098423548461702,
+      "memory_gb_current": 0.998631424,
+      "memory_gb_average": 0.997748524235948,
+      "memory_gb_max": 0.999952384,
+      "memory_limit_gb": null,
+      "assessment": "Memory usage is consistently close to 1 GB in the observed sample. The Railway service-config read did not expose a memory limit, so no percentage-of-limit or saturation threshold is asserted. The service requires capacity review and time-correlated telemetry."
+    },
+    {
+      "id": "W7-RAILWAY-003",
+      "surface": "deployment_recovery",
+      "related_pr": 839,
+      "related_pr_url": "https://github.com/waelhe/app-java-v3/pull/839",
+      "candidate_head_sha": "9df92c5d4e6c395d53d7dce170c3c34952c435ee",
+      "candidate_state": "open",
+      "ci_state": "queued",
+      "assessment": "PR #839 is the candidate fix for the measured Dockerfile/Railway cache ID issue. Its integration, OpenRewrite, CodeQL, container and canonical-plan checks passed in the capture; CI itself remained queued. No deployment recovery is claimed until the fix merges and a new production deployment succeeds."
+    },
+    {
+      "id": "W7-GRAFANA-001",
+      "surface": "alerting_and_routing",
+      "datasource_count": 17,
+      "default_prometheus_datasource": "grafanacloud-pinkblackberry661-prom",
+      "contact_points_returned": 0,
+      "notification_policy_receiver": "empty",
+      "notification_policy_routes": null,
+      "alert_rules_read_result": "null",
+      "prometheus_query_result": "datasource_uid_not_resolved_by_query_tool",
+      "assessment": "Grafana returned 17 datasource records. The contact-point list was empty and the root notification receiver was 'empty'. The alert-rule read returned null rather than a structured rule list, and Prometheus query calls could not resolve the datasource UID despite it appearing in the datasource inventory. Live rule inventory and metric-to-alert delivery remain unproven."
+    }
+  ],
+  "anomalies": [
+    "The latest production deployment attempt is FAILED while the previous deployment remains active SUCCESS.",
+    "No pending Railway staged changes were present.",
+    "Grafana's datasource inventory and Prometheus query adapter disagreed about datasource UID availability.",
+    "Alert rules could not be conclusively enumerated; do not treat a null read result as a verified zero-rule count."
+  ],
+  "assessment": "W7 has partial operational truth, not operational maturity. Production currently serves from the 2026-11-15 successful deployment, the 2026-11-20 main deployment attempt fails Dockerfile validation, memory samples are high in absolute GB, and Grafana's notification receiver is empty. Required next proofs are a reviewed Railway recovery merge and successful deployment, memory limit confirmation, datasource query recovery, explicit alert-rule inventory, contact-point provisioning, end-to-end notification test, SLO consumption, and documented rollback/recovery exercise."
+}
