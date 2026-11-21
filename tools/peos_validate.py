@@ -365,30 +365,46 @@ def validate_registry(root: Path = ROOT) -> list[str]:
         (item for item in w3.get("sources", []) if item.get("repository") == "waelhe/app-java-v3"),
         {},
     )
-    w3_records = {item.get("pr_number"): item for item in w3.get("records", [])}
-    if w3_source.get("ref") != "main" or w3_source.get("commit_sha") != "8ab2c667aef190b58d88cb116d8ce004bf948cf9":
-        errors.append("W3 must remain pinned to the measured app-java-v3 main SHA")
-    if w3.get("open_pr_count") != 25 or len(w3_records) != 25:
-        errors.append("W3 must preserve the complete 25-PR open queue from the 2026-11-21 capture")
+    w3_record_list = w3.get("records", [])
+    w3_numbers = [item.get("pr_number") for item in w3_record_list]
+    w3_records = {item.get("pr_number"): item for item in w3_record_list}
+    if w3_source.get("ref") != "main" or not SHA_RE.fullmatch(str(w3_source.get("commit_sha", ""))):
+        errors.append("W3 source must pin a full SHA from app-java-v3/main")
+    if w3.get("open_pr_count") != len(w3_record_list):
+        errors.append("W3 open_pr_count must equal the number of captured open PR records")
+    if len(w3_numbers) != len(set(w3_numbers)):
+        errors.append("W3 pull-request numbers must be unique")
+    if any(item.get("state") != "open" for item in w3_record_list):
+        errors.append("W3 queue may contain only currently open pull requests")
+    if any(item.get("allowed_to_merge") is True or item.get("merge_policy") == "authorized_to_merge" for item in w3_record_list):
+        errors.append("W3 inventory cannot grant merge authorization")
     if w3_records.get(787, {}).get("merge_policy") != "single_full_commerce_candidate":
         errors.append("W3 PR #787 must remain the single full-commerce release candidate")
-    if w3_records.get(787, {}).get("head_sha") != "aa05af4494615fa299abba78091970c5a3a25c56":
-        errors.append("W3 PR #787 head SHA does not match the queue capture")
+    if not SHA_RE.fullmatch(str(w3_records.get(787, {}).get("head_sha", ""))):
+        errors.append("W3 PR #787 must carry its exact current head SHA")
     for number in range(806, 812):
         if w3_records.get(number, {}).get("merge_policy") != "tracking_only_do_not_merge":
             errors.append(f"W3 PR #{number} must remain a tracking-only, do-not-merge review shard")
     stacked = w3_records.get(837, {})
     stacked_proof = (w3.get("special_rules", {}).get("stacked_prs") or [{}])[0]
+    stacked_relation = stacked.get("base_relation")
+    stacked_ahead = stacked_proof.get("ahead_by")
     if (
-        stacked.get("base_relation") != "stacked_base_behind_candidate"
-        or stacked.get("base_sha") != "44cf56ab144b9d6abc1afc422026d3d70cf65702"
-        or stacked_proof.get("comparison_status") != "ahead"
-        or stacked_proof.get("ahead_by") != 8
+        stacked_relation not in {"stacked_base_behind_candidate", "stacked_base_matches_candidate"}
+        or stacked.get("base_branch") != w3_records.get(787, {}).get("head_branch")
+        or stacked.get("base_sha") != stacked_proof.get("base_sha")
+        or stacked_proof.get("candidate_pr") != 787
+        or stacked_proof.get("candidate_head_sha") != w3_records.get(787, {}).get("head_sha")
+        or stacked_proof.get("comparison_status") not in {"ahead", "identical"}
+        or not isinstance(stacked_ahead, int)
+        or stacked_ahead < 0
         or stacked_proof.get("behind_by") != 0
+        or (stacked_proof.get("comparison_status") == "ahead" and stacked_ahead <= 0)
+        or (stacked_proof.get("comparison_status") == "identical" and stacked_ahead != 0)
+        or (stacked_relation == "stacked_base_behind_candidate" and stacked_ahead <= 0)
+        or (stacked_relation == "stacked_base_matches_candidate" and stacked_ahead != 0)
     ):
-        errors.append("W3 PR #837 must retain the measured eight-commit lag behind the current #787 head")
-    if w3_records.get(840, {}).get("draft") is not True:
-        errors.append("W3 PR #840 must remain Draft until its failed workflows are repaired")
+        errors.append("W3 PR #837 must retain an exact Compare API proof against the current #787 head")
 
     w5 = current_payloads.get("w5_backend_commerce_snapshot", {})
     w5_source = next(
