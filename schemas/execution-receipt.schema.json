@@ -320,8 +320,7 @@
         "behind_by",
         "proof_url",
         "target_verification",
-        "target_branch_proof",
-        "proof_url"
+        "target_branch_proof"
       ],
       "properties": {
         "target_branch": {
