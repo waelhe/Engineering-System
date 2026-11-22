@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "task_id": "sync-cross-repo-profile-inventory",
+  "project_id": "egm-engineering-system",
+  "repository": "waelhe/Engineering-System",
+  "pull_request": 1,
+  "branch": "build/egm-engineering-system-v1",
+  "tier": "T1",
+  "status": "in_progress",
+  "head_sha": "2037431663b075bb49e796e96394257bf08dcf4f",
+  "started_at": "2026-11-22T15:12:05Z",
+  "completed_at": null,
+  "knowledge_pack": {
+    "generated_at": "2026-11-22T15:12:05Z",
+    "record_ids": [],
+    "omissions": [
+      "The remote GitHub-only execution context did not expose a local EGM system root or knowledge CLI; the governing charter, task-risk policy, execution instructions, project profiles and target design were read directly at the pinned target SHA."
+    ]
+  },
+  "checks": [],
+  "reviews": [],
+  "write_boundary": [
+    "docs/designs/cross-repository-github-review-intake.md",
+    "knowledge/execution-receipts/sync-cross-repo-profile-inventory.json"
+  ],
+  "residual_risks": [
+    "Cross-repository intake remains proposed and disabled; GitHub App configuration, fresh-context EGM review and human approval remain prerequisites."
+  ]
+}

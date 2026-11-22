@@ -14,11 +14,11 @@ The source repositories observed through the GitHub API on 2026-11-22 are:
 
 | Repository | Visibility | Default branch | Observed main SHA | Source profile |
 |---|---|---|---|---|
-| `waelhe/app-java-v3` | Public | `main` | `8ab2c667aef190b58d88cb116d8ce004bf948cf9` | `knowledge/projects/app-java-v3.json` exists |
-| `waelhe/marketplace-admin` | Public | `main` | `982ecf3667d2242cab941737cb6a0bceaee7ffcb` | Missing; must be added as a candidate profile |
-| `waelhe/mobile-marketplace` | Private | `main` | `3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4` | Missing; must be added as a candidate profile |
+| `waelhe/app-java-v3` | Public | `main` | `8ab2c667aef190b58d88cb116d8ce004bf948cf9` | `knowledge/projects/app-java-v3.json` exists; imported candidate snapshot |
+| `waelhe/marketplace-admin` | Public | `main` | `982ecf3667d2242cab941737cb6a0bceaee7ffcb` | `knowledge/projects/marketplace-admin.json` added; candidate profile |
+| `waelhe/mobile-marketplace` | Private | `main` | `3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4` | `knowledge/projects/mobile-marketplace.json` added; candidate profile |
 
-These SHAs are dated repository observations, not live references or capability/readiness claims. The Android client is private; its inclusion requires explicit GitHub App installation access.
+These SHAs are dated repository observations, not live references or capability/readiness claims. All three source projects now have profiles under `knowledge/projects/`. The Admin and Mobile profiles remain `candidate` records with intentionally empty module maps; they establish project identity and provenance, not feature completeness or journey readiness. The Android client is private; its inclusion requires explicit GitHub App installation access.
 
 ## Goals
 
@@ -82,7 +82,7 @@ Add a versioned, schema-validated registry under `registry/` with one entry per 
 - `capture_mode` (initially scheduled/manual sweep)
 - `observed_main_sha` and `observed_at` as provenance only
 
-Validation must fail closed when a repository is duplicated, a project ID is unknown, the project profile does not list that repository, or the live repository identity/default branch does not match the configured mapping. The two missing profiles must be minimal candidate profiles with empty module maps and no inferred technology or domain capabilities. They exist to establish project identity for intake, not to certify feature completeness.
+Validation must fail closed when a repository is duplicated, a project ID is unknown, the project profile does not list that repository, or the live repository identity/default branch does not match the configured mapping. Candidate profiles for `marketplace-admin` and `mobile-marketplace` have now been added. Their module maps remain empty, and their candidate status must not be promoted merely because a repository is present or a package builds. The registry must bind each source repository to exactly one existing profile and preserve the profile's repository identity; it does not infer domain capabilities or certify feature completeness.
 
 ### Capture mode
 
