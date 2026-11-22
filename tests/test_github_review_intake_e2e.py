@@ -108,11 +108,11 @@ def test_workflow_dispatch_collects_validates_and_publishes_one_data_only_signal
     def fake_api_pages(path, token):
         if "/pulls?state=open&sort=updated" in path:
             return [open_pr]
-        if path.startswith("/repos/owner/repo/pulls/7/reviews?"):
+        if path == "/repos/owner/repo/pulls/7/reviews":
             return [review]
-        if path.startswith("/repos/owner/repo/pulls/7/comments?"):
+        if path == "/repos/owner/repo/pulls/7/comments":
             return []
-        if path.startswith("/repos/owner/repo/issues/7/comments?"):
+        if path == "/repos/owner/repo/issues/7/comments":
             return []
         if "/pulls?state=open&sort=created" in path:
             return []
