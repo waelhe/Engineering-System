@@ -8,6 +8,7 @@ This is the only operational knowledge store for the unified system.
 - findings/, cases/, patterns/: investigated engineering knowledge.
 - decisions/, rules/, controls/: current and historical governance.
 - actions/, risk-acceptances/, verifications/: accountable remediation and proof.
+- execution-receipts/: task execution state, checks, reviews, write boundaries and approvals, validated against `schemas/execution-receipt.schema.json`.
 - index.json: generated deterministic index; do not edit by hand.
 
 Every knowledge record uses schemas/knowledge-record.schema.json. A record is not authoritative solely because it exists: assessment, lifecycle, approval, sources and relations all matter.
