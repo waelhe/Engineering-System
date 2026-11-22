@@ -37,11 +37,30 @@ These SHAs are dated repository observations, not live references or capability/
 - Create it in the trusted collector job only when the external-source integration is explicitly enabled.
 - Restrict its installation to the three listed repositories; do not request access to all repositories owned by `waelhe`.
 - Request only repository permissions required by the current read API calls:
-  - `pull-requests: read` for listing PRs, reviews and PR review comments.
+  - `pull-requests: read` for PR metadata, reviews and PR review comments.
   - `issues: read` for issue-level comments attached to PRs.
+  - `metadata: read` for repository identity/default-branch validation (GitHub App installations also expose repository metadata read access).
 - Do not request `contents`, `actions`, `checks`, `statuses`, `workflows`, or any write permission for source repositories.
 - Use the official `actions/create-github-app-token` action pinned to the immutable v3.4.0 release commit `f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc`. GitHub's release API reports that commit's signature as verified and the release as immutable (published 2026-11-18).
 - The installation token is short-lived (one hour) and the action revokes it in its post step unless configured otherwise. Do not persist it, store it in repository files, or pass it to subprocesses.
+
+Example source-token step after the App has been installed only on the approved repositories:
+
+```yaml
+- name: Mint read-only source token
+  id: source-token
+  uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
+  with:
+    app-id: ${{ vars.EGM_SOURCE_GITHUB_APP_ID }}
+    private-key: ${{ secrets.EGM_SOURCE_GITHUB_APP_PRIVATE_KEY }}
+    owner: waelhe
+    repositories: app-java-v3,marketplace-admin,mobile-marketplace
+    permission-metadata: read
+    permission-pull-requests: read
+    permission-issues: read
+```
+
+The non-empty `repositories` list is mandatory: the action documentation states that setting `owner` without `repositories` scopes the token to every repository in that owner's installation. Keep the default token revocation behavior; do not set `skip-token-revoke`.
 
 **Destination token — existing Actions GITHUB_TOKEN**
 
