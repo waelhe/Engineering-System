@@ -173,8 +173,8 @@ def test_workflow_dispatch_collects_validates_and_publishes_one_data_only_signal
     stored = json.loads(signals[0].read_text(encoding="utf-8"))
     assert stored["project_id"] == "sample-project"
     assert stored["source_id"] == "github_review-501"
-    assert stored["commit_sha"] == "a" * 40
-    assert stored["state"] == "untriaged"
+    assert stored["sources"][0]["commit_sha"] == "a" * 40
+    assert stored["lifecycle"] == "untriaged"
     assert (root / "knowledge/index.json").is_file()
 
     staged = next(args for args in git_calls if args and args[0] == "add")
