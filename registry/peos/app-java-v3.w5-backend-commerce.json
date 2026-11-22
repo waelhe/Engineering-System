@@ -1,0 +1,475 @@
+{
+  "schema_version": 1,
+  "kind": "w5_backend_commerce_snapshot",
+  "snapshot_date": "2026-11-21",
+  "sources": [
+    {
+      "system": "github",
+      "repository": "waelhe/app-java-v3",
+      "ref": "main",
+      "commit_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "capture_method": "GitHub repository, pull request, commit workflow-run and check evidence"
+    }
+  ],
+  "open_pr_count": 25,
+  "records": [
+    {
+      "id": "W5-PR-787",
+      "pr_number": 787,
+      "title": "Promote full commerce integration",
+      "url": "https://github.com/waelhe/app-java-v3/pull/787",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "aa05af4494615fa299abba78091970c5a3a25c56",
+      "checks": [
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Android client",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CI",
+          "status": "queued",
+          "conclusion": null
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "assessment": "The single full-commerce release candidate. All observed checks except CI are terminal-success; CI was queued at capture. Six review shards #806–#811 remain tracking-only and are not merge candidates."
+    },
+    {
+      "id": "W5-PR-839",
+      "pr_number": 839,
+      "title": "Restore Railway production deployment after service migration",
+      "url": "https://github.com/waelhe/app-java-v3/pull/839",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "9df92c5d4e6c395d53d7dce170c3c34952c435ee",
+      "checks": [
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CI",
+          "status": "queued",
+          "conclusion": null
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "assessment": "Candidate repair for the observed Railway Dockerfile cache-mount validation failure. CI remained queued; no deployment recovery is claimed."
+    },
+    {
+      "id": "W5-PR-840",
+      "pr_number": 840,
+      "title": "Add Resend HTTPS transport for production email",
+      "url": "https://github.com/waelhe/app-java-v3/pull/840",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "b2b05fae111606f70bb1c8438097241678e8d19b",
+      "checks": [
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "failure"
+        }
+      ],
+      "assessment": "Current observed workflows all failed on this exact head. Do not merge until failure causes are inspected and a fresh green run is recorded."
+    },
+    {
+      "id": "W5-PR-832",
+      "pr_number": 832,
+      "title": "Model delivery fee and courier compensation (A1)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/832",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "f8900c3ca731f99fb619e417f8603c358d32b2b9",
+      "checks": [
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CI",
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ],
+      "assessment": "P0 owner-decision blocker: the candidate ledger model conflicts with the governing accounting recommendation. Passing individual workflows does not authorize the accounting choice."
+    },
+    {
+      "id": "W5-PR-831",
+      "pr_number": 831,
+      "title": "Serialize delivery refunds and completion under a batch lock (A3)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/831",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "d5ca5839d20d322bef4d12c2d5fea50dd4de4193",
+      "checks": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "assessment": "Workflow checks passed on the observed head; the prior W4 review found the recognition-side lock and event-order invariants still require adjudicated proof."
+    },
+    {
+      "id": "W5-PR-828",
+      "pr_number": 828,
+      "title": "Own the retry transaction on carrier refund overload (A4/B2)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/828",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "8725c670978fabca6e9e61c3f9c23e153ff161d1",
+      "checks": [
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "assessment": "Observed build and integration workflows pass; PR remains open and requires repository review, coverage and post-merge proof."
+    },
+    {
+      "id": "W5-PR-833",
+      "pr_number": 833,
+      "title": "Purge account-erasure media (G3)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/833",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "4e169733dbdfa994071c8e505fe268c5b676cb5b",
+      "checks": [
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Saleor Canonical Plan and Schema Inventory",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CI",
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ],
+      "assessment": "CI still in progress. Versioned-object permanent deletion remains a conditional gap until actual bucket versioning/retention is inspected and version-ID deletion is tested."
+    },
+    {
+      "id": "W5-PR-827",
+      "pr_number": 827,
+      "title": "Return 503 when no PSP channel is bound (W3)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/827",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "e676feca81256ffc304defb4148adfe9895e768c",
+      "checks": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "assessment": "Observed checks passed on the reported head; PR remains open and must satisfy exact-head review/coverage and post-merge proof."
+    },
+    {
+      "id": "W5-PR-822",
+      "pr_number": 822,
+      "title": "Fail fast on identity mail-link origin configuration (W2)",
+      "url": "https://github.com/waelhe/app-java-v3/pull/822",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "861297933918d7d20287ea249e483f61a74cba43",
+      "checks": [
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "OpenRewrite Catalog",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "assessment": "Observed checks passed on the reported head; exact-head review and current-base synchronization remain required by the release process."
+    },
+    {
+      "id": "W5-PR-847",
+      "pr_number": 847,
+      "title": "Exclude CodeRabbit skipped files from review coverage",
+      "url": "https://github.com/waelhe/app-java-v3/pull/847",
+      "state": "open",
+      "base_branch": "main",
+      "base_sha": "8ab2c667aef190b58d88cb116d8ce004bf948cf9",
+      "head_sha": "b60282f19d0f14878ba80aedc63cdc58ffbb5f4a",
+      "checks": [
+        {
+          "name": "CodeQL",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container Scan",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Integration Test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retired Saleor Plan and PR Guard",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "assessment": "Observed checks passed on the reported head; ensure the coverage gate remains fail-closed and review is bound to current source blobs."
+    },
+    {
+      "id": "W5-PR-842",
+      "pr_number": 842,
+      "title": "Read the CodeRabbit coverage declaration, not the empty approval",
+      "url": "https://github.com/waelhe/app-java-v3/pull/842",
+      "state": "merged",
+      "base_branch": "main",
+      "base_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+      "head_sha": "fb1730c580c6d191ae21d08331ee6a5c96b2fffc",
+      "checks": [],
+      "assessment": "Merged on 2026-11-19. Do not continue treating W8 as an unmerged candidate; subsequent PR #847 addresses the skipped-file parsing edge."
+    }
+  ],
+  "anomalies": [
+    "Workflow states are a point-in-time capture on 2026-11-21; queued/in_progress results are not successful proof.",
+    "PR #806–#811 remain tracking-only / DO_NOT_MERGE; PR #787 remains the single full-commerce candidate.",
+    "This inventory does not authorize merge or declare commerce journeys complete."
+  ],
+  "assessment": "The backend is active and has 25 open PRs. Several high-impact candidates have green checks but remain review/decision constrained; #840 has observed workflow failures; #787 and #839 still have CI in queue at capture. Current code-level completeness requires journey-specific source and test revalidation."
+}
