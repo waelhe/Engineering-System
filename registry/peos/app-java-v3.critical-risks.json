@@ -1,0 +1,610 @@
+{
+  "schema_version": 1,
+  "kind": "critical_risk_registry",
+  "snapshot_date": "2026-11-17",
+  "source": {
+    "repository": "waelhe/app-java-v3",
+    "ref": "main",
+    "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+    "snapshot_date": "2026-11-17",
+    "capture_boundary": "Read-only GitHub source, PR, check-run, compare and review inspection. No app-java-v3 source, production configuration, database, object store, deployment or merge was changed.",
+    "evidence_sources": [
+      {
+        "repository": "waelhe/app-java-v3",
+        "ref": "main",
+        "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+        "path": "docs/adr/ADR-0013-financial-allocation-decisions.md",
+        "blob_sha": "09120254568d9ac0ea0ea5dfe2f0cb4325dc1555"
+      },
+      {
+        "repository": "waelhe/app-java-v3",
+        "ref": "review/adversarial-behavioral-followup-20261112",
+        "commit_sha": null,
+        "path": "docs/governance/adversarial-behavioral-review-2026-11-12-owner-gate-recommendations.md",
+        "blob_sha": "82671649bb37d001e6e9434072a35b7300a4a206"
+      },
+      {
+        "repository": "waelhe/app-java-v3",
+        "ref": "agent/fix-a1-delivery-fee-ledger-modeling-20261112",
+        "commit_sha": "ff0af304e9bc5e35890456bea190566e3e6ed50a",
+        "path": "docs/adr/ADR-0014-order-leg-courier-compensation-clearing-claim.md",
+        "blob_sha": "6130695f42cae34cfddd7c1417efbe86735e4a59"
+      },
+      {
+        "repository": "waelhe/app-java-v3",
+        "ref": "agent/fix-a3-refund-delta-advisory-lock-20261112",
+        "commit_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6",
+        "path": "marketplace-ledger/src/main/java/com/marketplace/ledger/LedgerJournalService.java",
+        "blob_sha": "cf4e9de62798d5b31cb24d37911c93341b1ed0a9"
+      },
+      {
+        "repository": "waelhe/app-java-v3",
+        "ref": "agent/fix-g3-media-purge-scope-20261112",
+        "commit_sha": "3ee5713760e17164811a4362f9f601fb782efb88",
+        "path": "marketplace-media/src/main/java/com/marketplace/media/S3MediaStorage.java",
+        "blob_sha": "22a626c27ba8d45e8af94f6c8772e369f33f2c24"
+      }
+    ]
+  },
+  "records": [
+    {
+      "risk_id": "W4-A1-001",
+      "category": "money",
+      "priority": "P0",
+      "status": "blocked_owner_decision",
+      "title": "Delivery-fee ownership and courier compensation do not match the recorded owner-gate recommendation.",
+      "control_objective": "Delivery-fee ownership and courier compensation do not match the recorded owner-gate recommendation.",
+      "upstream_source": {
+        "repository": "waelhe/app-java-v3",
+        "ref": "main",
+        "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+      },
+      "pull_request": {
+        "number": 832,
+        "url": "https://github.com/waelhe/app-java-v3/pull/832",
+        "state": "open",
+        "base_branch": "main",
+        "base_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+        "head_branch": "agent/fix-a1-delivery-fee-ledger-modeling-20261112",
+        "head_sha": "ff0af304e9bc5e35890456bea190566e3e6ed50a",
+        "base_relation": "base_matches_current_main",
+        "behind_by": 0
+      },
+      "checks": {
+        "head_sha": "ff0af304e9bc5e35890456bea190566e3e6ed50a",
+        "total_check_runs": 31,
+        "non_gate_failure_count": 0,
+        "non_gate_checks_conclusion": "success",
+        "coderabbit_check_conclusion": "success",
+        "coderabbit_gate_conclusion": "failure",
+        "gate_failure_stage": "coverage_declaration_missing",
+        "gate_job_url": "https://github.com/waelhe/app-java-v3/actions/runs/43710099941/job/133993053216"
+      },
+      "review": {
+        "latest_state": "commented",
+        "latest_sha": "ff0af304e9bc5e35890456bea190566e3e6ed50a",
+        "latest_submitted_at": "2026-11-15T12:22:05Z",
+        "approval_on_current_head": true,
+        "review_request_comment_id": null
+      },
+      "source_artifacts": [
+        {
+          "path": "docs/adr/ADR-0013-financial-allocation-decisions.md",
+          "blob_sha": "09120254568d9ac0ea0ea5dfe2f0cb4325dc1555",
+          "ref": "main",
+          "role": "governing financial ADR"
+        },
+        {
+          "path": "docs/governance/adversarial-behavioral-review-2026-11-12-owner-gate-recommendations.md",
+          "blob_sha": "82671649bb37d001e6e9434072a35b7300a4a206",
+          "ref": "review/adversarial-behavioral-followup-20261112",
+          "role": "owner-gate recommendation"
+        },
+        {
+          "path": "docs/adr/ADR-0014-order-leg-courier-compensation-clearing-claim.md",
+          "blob_sha": "6130695f42cae34cfddd7c1417efbe86735e4a59",
+          "ref": "agent/fix-a1-delivery-fee-ledger-modeling-20261112",
+          "role": "unmerged candidate ADR"
+        }
+      ],
+      "assessment": {
+        "confirmed_facts": [
+          "ADR-0013 on captured main identifies the platform as merchant of record and states that the platform keeps the delivery fee to fund the carrier.",
+          "The owner-gate recommendation in PR #826 says the seller balance should not be touched by the delivery fee; the delivery journal should debit delivery-fee revenue and credit courier payable.",
+          "Unmerged PR #832 ADR-0014 and code instead describe a seller-side DELIVERY_FEE debit plus a delivery-journal PSP_CLEARING claim debit and courier payable.",
+          "PR #832 has a CodeRabbit APPROVED review on its exact head; the latest review on that head is COMMENTED."
+        ],
+        "unknowns": [
+          "The owner has not recorded a subsequent decision superseding the owner-gate recommendation.",
+          "The final accounting treatment is a governance decision; this registry does not infer it."
+        ],
+        "blocking_gaps": [
+          "The unmerged candidate and the recorded owner-gate recommendation prescribe materially different seller-balance and accounting traces.",
+          "The coverage verifier fails because the review evidence has no explicit processed-file declaration."
+        ],
+        "next_actions": [
+          "Resolve the accounting treatment against ADR-0013 D1/D4 and the owner-gate recommendation before accepting ADR-0014.",
+          "Align seller postings, carrier payable, refund mirror and reconciliation tests to the selected treatment.",
+          "Rerun ledger, refund, idempotency and seller-statement tests after the chosen treatment is implemented."
+        ]
+      },
+      "closure_requirements": [
+        "The change is merged into app-java-v3/main; an open PR head is not closure.",
+        "Required unit, integration, concurrency, contract and security/privacy tests pass on the exact merged SHA.",
+        "Required review and CodeRabbit processed-file coverage pass against the exact source SHA.",
+        "Owner decisions, migrations and cross-module contracts agree with governing ADRs.",
+        "Post-merge verification is recorded against the exact main SHA; production readiness is tracked separately."
+      ],
+      "closure_evidence": null
+    },
+    {
+      "risk_id": "W4-A3-001",
+      "category": "concurrency",
+      "priority": "P0",
+      "status": "partial_candidate",
+      "title": "Delivery refund-delta read/modify/write is only partially serialized.",
+      "control_objective": "Delivery refund-delta read/modify/write is only partially serialized.",
+      "upstream_source": {
+        "repository": "waelhe/app-java-v3",
+        "ref": "main",
+        "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+      },
+      "pull_request": {
+        "number": 831,
+        "url": "https://github.com/waelhe/app-java-v3/pull/831",
+        "state": "open",
+        "base_branch": "main",
+        "base_sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63",
+        "head_branch": "agent/fix-a3-refund-delta-advisory-lock-20261112",
+        "head_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6",
+        "base_relation": "diverged_behind_current_main",
+        "behind_by": 2
+      },
+      "checks": {
+        "head_sha": "a73d453aa11f7228e4eff395e0940e0c90ebf8a6",
+        "total_check_runs": 28,
+        "non_gate_failure_count": 0,
+        "non_gate_checks_conclusion": "success",
+        "coderabbit_check_conclusion": "skipped",
+        "coderabbit_gate_conclusion": "failure",
+        "gate_failure_stage": "current_head_review_missing",
+        "gate_job_url": "https://github.com/waelhe/app-java-v3/actions/runs/43382690803/job/131743914933"
+      },
+      "review": {
+        "latest_state": "none",
+        "latest_sha": null,
+        "latest_submitted_at": null,
+        "approval_on_current_head": false,
+        "review_request_comment_id": 6946114580
+      },
+      "source_artifacts": [
+        {
+          "path": "marketplace-ledger/src/main/java/com/marketplace/ledger/LedgerJournalService.java",
+          "blob_sha": "cf4e9de62798d5b31cb24d37911c93341b1ed0a9",
+          "ref": "agent/fix-a3-refund-delta-advisory-lock-20261112",
+          "role": "candidate ledger implementation"
+        }
+      ],
+      "assessment": {
+        "confirmed_facts": [
+          "PR #831 adds pg_advisory_xact_lock before the refund path's capture replay, latest-cumulative read, delta calculation and insert.",
+          "The advisory lock is transaction-scoped and keyed by the delivery request UUID.",
+          "The candidate is two commits ahead and two commits behind captured current main."
+        ],
+        "unknowns": [
+          "No completed CodeRabbit review on the exact PR head was present when captured; a fresh review request comment was posted.",
+          "The PostgreSQL isolation level was not independently proven from this candidate's code."
+        ],
+        "blocking_gaps": [
+          "recognize() does not acquire the same per-delivery advisory lock before its capture/revenue reads and postings.",
+          "recognize() posts the gross completion amount and does not reconcile refunds that arrive first.",
+          "The R=G case and both event orders are not demonstrated.",
+          "The branch is behind current main and review/coverage is not green."
+        ],
+        "next_actions": [
+          "Use the same per-delivery lock in refund() and recognize(), with explicit READ COMMITTED semantics.",
+          "Implement net recognition G-R and the zero-revenue/courier-payable treatment in the owner-gate recommendation.",
+          "Add both-event-order and concurrent-webhook PostgreSQL integration tests; synchronize with main and obtain exact-head review and coverage."
+        ]
+      },
+      "closure_requirements": [
+        "The change is merged into app-java-v3/main; an open PR head is not closure.",
+        "Required unit, integration, concurrency, contract and security/privacy tests pass on the exact merged SHA.",
+        "Required review and CodeRabbit processed-file coverage pass against the exact source SHA.",
+        "Owner decisions, migrations and cross-module contracts agree with governing ADRs.",
+        "Post-merge verification is recorded against the exact main SHA; production readiness is tracked separately."
+      ],
+      "closure_evidence": null
+    },
+    {
+      "risk_id": "W4-A4-B2-001",
+      "category": "payments",
+      "priority": "P0",
+      "status": "verification_gate_blocked",
+      "title": "Refund transaction-boundary and identity-erasure candidate is not yet integrated.",
+      "control_objective": "Refund transaction-boundary and identity-erasure candidate is not yet integrated.",
+      "upstream_source": {
+        "repository": "waelhe/app-java-v3",
+        "ref": "main",
+        "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+      },
+      "pull_request": {
+        "number": 828,
+        "url": "https://github.com/waelhe/app-java-v3/pull/828",
+        "state": "open",
+        "base_branch": "main",
+        "base_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+        "head_branch": "agent/fix-a4-psp-refund-tx-boundary-20261114",
+        "head_sha": "b25c8e7086b500711fcdb073508af414e204b8e4",
+        "base_relation": "base_matches_current_main",
+        "behind_by": 0
+      },
+      "checks": {
+        "head_sha": "b25c8e7086b500711fcdb073508af414e204b8e4",
+        "total_check_runs": 31,
+        "non_gate_failure_count": 0,
+        "non_gate_checks_conclusion": "success",
+        "coderabbit_check_conclusion": "success",
+        "coderabbit_gate_conclusion": "failure",
+        "gate_failure_stage": "coverage_declaration_missing",
+        "gate_job_url": "https://github.com/waelhe/app-java-v3/actions/runs/44062339296/job/133993031119"
+      },
+      "review": {
+        "latest_state": "approved",
+        "latest_sha": "b25c8e7086b500711fcdb073508af414e204b8e4",
+        "latest_submitted_at": "2026-11-17T10:52:39Z",
+        "approval_on_current_head": true,
+        "review_request_comment_id": null
+      },
+      "source_artifacts": [],
+      "assessment": {
+        "confirmed_facts": [
+          "PR #828 is based on the captured current main SHA.",
+          "The exact head has a CodeRabbit APPROVED review and no non-gate check failures were found.",
+          "The gate rerun accepted the exact-head review, then failed in processed-file coverage."
+        ],
+        "unknowns": [
+          "This snapshot does not independently certify all refund or account-erasure behavior outside the PR test suite."
+        ],
+        "blocking_gaps": [
+          "The coverage verifier reports that CodeRabbit omitted its explicit processed-file list.",
+          "The PR remains open and has no post-merge proof."
+        ],
+        "next_actions": [
+          "Validate the coverage-verifier fix through #842 and rerun #828's gate against the exact head.",
+          "Recheck refund rollback/idempotency and the relevant identity-erasure guards on the final synchronized head.",
+          "Capture post-merge tests separately from PR CI."
+        ]
+      },
+      "closure_requirements": [
+        "The change is merged into app-java-v3/main; an open PR head is not closure.",
+        "Required unit, integration, concurrency, contract and security/privacy tests pass on the exact merged SHA.",
+        "Required review and CodeRabbit processed-file coverage pass against the exact source SHA.",
+        "Owner decisions, migrations and cross-module contracts agree with governing ADRs.",
+        "Post-merge verification is recorded against the exact main SHA; production readiness is tracked separately."
+      ],
+      "closure_evidence": null
+    },
+    {
+      "risk_id": "W4-W3-001",
+      "category": "payments",
+      "priority": "P0",
+      "status": "verification_gate_blocked",
+      "title": "Payment initiation must fail explicitly when no PSP channel is bound.",
+      "control_objective": "Payment initiation must fail explicitly when no PSP channel is bound.",
+      "upstream_source": {
+        "repository": "waelhe/app-java-v3",
+        "ref": "main",
+        "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+      },
+      "pull_request": {
+        "number": 827,
+        "url": "https://github.com/waelhe/app-java-v3/pull/827",
+        "state": "open",
+        "base_branch": "main",
+        "base_sha": "445f421d67ad58bd533d42be9d5bbf6d268d9161",
+        "head_branch": "agent/fix-w3-psp-503-processintent-20261112",
+        "head_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0",
+        "base_relation": "diverged_behind_current_main",
+        "behind_by": 3
+      },
+      "checks": {
+        "head_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0",
+        "total_check_runs": 28,
+        "non_gate_failure_count": 0,
+        "non_gate_checks_conclusion": "success",
+        "coderabbit_check_conclusion": "success",
+        "coderabbit_gate_conclusion": "failure",
+        "gate_failure_stage": "coverage_declaration_missing",
+        "gate_job_url": "https://github.com/waelhe/app-java-v3/actions/runs/43586461454/job/133993069179"
+      },
+      "review": {
+        "latest_state": "commented",
+        "latest_sha": "84c14efcdaa962f09064b5543eb11c8c93cd75c0",
+        "latest_submitted_at": "2026-11-14T13:58:47Z",
+        "approval_on_current_head": true,
+        "review_request_comment_id": null
+      },
+      "source_artifacts": [],
+      "assessment": {
+        "confirmed_facts": [
+          "PR #827 has a CodeRabbit APPROVED review and a subsequent COMMENTED review on its exact head.",
+          "The gate rerun accepted the exact-head review.",
+          "No non-gate check failure was found on the captured head."
+        ],
+        "unknowns": [
+          "The base SHA is three commits behind captured current main; compare reports five commits ahead and three behind.",
+          "No merged-main or production evidence exists."
+        ],
+        "blocking_gaps": [
+          "The processed-file coverage verifier fails because the review evidence has no explicit processed-file declaration.",
+          "The branch must be synchronized with current main and reverified."
+        ],
+        "next_actions": [
+          "Resolve coverage evidence without weakening the fail-closed gate.",
+          "Synchronize with current main and rerun money-path integration and API error-contract tests on the resulting head."
+        ]
+      },
+      "closure_requirements": [
+        "The change is merged into app-java-v3/main; an open PR head is not closure.",
+        "Required unit, integration, concurrency, contract and security/privacy tests pass on the exact merged SHA.",
+        "Required review and CodeRabbit processed-file coverage pass against the exact source SHA.",
+        "Owner decisions, migrations and cross-module contracts agree with governing ADRs.",
+        "Post-merge verification is recorded against the exact main SHA; production readiness is tracked separately."
+      ],
+      "closure_evidence": null
+    },
+    {
+      "risk_id": "W4-G3-001",
+      "category": "privacy",
+      "priority": "P0",
+      "status": "partial_candidate",
+      "title": "Account-erasure media purge batches known object keys into DeleteObjects calls of at most 1,000 keys and surfaces per-key batch errors.",
+      "control_objective": "Account-erasure media purge batches known object keys into DeleteObjects calls of at most 1,000 keys and surfaces per-key batch errors.",
+      "upstream_source": {
+        "repository": "waelhe/app-java-v3",
+        "ref": "main",
+        "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+      },
+      "pull_request": {
+        "number": 833,
+        "url": "https://github.com/waelhe/app-java-v3/pull/833",
+        "state": "open",
+        "base_branch": "main",
+        "base_sha": "f92873c947e94c76ed3e7ea211db40a985ea3d63",
+        "head_branch": "agent/fix-g3-media-purge-scope-20261112",
+        "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88",
+        "base_relation": "diverged_behind_current_main",
+        "behind_by": 2
+      },
+      "checks": {
+        "head_sha": "3ee5713760e17164811a4362f9f601fb782efb88",
+        "total_check_runs": 31,
+        "non_gate_failure_count": 0,
+        "non_gate_checks_conclusion": "success",
+        "coderabbit_check_conclusion": "skipped",
+        "coderabbit_gate_conclusion": "failure",
+        "gate_failure_stage": "current_head_review_missing",
+        "gate_job_url": "https://github.com/waelhe/app-java-v3/actions/runs/43589608118/job/132431332434"
+      },
+      "review": {
+        "latest_state": "none",
+        "latest_sha": null,
+        "latest_submitted_at": null,
+        "approval_on_current_head": false,
+        "review_request_comment_id": 6946115783
+      },
+      "source_artifacts": [
+        {
+          "path": "marketplace-media/src/main/java/com/marketplace/media/S3MediaStorage.java",
+          "blob_sha": "22a626c27ba8d45e8af94f6c8772e369f33f2c24",
+          "ref": "agent/fix-g3-media-purge-scope-20261112",
+          "role": "candidate object-storage deletion implementation"
+        }
+      ],
+      "assessment": {
+        "confirmed_facts": [
+          "The inspected S3 deletion requests include object keys but no version IDs.",
+          "AWS documents that a key-only delete in a versioning-enabled bucket inserts a delete marker and does not permanently delete prior versions."
+        ],
+        "unknowns": [
+          "The actual production object-store provider, bucket versioning mode, Object Lock and retention configuration were not read.",
+          "Compatibility of the configured S3-compatible object store with version listing and version-ID deletion is not proven."
+        ],
+        "blocking_gaps": [
+          "Permanent destruction of old object versions is not proven if bucket versioning is enabled or suspended.",
+          "The exact current-head CodeRabbit review is missing and the branch is two commits behind current main."
+        ],
+        "next_actions": [
+          "Read actual bucket versioning and Object Lock/retention configuration through the authorized provider API.",
+          "Where versioning is enabled or suspended, enumerate versions and delete each version ID and relevant delete markers using the provider's documented API.",
+          "Add provider-compatible tests for versioned, suspended, unversioned, partial batch failure, over-1,000 keys and idempotent rerun; synchronize base and obtain exact-head review."
+        ]
+      },
+      "closure_requirements": [
+        "The change is merged into app-java-v3/main; an open PR head is not closure.",
+        "Required unit, integration, concurrency, contract and security/privacy tests pass on the exact merged SHA.",
+        "Required review and CodeRabbit processed-file coverage pass against the exact source SHA.",
+        "Owner decisions, migrations and cross-module contracts agree with governing ADRs.",
+        "Post-merge verification is recorded against the exact main SHA; production readiness is tracked separately."
+      ],
+      "closure_evidence": null
+    },
+    {
+      "risk_id": "W4-W2-001",
+      "category": "identity",
+      "priority": "P1",
+      "status": "review_and_base_refresh_required",
+      "title": "Identity mail-link origin validation is awaiting review and current-base synchronization.",
+      "control_objective": "Identity mail-link origin validation is awaiting review and current-base synchronization.",
+      "upstream_source": {
+        "repository": "waelhe/app-java-v3",
+        "ref": "main",
+        "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+      },
+      "pull_request": {
+        "number": 822,
+        "url": "https://github.com/waelhe/app-java-v3/pull/822",
+        "state": "open",
+        "base_branch": "main",
+        "base_sha": "445f421d67ad58bd533d42be9d5bbf6d268d9161",
+        "head_branch": "agent/fix-w2-identity-mail-base-url-prod-20261110",
+        "head_sha": "2bc484f6a5ed51631bb2c5e15243be0b6da12889",
+        "base_relation": "diverged_behind_current_main",
+        "behind_by": 3
+      },
+      "checks": {
+        "head_sha": "2bc484f6a5ed51631bb2c5e15243be0b6da12889",
+        "total_check_runs": 26,
+        "non_gate_failure_count": 0,
+        "non_gate_checks_conclusion": "success",
+        "coderabbit_check_conclusion": "skipped",
+        "coderabbit_gate_conclusion": "failure",
+        "gate_failure_stage": "current_head_review_missing",
+        "gate_job_url": "https://github.com/waelhe/app-java-v3/actions/runs/43625070285/job/132538973682"
+      },
+      "review": {
+        "latest_state": "none",
+        "latest_sha": null,
+        "latest_submitted_at": null,
+        "approval_on_current_head": false,
+        "review_request_comment_id": 6946116537
+      },
+      "source_artifacts": [],
+      "assessment": {
+        "confirmed_facts": [
+          "PR #822 changes mail-link origin validation and production/staging/deployment documentation and tests.",
+          "No non-gate check failure was found on the captured PR head."
+        ],
+        "unknowns": [
+          "No exact-current-head CodeRabbit review was present in the captured review list.",
+          "The branch is eight commits ahead and three behind captured current main."
+        ],
+        "blocking_gaps": [
+          "CodeRabbit Gate fails while waiting for a completed review on the exact head.",
+          "The PR must synchronize with current main and rerun tests on the new SHA."
+        ],
+        "next_actions": [
+          "Obtain substantive exact-head CodeRabbit review and passing processed-file coverage.",
+          "Synchronize with current main and rerun profile binding, URL origin and email-link tests."
+        ]
+      },
+      "closure_requirements": [
+        "The change is merged into app-java-v3/main; an open PR head is not closure.",
+        "Required unit, integration, concurrency, contract and security/privacy tests pass on the exact merged SHA.",
+        "Required review and CodeRabbit processed-file coverage pass against the exact source SHA.",
+        "Owner decisions, migrations and cross-module contracts agree with governing ADRs.",
+        "Post-merge verification is recorded against the exact main SHA; production readiness is tracked separately."
+      ],
+      "closure_evidence": null
+    },
+    {
+      "risk_id": "W4-W8-001",
+      "category": "ci-governance",
+      "priority": "P0",
+      "status": "coverage_gate_fix_candidate",
+      "title": "CodeRabbit coverage gate fix must be reviewed and verified against real review histories.",
+      "control_objective": "CodeRabbit coverage gate fix must be reviewed and verified against real review histories.",
+      "upstream_source": {
+        "repository": "waelhe/app-java-v3",
+        "ref": "main",
+        "commit_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26"
+      },
+      "pull_request": {
+        "number": 842,
+        "url": "https://github.com/waelhe/app-java-v3/pull/842",
+        "state": "open",
+        "base_branch": "main",
+        "base_sha": "8b1d2a82bf5c870d88ffc7d5d05e36bb06175c26",
+        "head_branch": "fix/coderabbit-coverage-declaring-review-20261112",
+        "head_sha": "a94fa6fd4ded45d654cc5b7eb88d071d7e5953b2",
+        "base_relation": "base_matches_current_main",
+        "behind_by": 0
+      },
+      "checks": {
+        "head_sha": "a94fa6fd4ded45d654cc5b7eb88d071d7e5953b2",
+        "total_check_runs": 24,
+        "non_gate_failure_count": 0,
+        "non_gate_checks_conclusion": "success",
+        "coderabbit_check_conclusion": "skipped",
+        "coderabbit_gate_conclusion": "failure",
+        "gate_failure_stage": "current_head_review_missing",
+        "gate_job_url": "https://github.com/waelhe/app-java-v3/actions/runs/43853671678/job/133252374365"
+      },
+      "review": {
+        "latest_state": "none",
+        "latest_sha": null,
+        "latest_submitted_at": null,
+        "approval_on_current_head": false,
+        "review_request_comment_id": 6946117305
+      },
+      "source_artifacts": [],
+      "assessment": {
+        "confirmed_facts": [
+          "PR #842 selects the latest accepted review on the exact candidate SHA that explicitly declares Files selected for processing, instead of reading the newest empty-bodied approval.",
+          "The diff adds tests for declaration then empty approval, empty approval alone, stale-head declaration, changes-requested declaration, malformed declaration and newest-declaration precedence.",
+          "PRs #827, #828 and #832 show downstream failures because no explicit processed-file list was found."
+        ],
+        "unknowns": [
+          "The candidate has no completed exact-head CodeRabbit review in the captured submissions.",
+          "The change has not yet been merged or executed as the verifier for another candidate."
+        ],
+        "blocking_gaps": [
+          "The new gate behavior must be reviewed on the exact #842 head.",
+          "A green #842 gate alone will not prove #827/#828/#832 pass after the change."
+        ],
+        "next_actions": [
+          "Obtain exact-head review and coverage for PR #842.",
+          "After merge under repository protection, rerun affected candidate coverage gates and verify every changed path is accounted for by current source blob identity."
+        ]
+      },
+      "closure_requirements": [
+        "The change is merged into app-java-v3/main; an open PR head is not closure.",
+        "Required unit, integration, concurrency, contract and security/privacy tests pass on the exact merged SHA.",
+        "Required review and CodeRabbit processed-file coverage pass against the exact source SHA.",
+        "Owner decisions, migrations and cross-module contracts agree with governing ADRs.",
+        "Post-merge verification is recorded against the exact main SHA; production readiness is tracked separately."
+      ],
+      "closure_evidence": null
+    }
+  ],
+  "anomalies": [
+    {
+      "id": "W4-ANOMALY-001",
+      "severity": "critical",
+      "affected_risk_ids": [
+        "W4-A1-001"
+      ],
+      "summary": "Unmerged ADR-0014 conflicts with the recorded owner-gate recommendation; do not infer supersession."
+    },
+    {
+      "id": "W4-ANOMALY-002",
+      "severity": "high",
+      "affected_risk_ids": [
+        "W4-A3-001",
+        "W4-G3-001",
+        "W4-W2-001",
+        "W4-W3-001"
+      ],
+      "summary": "Four candidate branches are behind current main and require synchronization before final verification."
+    },
+    {
+      "id": "W4-ANOMALY-003",
+      "severity": "high",
+      "affected_risk_ids": [
+        "W4-A4-B2-001",
+        "W4-W3-001",
+        "W4-A1-001"
+      ],
+      "summary": "Exact-head review approval can pass while the downstream processed-file coverage verifier still fails."
+    },
+    {
+      "id": "W4-ANOMALY-004",
+      "severity": "high",
+      "affected_risk_ids": [
+        "W4-G3-001"
+      ],
+      "summary": "Production bucket versioning, provider and retention settings were not inspected; permanent data erasure is unproven."
+    }
+  ]
+}
