@@ -6,7 +6,7 @@ The system combines EGM's context-rich design and fresh-context review workflow 
 
 ## Current status
 
-**Early implementation baseline. Not production-ready.** The repository has a pinned EGM submodule, initial architecture and governance policies, JSON Schemas, a knowledge CLI, local skills, and a CI workflow. Native harness and remote CI verification are still required before operational adoption.
+**Implementation baseline — 2026-11-21. Not yet merged or production-ready.** The EGM foundation is implemented in open PR #1. The PEOS control-plane baseline and current W5-W7 evidence are implemented in open Draft PR #2, stacked on the exact current PR #1 head. PR #1 CI passes on `bbb8b7cf13f8bcb93a46423a23b19bf3b7bb1fda`; fresh CI for the synchronized PR #2 head is still required. Independent fresh-context EGM proof, independent acceptance, migration cutover and operational closure remain outstanding.
 
 ## Architecture
 
@@ -21,6 +21,19 @@ The system combines EGM's context-rich design and fresh-context review workflow 
 - [Migration plan](docs/operations/migration-from-defect-knowledge.md)
 - [Pinned migration manifest](migration/app-java-v3-2026-11-13.manifest.json)
 - [ADR-0001: one EGM-based system](docs/adr/0001-single-egm-system.md)
+
+## Platform Engineering Operating System (PEOS)
+
+PEOS is the platform engineering control plane; EGM remains the single canonical knowledge, review, verification and learning engine. PEOS does not add a separate database or production service.
+
+- [PEOS operating model](docs/peos/operating-model.md)
+- [W3 current pull-request queue — 2026-11-21](docs/peos/w3-pr-queue-2026-11-21.md)
+- Read-only W3 recapture: `GITHUB_TOKEN=... python tools/capture_w3_pr_queue.py` (add `--check` to compare or `--write` to replace the snapshot after review).
+- [W5 backend and commerce evidence — 2026-11-21](docs/peos/w5-backend-commerce-2026-11-21.md)
+- [W6 client evidence — 2026-11-21](docs/peos/w6-client-delivery-2026-11-21.md)
+- [W7 operational evidence — 2026-11-21](docs/peos/w7-operational-recheck-2026-11-21.md)
+
+W0-W4 remain dated historical snapshots. W5-W7 are separately captured and SHA-bound evidence; none of these snapshots authorizes merge or production deployment.
 
 ## Upstream EGM baseline
 
