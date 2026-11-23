@@ -45,6 +45,14 @@ The Admin and Engineering-System rulesets are currently absent. Their policy gap
 
 ## 4. Audit implementation
 
+The scheduled workflow uses two separate read credentials:
+
+- `GITHUB_TOKEN` reads only the Engineering-System sink repository.
+- The same short-lived source GitHub App token used by cross-repository review intake reads the three source repositories. The token is repository-scoped and requests only Pull requests: read and Issues: read; GitHub's default Metadata read permission is used for branch metadata and repository ruleset GET endpoints. No Administration write permission is requested.
+
+The audit code selects the sink token only for `waelhe/Engineering-System` and the source token for the three source repositories. The source token is never used for a write request. The private mobile repository is therefore accessed through the App installation, not through the sink repository's `GITHUB_TOKEN`.
+
+
 `tools/audit_repository_governance.py` reads branch metadata, the repository rulesets collection and each active matching ruleset. It compares the effective rules to the checked-in PEOS expectation and writes a GitHub Actions job summary. It does not require Administration write permission and does not attempt a mutation.
 
 The workflow `Repository Governance Audit` runs daily and manually. Accessible missing policies make the workflow report failure; a plan-limited private repository is reported as a distinct warning state. API permission failures other than the known plan limitation are not converted into success.
