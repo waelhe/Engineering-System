@@ -185,7 +185,7 @@ def validate_w8_recovery_gates(root: Path = ROOT) -> list[str]:
         if state == "verified" and gate.get("owner_action_required") is True:
             errors.append(f"{gate_id}: verified gate cannot still require owner action")
 
-        for dependency in dependencies:
+        for dependency in contract["depends_on"]:
             dependency_gate = by_id.get(dependency)
             if dependency_gate and state in {"in_progress", "verified"} and dependency_gate.get("state") != "verified":
                 errors.append(f"{gate_id}: cannot progress before dependency {dependency} is verified")
