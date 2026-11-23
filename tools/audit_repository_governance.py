@@ -97,10 +97,21 @@ def targets_branch(ruleset: dict[str, Any], branch: str) -> bool:
     return matched and not excluded
 
 
-def audit_repository(repository_policy: dict[str, Any], token: str) -> dict[str, Any]:
+def audit_repository(
+    repository_policy: dict[str, Any],
+    sink_token: str,
+    source_token: str | None = None,
+) -> dict[str, Any]:
     repository = repository_policy["repository"]
     branch = repository_policy["default_branch"]
     expected = repository_policy["expected"]
+    # The sink token is local to Engineering-System. Source repositories use
+    # the separate read-only GitHub App installation token.
+    token = (
+        sink_token
+        if repository.lower() == "waelhe/engineering-system"
+        else (source_token or sink_token)
+    )
     encoded_branch = urllib.parse.quote(branch, safe="")
     branch_data = api_get(f"/repos/{repository}/branches/{encoded_branch}", token)
     branch_protected = bool(branch_data.get("protected"))
@@ -251,13 +262,20 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     args = parser.parse_args(argv)
-    token = os.environ.get("GITHUB_TOKEN", "")
-    if not token:
-        print("GITHUB_TOKEN is required for read-only repository governance auditing", file=sys.stderr)
+    sink_token = os.environ.get("GITHUB_TOKEN", "")
+    source_token = os.environ.get("EGM_SOURCE_GITHUB_TOKEN", "")
+    if not sink_token:
+        print("GITHUB_TOKEN is required for the canonical sink repository", file=sys.stderr)
+        return 2
+    if not source_token:
+        print("EGM_SOURCE_GITHUB_TOKEN is required to audit private source repositories", file=sys.stderr)
         return 2
     try:
         policy = load_policy(args.config)
-        results = [audit_repository(item, token) for item in policy["repositories"]]
+        results = [
+            audit_repository(item, sink_token, source_token)
+            for item in policy["repositories"]
+        ]
         report = {
             "captured_at": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
             "policy_snapshot_date": policy.get("snapshot_date"),
