@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "kind": "repository_merge_policy",
+  "snapshot_date": "2026-11-23",
+  "repositories": [
+    {
+      "repository": "waelhe/app-java-v3",
+      "default_branch": "main",
+      "visibility": "public",
+      "observed": {
+        "branch_protected": true,
+        "rulesets_api": "readable",
+        "active_ruleset_ids": [22305466],
+        "active_ruleset_names": ["main: CI required checks + PR-only merges"],
+        "source_sha": "9b5e29afd0a5a344a8ac04a51a51da32fe134d10"
+      },
+      "expected": {
+        "required_rules": ["deletion", "non_fast_forward", "required_linear_history", "pull_request", "required_status_checks"],
+        "required_approving_review_count": 0,
+        "require_thread_resolution": true,
+        "required_merge_methods": ["squash"],
+        "required_status_checks": [
+          "Build & Test (JDK 25)",
+          "Full Integration Test (JDK 25)",
+          "CodeQL Analyze (Java 25)",
+          "Container Image Scan (Docker)",
+          "CodeRabbit",
+          "CodeRabbit Gate"
+        ]
+      }
+    },
+    {
+      "repository": "waelhe/marketplace-admin",
+      "default_branch": "main",
+      "visibility": "public",
+      "observed": {
+        "branch_protected": false,
+        "rulesets_api": "readable",
+        "active_ruleset_ids": [],
+        "active_ruleset_names": [],
+        "source_sha": "982ecf3667d2242cab941737cb6a0bceaee7ffcb"
+      },
+      "expected": {
+        "required_rules": ["deletion", "non_fast_forward", "required_linear_history", "pull_request", "required_status_checks"],
+        "required_approving_review_count": 0,
+        "require_thread_resolution": true,
+        "required_merge_methods": ["squash"],
+        "required_status_checks": [
+          "Materialize pinned Dashboard, apply overlay, type-check and build"
+        ]
+      }
+    },
+    {
+      "repository": "waelhe/mobile-marketplace",
+      "default_branch": "main",
+      "visibility": "private",
+      "observed": {
+        "branch_protected": false,
+        "rulesets_api": "plan_limited",
+        "active_ruleset_ids": [],
+        "active_ruleset_names": [],
+        "source_sha": "3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4",
+        "limitation": "GitHub returned HTTP 403: Upgrade to GitHub Pro or make this repository public to enable repository rulesets."
+      },
+      "expected": {
+        "required_rules": ["deletion", "non_fast_forward", "required_linear_history", "pull_request"],
+        "required_approving_review_count": 0,
+        "require_thread_resolution": true,
+        "required_merge_methods": ["squash"],
+        "required_status_checks": []
+      }
+    },
+    {
+      "repository": "waelhe/Engineering-System",
+      "default_branch": "main",
+      "visibility": "public",
+      "observed": {
+        "branch_protected": false,
+        "rulesets_api": "readable",
+        "active_ruleset_ids": [],
+        "active_ruleset_names": [],
+        "source_sha": "96866d47c2ea6f54c6f6afba3442459907c03b0d"
+      },
+      "expected": {
+        "required_rules": ["deletion", "non_fast_forward", "required_linear_history", "pull_request", "required_status_checks"],
+        "required_approving_review_count": 0,
+        "require_thread_resolution": true,
+        "required_merge_methods": ["squash"],
+        "required_status_checks": ["validate"]
+      }
+    }
+  ],
+  "policy_notes": [
+    "The expected policy aligns with the active backend ruleset; it does not invent a new review-count requirement.",
+    "EGM's independent Goldfish/human review policy remains a separate merge gate and is not proven by a GitHub required-approving-review-count of zero.",
+    "The mobile private repository must remain private. Do not make it public as a workaround; repository rulesets for private repositories require a plan that supports the feature.",
+    "Observed fields are a point-in-time capture. The audit tool re-reads current GitHub state and does not write or mutate rulesets."
+  ]
+}
