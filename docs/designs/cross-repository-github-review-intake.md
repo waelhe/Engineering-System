@@ -51,7 +51,7 @@ Example source-token step after the App has been installed only on the approved 
   id: source-token
   uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
   with:
-    app-id: ${{ vars.EGM_SOURCE_GITHUB_APP_ID }}
+    client-id: ${{ vars.EGM_SOURCE_GITHUB_APP_CLIENT_ID }}
     private-key: ${{ secrets.EGM_SOURCE_GITHUB_APP_PRIVATE_KEY }}
     owner: waelhe
     repositories: app-java-v3,marketplace-admin,mobile-marketplace
