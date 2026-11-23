@@ -194,3 +194,44 @@ def test_audit_repository_rejects_bypass_actors_even_when_rules_otherwise_match(
 
     assert result["status"] == "policy_gap"
     assert "bypass_actors" in result["missing_rules"]
+
+
+def test_audit_repository_uses_source_token_for_non_sink_repository(monkeypatch):
+    observed_tokens = []
+
+    def fake_api(path, token):
+        observed_tokens.append((path, token))
+        if path.endswith("/branches/main"):
+            return {"protected": True}
+        if path.endswith("/rulesets?includes_parents=true"):
+            return [{"id": 5, "target": "branch", "enforcement": "active"}]
+        if path.endswith("/rulesets/5"):
+            return matching_ruleset()
+        raise AssertionError(path)
+
+    monkeypatch.setattr(audit, "api_get", fake_api)
+    audit.audit_repository(policy()["repositories"][0], "sink-token", "source-read-only-token")
+
+    assert observed_tokens
+    assert all(token == "source-read-only-token" for _, token in observed_tokens)
+
+
+def test_audit_repository_uses_sink_token_only_for_engineering_system(monkeypatch):
+    sink_policy = policy()["repositories"][0] | {"repository": "waelhe/Engineering-System"}
+    observed_tokens = []
+
+    def fake_api(path, token):
+        observed_tokens.append(token)
+        if path.endswith("/branches/main"):
+            return {"protected": True}
+        if path.endswith("/rulesets?includes_parents=true"):
+            return [{"id": 5, "target": "branch", "enforcement": "active"}]
+        if path.endswith("/rulesets/5"):
+            return matching_ruleset()
+        raise AssertionError(path)
+
+    monkeypatch.setattr(audit, "api_get", fake_api)
+    audit.audit_repository(sink_policy, "sink-token", "source-read-only-token")
+
+    assert observed_tokens
+    assert set(observed_tokens) == {"sink-token"}
