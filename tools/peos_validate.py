@@ -77,6 +77,9 @@ def validate_auxiliary_registries(root: Path = ROOT) -> list[str]:
             if not isinstance(repository, str) or repository.count("/") != 1:
                 errors.append(f"review-sources.json: repositories[{index}].repository is invalid")
                 continue
+            if not isinstance(project_id, str) or not re.fullmatch(r"[a-z][a-z0-9-]{2,79}", project_id):
+                errors.append(f"review-sources.json: {repository} project_id is invalid")
+                continue
             if repository.lower() == str(sink).lower():
                 errors.append("review-sources.json: sink repository cannot be a source")
             if repository.lower() in seen_repositories:
@@ -87,7 +90,7 @@ def validate_auxiliary_registries(root: Path = ROOT) -> list[str]:
             seen_projects.add(project_id)
             if project_map.get(repository) != project_id:
                 errors.append(f"review-sources.json: {repository} does not match its canonical project profile")
-            if item.get("enabled") not in {True, False}:
+            if type(item.get("enabled")) is not bool:
                 errors.append(f"review-sources.json: {repository} enabled flag must be boolean")
             if type(item.get("since_days")) is not int or not 1 <= item["since_days"] <= 90:
                 errors.append(f"review-sources.json: {repository} since_days must be 1..90")
