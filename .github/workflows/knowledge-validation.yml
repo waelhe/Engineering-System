@@ -30,6 +30,12 @@ on:
 permissions:
   contents: read
 
+# PR commits supersede earlier validation runs. Keep only the latest validation
+# per PR; workflow_dispatch and main pushes use unique run IDs.
+concurrency:
+  group: egm-knowledge-validation-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
