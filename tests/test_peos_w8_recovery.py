@@ -135,11 +135,11 @@ def test_w8_registry_accepts_ordered_progress_only_after_all_gate_proofs(tmp_pat
     payload["gates"][0]["state"] = "verified"
     payload["gates"][0]["owner_action_required"] = False
     payload["gates"][0]["evidence"] = [
-        evidence("neon_plan"), evidence("quota_category"),
-        evidence("billing_usage_and_reset"), evidence("owner_decision")
+        successful_evidence("neon_plan"), successful_evidence("quota_category"),
+        successful_evidence("billing_usage_and_reset"), successful_evidence("owner_decision")
     ]
     payload["gates"][1]["state"] = "in_progress"
-    payload["gates"][1]["evidence"] = [evidence("postgres_connection_acceptance")]
+    payload["gates"][1]["evidence"] = [successful_evidence("postgres_connection_acceptance")]
     payload["state"] = "open"
     write_snapshot(tmp_path, payload)
     assert validate_w8_recovery_gates(tmp_path) == []
