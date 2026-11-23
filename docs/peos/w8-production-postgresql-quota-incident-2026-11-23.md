@@ -103,3 +103,21 @@ The recovery sequence is represented by `registry/peos/w8-recovery-gates.json` a
 The gate validator derives the incident state from the gate states. It rejects a `recovered` claim while any gate remains unverified, rejects progression past an unverified dependency, requires all declared evidence kinds before a gate can be marked `verified`, and forbids secret-bearing fields.
 
 The registry preserves the original incident source pins and data-safety prohibitions. It does not fetch billing data, change Neon, mutate Railway, run migrations, rotate credentials, or authorize production operations. The current registry therefore remains `blocked_external`; recovery has **not** been performed or verified.
+
+## 9. Live Railway recheck — 2026-11-23
+
+A second read-only Railway capture was performed at `2026-11-23T07:50:33.359Z`, using the provider's environment status, service description, deployment history, bounded logs and 24-hour metrics. It confirms the outage is still active:
+
+| Observation | Captured value |
+|---|---|
+| Production service | `CRASHED`; 0 running / 1 total / 1 crashed replica |
+| Latest deployment | `b76e73fd-5ad7-469d-8aa5-e68f7b09ab3f` — `CRASHED` |
+| Deployed source | `app-java-v3/main` at `9b5e29afd0a5a344a8ac04a51a51da32fe134d10` |
+| Pending Railway work | 0 staged/applying operations |
+| Database startup failure | PostgreSQL SQLSTATE `53000`; provider reports account/project quota exceeded |
+| HTTP sample | `502` on `/actuator/health/readiness`; upstream `connection dial timeout` at `2026-11-23T03:07:44.819945542Z` |
+| Memory, 24-hour window | 0.999456768 GB used / 0.99999744 GB limit; 1441 samples; 99.9459% |
+
+The Railway deployment diagnosis endpoint returned no generated diagnosis, so the quota conclusion is based on the raw deployment log and its exact PostgreSQL error. The memory measurement is a separate capacity warning. This capture does **not** establish an OOM kill or identify memory as the startup-failure cause. The 502 entries are consistent with the crashed replica being unreachable; they do not identify a second application exception.
+
+The machine-readable recheck is retained in `registry/peos/w8-recovery-gates.json` and is schema-checked. The five recovery gates remain unchanged and `blocked_external`; no production action, restart, redeploy, variable change, database operation or billing change was performed.

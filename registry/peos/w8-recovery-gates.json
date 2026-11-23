@@ -108,5 +108,43 @@
     "manual_migrations_authorized": false,
     "credential_rotation_authorized": false
   },
-  "assessment": "The incident is blocked by an external Neon quota condition. All five recovery gates remain unverified; this registry is a machine-checked gate contract, not evidence that recovery has occurred."
+  "assessment": "The incident is blocked by an external Neon quota condition. All five recovery gates remain unverified; this registry is a machine-checked gate contract, not evidence that recovery has occurred.",
+  "live_rechecks": [
+    {
+      "captured_at": "2026-11-23T07:50:33.359Z",
+      "provider": "railway",
+      "project_id": "c8985750-82a2-42eb-8431-ee0f49352818",
+      "environment_id": "c324c1a0-e4db-4a9a-8dc0-30ca1f3935d0",
+      "service_id": "43b1b64b-9087-45d4-88ca-358a40c5a583",
+      "service_state": "crashed",
+      "replicas_running": 0,
+      "replicas_total": 1,
+      "replicas_crashed": 1,
+      "deployment_id": "b76e73fd-5ad7-469d-8aa5-e68f7b09ab3f",
+      "deployment_status": "CRASHED",
+      "deployment_created_at": "2026-11-22T07:57:55.608Z",
+      "deployment_commit_sha": "9b5e29afd0a5a344a8ac04a51a51da32fe134d10",
+      "pending_work_count": 0,
+      "database_error": {
+        "observed_at": "2026-11-22T08:03:08.696763259Z",
+        "sql_state": "53000",
+        "message": "Your account or project has exceeded the quota. Upgrade your plan to increase limits."
+      },
+      "http_failure_sample": {
+        "observed_at": "2026-11-23T03:07:44.819945542Z",
+        "status": 502,
+        "path": "/actuator/health/readiness",
+        "upstream_error": "connection dial timeout"
+      },
+      "memory": {
+        "window_hours": 24,
+        "sample_count": 1441,
+        "usage_gb": 0.999456768,
+        "limit_gb": 0.99999744,
+        "utilization_percent": 99.94593266158762
+      },
+      "diagnosis_available": false,
+      "assessment": "The live service remains crashed and PostgreSQL quota refusal is the confirmed startup blocker. Memory utilization is a separate capacity warning; this sample does not establish OOM as the crash cause."
+    }
+  ]
 }

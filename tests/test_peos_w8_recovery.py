@@ -70,7 +70,45 @@ def snapshot():
             "production_changes_performed": False, "database_replacement_authorized": False,
             "manual_migrations_authorized": False, "credential_rotation_authorized": False
         },
-        "assessment": "The outage remains blocked by an external Neon quota condition."
+        "assessment": "The outage remains blocked by an external Neon quota condition.",
+        "live_rechecks": [
+            {
+                "captured_at": "2026-11-23T07:50:33.359Z",
+                "provider": "railway",
+                "project_id": "c8985750-82a2-42eb-8431-ee0f49352818",
+                "environment_id": "c324c1a0-e4db-4a9a-8dc0-30ca1f3935d0",
+                "service_id": "43b1b64b-9087-45d4-88ca-358a40c5a583",
+                "service_state": "crashed",
+                "replicas_running": 0,
+                "replicas_total": 1,
+                "replicas_crashed": 1,
+                "deployment_id": "b76e73fd-5ad7-469d-8aa5-e68f7b09ab3f",
+                "deployment_status": "CRASHED",
+                "deployment_created_at": "2026-11-22T07:57:55.608Z",
+                "deployment_commit_sha": "9b5e29afd0a5a344a8ac04a51a51da32fe134d10",
+                "pending_work_count": 0,
+                "database_error": {
+                        "observed_at": "2026-11-22T08:03:08.696763259Z",
+                        "sql_state": "53000",
+                        "message": "Your account or project has exceeded the quota. Upgrade your plan to increase limits."
+                },
+                "http_failure_sample": {
+                        "observed_at": "2026-11-23T03:07:44.819945542Z",
+                        "status": 502,
+                        "path": "/actuator/health/readiness",
+                        "upstream_error": "connection dial timeout"
+                },
+                "memory": {
+                        "window_hours": 24,
+                        "sample_count": 1441,
+                        "usage_gb": 0.999456768,
+                        "limit_gb": 0.99999744,
+                        "utilization_percent": 99.94593266158762
+                },
+                "diagnosis_available": false,
+                "assessment": "The live service remains crashed and PostgreSQL quota refusal is the confirmed startup blocker. Memory utilization is a separate capacity warning; this sample does not establish OOM as the crash cause."
+        }
+        ]
     }
 
 
@@ -275,3 +313,34 @@ def test_w8_validator_reports_malformed_incident_and_required_evidence_without_c
     errors = validate_w8_recovery_gates(tmp_path)
     assert any("incident record must be an object" in error for error in errors)
     assert any("required_evidence must be a non-empty unique string list" in error for error in errors)
+
+
+def test_live_recheck_preserves_current_provider_failure_and_separate_memory_warning():
+    payload = json.loads(
+        (ROOT / "registry" / "peos" / "w8-recovery-gates.json").read_text(encoding="utf-8")
+    )
+    latest = payload["live_rechecks"][-1]
+    assert latest["service_state"] == "crashed"
+    assert latest["replicas_running"] == 0
+    assert latest["replicas_total"] == 1
+    assert latest["replicas_crashed"] == 1
+    assert latest["deployment_status"] == "CRASHED"
+    assert latest["deployment_commit_sha"] == payload["incident"]["source_commit_sha"]
+    assert latest["pending_work_count"] == 0
+    assert latest["database_error"]["sql_state"] == "53000"
+    assert latest["http_failure_sample"]["status"] == 502
+    assert latest["http_failure_sample"]["upstream_error"] == "connection dial timeout"
+    assert latest["memory"]["sample_count"] == 1441
+    assert latest["memory"]["utilization_percent"] > 99.9
+    assert "does not establish OOM" in latest["assessment"]
+
+
+def test_live_recheck_rejects_a_false_healthy_state_and_memory_math(tmp_path):
+    payload = snapshot()
+    latest = payload["live_rechecks"][-1]
+    latest["service_state"] = "online"
+    latest["memory"]["utilization_percent"] = 12.0
+    write_snapshot(tmp_path, payload)
+    errors = validate_w8_recovery_gates(tmp_path)
+    assert any("crashed service state" in error for error in errors)
+    assert any("must be derived from the captured usage and limit" in error for error in errors)

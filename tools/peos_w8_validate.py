@@ -221,6 +221,65 @@ def validate_w8_recovery_gates(root: Path = ROOT) -> list[str]:
     if payload.get("state") != derived_state:
         errors.append(f"W8 incident state must be derived from its gates: expected {derived_state}")
 
+    rechecks = payload.get("live_rechecks")
+    if not isinstance(rechecks, list) or not rechecks:
+        errors.append("W8 live_rechecks must contain at least one provider capture")
+    else:
+        timestamps = [
+            item.get("captured_at") for item in rechecks
+            if isinstance(item, dict) and isinstance(item.get("captured_at"), str)
+        ]
+        if timestamps != sorted(timestamps):
+            errors.append("W8 live_rechecks must be ordered by captured_at")
+        latest = rechecks[-1] if isinstance(rechecks[-1], dict) else {}
+        if latest.get("service_state") != "crashed":
+            errors.append("W8 latest live recheck must preserve the observed crashed service state")
+        if (
+            latest.get("replicas_running") != 0
+            or latest.get("replicas_total") != 1
+            or latest.get("replicas_crashed") != 1
+        ):
+            errors.append("W8 latest live recheck replica state differs from observed 0/1 running and 1 crashed")
+        if latest.get("deployment_status") != "CRASHED":
+            errors.append("W8 latest live recheck must preserve the CRASHED deployment state")
+        if latest.get("deployment_commit_sha") != fixed_incident["source_commit_sha"]:
+            errors.append("W8 live recheck deployment SHA must match the incident source SHA")
+        if latest.get("pending_work_count") != 0:
+            errors.append("W8 live recheck pending Railway work count differs from the observed zero")
+        database_error = latest.get("database_error")
+        if not isinstance(database_error, dict) or database_error.get("sql_state") != "53000":
+            errors.append("W8 live recheck must preserve PostgreSQL SQLSTATE 53000 quota evidence")
+        elif "exceeded the quota" not in str(database_error.get("message", "")).lower():
+            errors.append("W8 live recheck quota message does not match the observed PostgreSQL refusal")
+        http_failure = latest.get("http_failure_sample")
+        if (
+            not isinstance(http_failure, dict)
+            or http_failure.get("status") != 502
+            or http_failure.get("path") != "/actuator/health/readiness"
+            or http_failure.get("upstream_error") != "connection dial timeout"
+        ):
+            errors.append("W8 live recheck must preserve the sampled readiness 502 connection dial timeout")
+        memory = latest.get("memory")
+        if isinstance(memory, dict):
+            usage = memory.get("usage_gb")
+            limit = memory.get("limit_gb")
+            reported = memory.get("utilization_percent")
+            if (
+                not isinstance(usage, (int, float))
+                or not isinstance(limit, (int, float))
+                or limit <= 0
+                or not isinstance(reported, (int, float))
+                or abs((usage / limit * 100) - reported) > 0.01
+            ):
+                errors.append("W8 memory utilization percentage must be derived from the captured usage and limit")
+            if memory.get("window_hours") != 24 or memory.get("sample_count") != 1441:
+                errors.append("W8 memory metric window/sample count differs from the captured 24-hour provider query")
+        else:
+            errors.append("W8 live recheck memory measurement must be an object")
+        assessment = str(latest.get("assessment", "")).lower()
+        if "does not establish oom" not in assessment and "does not prove oom" not in assessment:
+            errors.append("W8 live recheck must not claim memory usage proves the crash cause")
+
     for path in _secret_key_paths(payload):
         errors.append(f"W8 recovery registry forbids secret-bearing fields at {path}")
 
