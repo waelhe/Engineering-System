@@ -105,10 +105,16 @@ def validate_w8_recovery_gates(root: Path = ROOT) -> list[str]:
         location = "/".join(map(str, item.absolute_path))
         errors.append(f"w8-recovery-gates.json: {location}: {item.message}")
 
+    if not isinstance(payload, dict):
+        return errors + ["w8-recovery-gates.json: root must be a JSON object"]
+
     if payload.get("kind") != "w8_recovery_gates":
         errors.append("W8 recovery registry must use kind=w8_recovery_gates")
 
     incident = payload.get("incident", {})
+    if not isinstance(incident, dict):
+        errors.append("W8 incident record must be an object")
+        incident = {}
     fixed_incident = {
         "incident_id": "W8-NEON-QUOTA-2026-11-23",
         "source_repository": "waelhe/app-java-v3",
@@ -161,8 +167,13 @@ def validate_w8_recovery_gates(root: Path = ROOT) -> list[str]:
         if len(evidence_kinds) != len(set(evidence_kinds)):
             errors.append(f"{gate_id}: evidence kinds must be unique")
         required = gate.get("required_evidence", [])
-        if not isinstance(required, list) or not required or len(required) != len(set(required)):
-            errors.append(f"{gate_id}: required_evidence must be a non-empty unique list")
+        if (
+            not isinstance(required, list)
+            or not required
+            or any(not isinstance(item, str) for item in required)
+            or len(required) != len(set(required))
+        ):
+            errors.append(f"{gate_id}: required_evidence must be a non-empty unique string list")
         elif state == "verified":
             missing = sorted(set(required) - set(evidence_kinds))
             if missing:

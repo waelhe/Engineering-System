@@ -259,3 +259,19 @@ def test_w8_registry_rejects_duplicate_evidence_kinds(tmp_path):
     write_snapshot(tmp_path, payload)
     errors = validate_w8_recovery_gates(tmp_path)
     assert any("evidence kinds must be unique" in error for error in errors)
+
+
+def test_w8_validator_reports_non_object_registry_root_without_crashing(tmp_path):
+    write_snapshot(tmp_path, [])
+    errors = validate_w8_recovery_gates(tmp_path)
+    assert any("root must be a JSON object" in error for error in errors)
+
+
+def test_w8_validator_reports_malformed_incident_and_required_evidence_without_crashing(tmp_path):
+    payload = snapshot()
+    payload["incident"] = "malformed"
+    payload["gates"][0]["required_evidence"] = [{"not": "a string"}]
+    write_snapshot(tmp_path, payload)
+    errors = validate_w8_recovery_gates(tmp_path)
+    assert any("incident record must be an object" in error for error in errors)
+    assert any("required_evidence must be a non-empty unique string list" in error for error in errors)
