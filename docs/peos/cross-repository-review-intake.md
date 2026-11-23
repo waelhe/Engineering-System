@@ -37,9 +37,9 @@ Grant only:
 - Pull requests: read.
 - Issues: read.
 
-Do **not** grant source Contents, Actions, Administration, Checks, Commit statuses, Deployments, or write permissions. The collector reads PR objects and review/comment APIs; it does not need to read source files or run source code.
+Do **not** grant source Contents, Actions, Administration, Checks, Commit statuses, Deployments, or write permissions. GitHub's required/default repository Metadata permission remains read-only; the ruleset audit uses that metadata read surface for GET-only branch/ruleset inspection. The collector reads PR objects and review/comment APIs; it does not read source files or run source code.
 
-The workflow uses the official `actions/create-github-app-token` action pinned to the verified v3.4.0 commit `f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc`. It creates a repository-scoped installation token for only the three named source repositories and explicitly narrows it to `pull-requests:read` and `issues:read`. The token is short-lived and revoked by the action's post step.
+The workflow uses the official `actions/create-github-app-token` action pinned to the verified v3.4.0 commit `f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc`. It creates a repository-scoped installation token for only the three named source repositories and explicitly narrows it to `pull-requests:read` and `issues:read`. The token is short-lived and revoked by the action's post step. The governance audit also uses this token for read-only metadata requests on the same three registered source repositories; the Engineering-System sink continues to use only its own workflow token.
 
 ### Sink token — workflow GITHUB_TOKEN
 
