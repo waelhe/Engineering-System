@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -228,7 +229,7 @@ def main(argv: list[str] | None = None) -> int:
             "publication": publication,
         }, ensure_ascii=False))
         return 0
-    except (IntakeError, KnowledgeError, OSError, ValueError, RuntimeError) as exc:
+    except (IntakeError, KnowledgeError, OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
 
