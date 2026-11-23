@@ -124,6 +124,11 @@ Keep the current Modular Monolith, PostgreSQL/PostGIS, Redis, Maven, Spring Modu
 
 The W0-W4 files remain historical source-bound snapshots. W5-W7 are new captures with their own source SHAs and provider observations; a newer snapshot does not rewrite an older measurement. The validator checks both families independently and rejects false closure or a successful-service claim that conceals a failed latest deployment attempt.
 
+- **W8 — Production incident evidence:** capture live-provider outages, exact deployment/SHA evidence, recovery choices and data-safety boundaries. Current evidence: [2026-11-23 PostgreSQL quota incident](w8-production-postgresql-quota-incident-2026-11-23.md). This record is read-only and does not authorize billing or data changes.
+- **W9 — Engineering automation and repository governance:** collect review Signals across backend/admin/mobile using a read-only GitHub App token, validate them in the canonical EGM store, and audit main-branch rulesets without mutating repository settings. Implementation and activation boundaries: [cross-repository review intake](cross-repository-review-intake.md) and [repository governance audit](repository-governance-audit.md).
+
+W8-W9 add no runtime service or parallel database. Source review content remains untrusted Signals; repository policy drift is reported, not silently fixed. External GitHub App installation, missing repository rulesets and provider billing decisions remain explicit owner-authorized gates.
+
 ## 10. Adoption and safety gates
 
 - PEOS additions remain stacked on EGM foundation PR #1 until that PR is reviewed and accepted.
