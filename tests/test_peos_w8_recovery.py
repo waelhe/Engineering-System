@@ -105,7 +105,7 @@ def snapshot():
                         "limit_gb": 0.99999744,
                         "utilization_percent": 99.94593266158762
                 },
-                "diagnosis_available": false,
+                "diagnosis_available": False,
                 "assessment": "The live service remains crashed and PostgreSQL quota refusal is the confirmed startup blocker. Memory utilization is a separate capacity warning; this sample does not establish OOM as the crash cause."
         }
         ]
