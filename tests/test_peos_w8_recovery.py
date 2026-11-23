@@ -159,3 +159,91 @@ def test_w8_registry_rejects_secret_shaped_fields(tmp_path):
     write_snapshot(tmp_path, payload)
     errors = validate_w8_recovery_gates(tmp_path)
     assert any("secret-bearing fields" in error for error in errors)
+
+
+def successful_evidence(kind):
+    result_by_kind = {
+        "neon_plan": "observed",
+        "quota_category": "observed",
+        "billing_usage_and_reset": "observed",
+        "owner_decision": "approved",
+        "postgres_connection_acceptance": "success",
+        "read_only_query": "success",
+        "railway_deployment_success": "success",
+        "deployed_commit_sha": "sha_bound",
+        "flyway_validation": "success",
+        "readiness_http_200": "200",
+        "production_smoke_report": "passed",
+        "post_deploy_observation": "healthy",
+    }
+    item = evidence(kind)
+    item["result"] = result_by_kind[kind]
+    if kind == "deployed_commit_sha":
+        item["source_sha"] = "a" * 40
+    return item
+
+
+def test_w8_registry_accepts_recovery_only_after_all_ordered_gates_are_verified(tmp_path):
+    payload = snapshot()
+    for gate in payload["gates"]:
+        gate["state"] = "verified"
+        gate["owner_action_required"] = False
+        gate["evidence"] = [
+            successful_evidence(kind) for kind in gate["required_evidence"]
+        ]
+    payload["state"] = "recovered"
+    write_snapshot(tmp_path, payload)
+    assert validate_w8_recovery_gates(tmp_path) == []
+
+
+def test_w8_registry_rejects_failed_evidence_inside_a_verified_gate(tmp_path):
+    payload = snapshot()
+    gate_one = payload["gates"][0]
+    gate_one["state"] = "verified"
+    gate_one["owner_action_required"] = False
+    gate_one["evidence"] = [
+        successful_evidence("neon_plan"),
+        successful_evidence("quota_category"),
+        successful_evidence("billing_usage_and_reset"),
+        successful_evidence("owner_decision"),
+    ]
+    gate_two = payload["gates"][1]
+    gate_two["state"] = "verified"
+    gate_two["evidence"] = [
+        evidence("postgres_connection_acceptance"),
+        successful_evidence("read_only_query"),
+    ]
+    gate_two["evidence"][0]["result"] = "failure"
+    payload["state"] = "open"
+    write_snapshot(tmp_path, payload)
+    errors = validate_w8_recovery_gates(tmp_path)
+    assert any("postgres_connection_acceptance result" in error for error in errors)
+
+
+def test_w8_registry_rejects_weakened_required_evidence_contract(tmp_path):
+    payload = snapshot()
+    payload["gates"][0]["required_evidence"].remove("owner_decision")
+    write_snapshot(tmp_path, payload)
+    errors = validate_w8_recovery_gates(tmp_path)
+    assert any("required evidence differs from the approved gate contract" in error for error in errors)
+
+
+def test_w8_deployed_commit_evidence_must_include_a_full_sha(tmp_path):
+    payload = snapshot()
+    for gate in payload["gates"][:2]:
+        gate["state"] = "verified"
+        gate["owner_action_required"] = False
+        gate["evidence"] = [
+            successful_evidence(kind) for kind in gate["required_evidence"]
+        ]
+    gate_three = payload["gates"][2]
+    gate_three["state"] = "verified"
+    gate_three["evidence"] = [
+        successful_evidence("railway_deployment_success"),
+        evidence("deployed_commit_sha"),
+    ]
+    gate_three["evidence"][1]["result"] = "sha_bound"
+    payload["state"] = "open"
+    write_snapshot(tmp_path, payload)
+    errors = validate_w8_recovery_gates(tmp_path)
+    assert any("deployed_commit_sha must carry a full source_sha" in error for error in errors)

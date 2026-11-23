@@ -9,13 +9,43 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_GATES = [
-    ("W8-G1", []),
-    ("W8-G2", ["W8-G1"]),
-    ("W8-G3", ["W8-G2"]),
-    ("W8-G4", ["W8-G3"]),
-    ("W8-G5", ["W8-G4"]),
-]
+EXPECTED_GATE_CONTRACTS = {
+    "W8-G1": {
+        "depends_on": [],
+        "required_evidence": ["neon_plan", "quota_category", "billing_usage_and_reset", "owner_decision"],
+    },
+    "W8-G2": {
+        "depends_on": ["W8-G1"],
+        "required_evidence": ["postgres_connection_acceptance", "read_only_query"],
+    },
+    "W8-G3": {
+        "depends_on": ["W8-G2"],
+        "required_evidence": ["railway_deployment_success", "deployed_commit_sha"],
+    },
+    "W8-G4": {
+        "depends_on": ["W8-G3"],
+        "required_evidence": ["flyway_validation", "readiness_http_200"],
+    },
+    "W8-G5": {
+        "depends_on": ["W8-G4"],
+        "required_evidence": ["production_smoke_report", "post_deploy_observation"],
+    },
+}
+EXPECTED_GATES = list(EXPECTED_GATE_CONTRACTS)
+ACCEPTED_EVIDENCE_RESULTS = {
+    "neon_plan": {"observed"},
+    "quota_category": {"observed"},
+    "billing_usage_and_reset": {"observed"},
+    "owner_decision": {"approved", "deferred"},
+    "postgres_connection_acceptance": {"success"},
+    "read_only_query": {"success"},
+    "railway_deployment_success": {"success"},
+    "deployed_commit_sha": {"sha_bound"},
+    "flyway_validation": {"success"},
+    "readiness_http_200": {"200"},
+    "production_smoke_report": {"passed"},
+    "post_deploy_observation": {"healthy"},
+}
 EXPECTED_PROHIBITIONS = [
     "do_not_point_DB_URL_at_new_empty_project",
     "do_not_run_manual_migrations",
@@ -97,7 +127,7 @@ def validate_w8_recovery_gates(root: Path = ROOT) -> list[str]:
         return errors + ["W8 gates must be an array"]
 
     observed_ids = [item.get("id") for item in gates if isinstance(item, dict)]
-    expected_ids = [item[0] for item in EXPECTED_GATES]
+    expected_ids = EXPECTED_GATES
     if observed_ids != expected_ids:
         errors.append("W8 recovery gates must remain ordered W8-G1 through W8-G5")
 
@@ -105,20 +135,24 @@ def validate_w8_recovery_gates(root: Path = ROOT) -> list[str]:
         item.get("id"): item for item in gates
         if isinstance(item, dict) and isinstance(item.get("id"), str)
     }
-    for gate_id, dependencies in EXPECTED_GATES:
+    for gate_id in EXPECTED_GATES:
         gate = by_id.get(gate_id)
         if gate is None:
             continue
-        if gate.get("depends_on") != dependencies:
+        contract = EXPECTED_GATE_CONTRACTS[gate_id]
+        if gate.get("depends_on") != contract["depends_on"]:
             errors.append(f"{gate_id}: recovery dependency chain differs from the approved sequence")
+        if gate.get("required_evidence") != contract["required_evidence"]:
+            errors.append(f"{gate_id}: required evidence differs from the approved gate contract")
         state = gate.get("state")
         evidence = gate.get("evidence", [])
         if not isinstance(evidence, list):
             evidence = []
-        evidence_kinds = [
-            item.get("kind") for item in evidence
+        evidence_by_kind = {
+            item.get("kind"): item for item in evidence
             if isinstance(item, dict) and isinstance(item.get("kind"), str)
-        ]
+        }
+        evidence_kinds = list(evidence_by_kind)
         if len(evidence_kinds) != len(set(evidence_kinds)):
             errors.append(f"{gate_id}: evidence kinds must be unique")
         required = gate.get("required_evidence", [])
@@ -128,6 +162,19 @@ def validate_w8_recovery_gates(root: Path = ROOT) -> list[str]:
             missing = sorted(set(required) - set(evidence_kinds))
             if missing:
                 errors.append(f"{gate_id}: verified gate is missing evidence: {', '.join(missing)}")
+            for kind in required:
+                proof = evidence_by_kind.get(kind)
+                if proof is None:
+                    continue
+                accepted = ACCEPTED_EVIDENCE_RESULTS.get(kind)
+                if accepted and proof.get("result") not in accepted:
+                    errors.append(
+                        f"{gate_id}: {kind} result must be one of {sorted(accepted)}"
+                    )
+                if kind == "deployed_commit_sha":
+                    source_sha = proof.get("source_sha", "")
+                    if not isinstance(source_sha, str) or not SHA_RE.fullmatch(source_sha):
+                        errors.append(f"{gate_id}: deployed_commit_sha must carry a full source_sha")
         elif state == "in_progress" and not evidence:
             errors.append(f"{gate_id}: in_progress requires at least one captured evidence item")
 
