@@ -32,6 +32,7 @@ PEOS is the platform engineering control plane; EGM remains the single canonical
 - [W5 backend and commerce evidence — 2026-11-21](docs/peos/w5-backend-commerce-2026-11-21.md)
 - [W6 client evidence — 2026-11-21](docs/peos/w6-client-delivery-2026-11-21.md)
 - [W7 operational evidence — 2026-11-21](docs/peos/w7-operational-recheck-2026-11-21.md)
+- [W8 production PostgreSQL quota incident — 2026-11-23](docs/peos/w8-production-postgresql-quota-incident-2026-11-23.md) — read-only evidence; production recovery remains blocked on the external Neon quota.
 
 W0-W4 remain dated historical snapshots. W5-W7 are separately captured and SHA-bound evidence; none of these snapshots authorizes merge or production deployment.
 
