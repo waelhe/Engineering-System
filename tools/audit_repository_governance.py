@@ -197,6 +197,10 @@ def audit_repository(repository_policy: dict[str, Any], token: str) -> dict[str,
             if expected_merge_methods and not expected_merge_methods.issubset(merge_methods):
                 missing_rules.append("pull_request.merge_methods")
 
+    if any(ruleset.get("bypass_actors") for ruleset in matching):
+        missing_rules.append("bypass_actors")
+    if any(ruleset.get("current_user_can_bypass") not in {None, "never"} for ruleset in matching):
+        missing_rules.append("current_user_can_bypass")
     missing_rules = sorted(set(missing_rules))
     status = "verified" if not missing_rules and not missing_status_checks else "policy_gap"
     return {
