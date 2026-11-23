@@ -174,3 +174,23 @@ def test_audit_repository_ignores_non_matching_inactive_ruleset(monkeypatch):
 
     assert result["status"] == "policy_gap"
     assert "required_status_checks" in result["missing_rules"]
+
+
+def test_audit_repository_rejects_bypass_actors_even_when_rules_otherwise_match(monkeypatch):
+    details = matching_ruleset()
+    details["bypass_actors"] = [{"actor_id": 1, "actor_type": "RepositoryRole", "bypass_mode": "always"}]
+
+    def fake_api(path, token):
+        if path.endswith("/branches/main"):
+            return {"protected": True}
+        if path.endswith("/rulesets?includes_parents=true"):
+            return [{"id": 5, "target": "branch", "enforcement": "active"}]
+        if path.endswith("/rulesets/5"):
+            return details
+        raise AssertionError(path)
+
+    monkeypatch.setattr(audit, "api_get", fake_api)
+    result = audit.audit_repository(policy()["repositories"][0], "read-only-token")
+
+    assert result["status"] == "policy_gap"
+    assert "bypass_actors" in result["missing_rules"]
