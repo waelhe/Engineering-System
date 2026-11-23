@@ -35,9 +35,10 @@ PEOS is the platform engineering control plane; EGM remains the single canonical
 - [W8 production PostgreSQL quota incident — 2026-11-23](docs/peos/w8-production-postgresql-quota-incident-2026-11-23.md) — read-only evidence; production recovery remains blocked on the external Neon quota.
 - [Cross-repository review intake](docs/peos/cross-repository-review-intake.md) — implemented with a separate read-only source App token; remains disabled until owner credentials/install are configured.
 - [Main-branch repository governance audit](docs/peos/repository-governance-audit.md) — read-only audit; Admin and Engineering-System rulesets are still absent, mobile is plan-limited.
-- [W8/W9 operating-model extension](docs/peos/operating-model.md#9-maturity-model) — production incident evidence, external review intake and repository governance.
+- [Cross-repository intake workflow](.github/workflows/cross-repository-review-intake.yml) and [read-only governance audit workflow](.github/workflows/repository-governance-audit.yml).
+- [W8/W9 operating-model extension](docs/peos/operating-model.md) — production incident evidence, external review intake and repository governance.
 
-W0-W4 remain dated historical snapshots. W5-W7 are separately captured and SHA-bound evidence; W8 records the current production quota incident and W9 adds read-only intake/governance automation. None of these snapshots authorizes merge or production deployment, and W9 intake remains disabled until the App installation gate is satisfied.
+W0-W4 remain dated historical snapshots. W5-W7 are separately captured and SHA-bound evidence. W8 records the current production quota incident; W9 adds read-only cross-repository review intake and repository-governance auditing. Neither the collector nor the audit mutates source repositories or authorizes merge/deployment. Cross-repository intake remains disabled until the App installation gate is satisfied.
 
 ## Upstream EGM baseline
 
