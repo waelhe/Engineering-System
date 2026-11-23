@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "project_id": "mobile-marketplace",
+  "name": "Mobile Marketplace",
+  "description": "Candidate profile for the private Expo/React Native mobile marketplace repository. The source project instructions and Mobile Plan 01 describe an Expo SDK 57 application with file-based routing and an OAuth Authorization Code + PKCE client. This profile records source identity and technology pins; it does not certify current auth completion, journey coverage, or release readiness.",
+  "repositories": [
+    {
+      "name": "waelhe/mobile-marketplace",
+      "default_branch": "main",
+      "url": "https://github.com/waelhe/mobile-marketplace",
+      "role": "primary-project-repository"
+    }
+  ],
+  "technology": [
+    {
+      "name": "Expo",
+      "version": "~57.0.26",
+      "source": "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/package.json"
+    },
+    {
+      "name": "React Native",
+      "version": "0.86.3",
+      "source": "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/package.json"
+    },
+    {
+      "name": "React",
+      "version": "19.2.3",
+      "source": "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/package.json"
+    },
+    {
+      "name": "TypeScript",
+      "version": "~6.0.3",
+      "source": "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/package.json"
+    }
+  ],
+  "module_map": [],
+  "architecture_decisions": [],
+  "source_of_truth": [
+    "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/AGENTS.md",
+    "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/README.md",
+    "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/package.json",
+    "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/app.json",
+    "https://github.com/waelhe/mobile-marketplace/blob/3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4/docs/mobile-execution-plan-01.md"
+  ],
+  "profile_status": "candidate",
+  "baseline_sha": "3e2357ac3f5ed00cfffc51b2909c60f9f214f1f4",
+  "profile_notes": [
+    "The source repository is private; external review intake requires an explicitly installed, narrowly scoped GitHub App.",
+    "Repository main SHA was observed on 2026-11-22; baseline SHA is a point-in-time source pin, not a live synchronization guarantee.",
+    "The module map is deliberately empty; feature ownership and domain boundaries have not been adjudicated in this profile.",
+    "Mobile Plan 01 is the source-controlled execution plan and includes measured backend/auth assumptions dated 2026-10-02; those assumptions require revalidation before use as current operational facts.",
+    "Do not infer completed authentication, E2E journeys, release readiness, or production deployment from the package manifest."
+  ]
+}

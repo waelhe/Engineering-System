@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "project_id": "egm-engineering-system",
+  "name": "EGM Engineering Knowledge & Development System",
+  "description": "The canonical repository for the unified EGM-based engineering system.",
+  "repositories": [
+    {
+      "name": "waelhe/Engineering-System",
+      "default_branch": "main",
+      "url": "https://github.com/waelhe/Engineering-System",
+      "role": "canonical-system"
+    }
+  ],
+  "technology": [
+    {
+      "name": "Python",
+      "version": ">=3.10",
+      "source": "pyproject.toml"
+    },
+    {
+      "name": "JSON Schema",
+      "version": "Draft 2020-12",
+      "source": "schemas/"
+    }
+  ],
+  "module_map": [
+    {
+      "name": "knowledge-core",
+      "responsibility": "Canonical records, evidence provenance, lifecycle and relations",
+      "paths": [
+        "knowledge/",
+        "schemas/"
+      ]
+    },
+    {
+      "name": "egm-runtime",
+      "responsibility": "Pinned upstream EGM plus local system overlays",
+      "paths": [
+        "upstream/egm",
+        "extensions/"
+      ]
+    },
+    {
+      "name": "governance",
+      "responsibility": "Charter, risk, review, retrieval and verification policy",
+      "paths": [
+        "docs/policies/",
+        "docs/adr/"
+      ]
+    },
+    {
+      "name": "tooling",
+      "responsibility": "Deterministic intake, index, retrieval, validation and packaging",
+      "paths": [
+        "tools/",
+        "tests/"
+      ]
+    }
+  ],
+  "architecture_decisions": [
+    "ADR-0001"
+  ],
+  "source_of_truth": [
+    "docs/adr/0001-single-egm-system.md",
+    "upstream/egm.lock.json",
+    "schemas/"
+  ],
+  "policy_profiles": [
+    "docs/policies/engineering-charter.md",
+    "docs/policies/task-risk.md",
+    "docs/policies/knowledge-learning.md"
+  ],
+  "task_profiles": [
+    "docs/policies/retrieval.md",
+    "docs/policies/review.md",
+    "docs/policies/verification.md"
+  ]
+}

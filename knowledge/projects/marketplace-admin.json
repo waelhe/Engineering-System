@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "project_id": "marketplace-admin",
+  "name": "Marketplace Admin",
+  "description": "Candidate profile for the downstream platform administration dashboard. The repository's integration document identifies its baseline as a pinned Saleor Dashboard adaptation and describes the platform GraphQL integration. This profile records project identity and source provenance only; it does not certify feature parity or journey readiness.",
+  "repositories": [
+    {
+      "name": "waelhe/marketplace-admin",
+      "default_branch": "main",
+      "url": "https://github.com/waelhe/marketplace-admin",
+      "role": "primary-project-repository"
+    }
+  ],
+  "technology": [
+    {
+      "name": "Node.js",
+      "version": "24",
+      "source": "https://github.com/waelhe/marketplace-admin/blob/982ecf3667d2242cab941737cb6a0bceaee7ffcb/README.md"
+    }
+  ],
+  "module_map": [],
+  "architecture_decisions": [],
+  "source_of_truth": [
+    "https://github.com/waelhe/marketplace-admin/blob/982ecf3667d2242cab941737cb6a0bceaee7ffcb/AGENTS.md",
+    "https://github.com/waelhe/marketplace-admin/blob/982ecf3667d2242cab941737cb6a0bceaee7ffcb/README.md",
+    "https://github.com/waelhe/marketplace-admin/blob/982ecf3667d2242cab941737cb6a0bceaee7ffcb/CONTEXT.md",
+    "https://github.com/waelhe/marketplace-admin/blob/982ecf3667d2242cab941737cb6a0bceaee7ffcb/PLATFORM_INTEGRATION.md",
+    "https://github.com/waelhe/marketplace-admin/blob/982ecf3667d2242cab941737cb6a0bceaee7ffcb/package.json"
+  ],
+  "profile_status": "candidate",
+  "baseline_sha": "982ecf3667d2242cab941737cb6a0bceaee7ffcb",
+  "profile_notes": [
+    "Repository main SHA was observed on 2026-11-22; baseline SHA is a point-in-time source pin, not a live synchronization guarantee.",
+    "The upstream README and local integration document describe a Saleor Dashboard-derived application; the local platform integration contract is documented separately in PLATFORM_INTEGRATION.md.",
+    "The module map is deliberately empty; domain/module ownership and journey coverage have not been adjudicated in this profile.",
+    "Do not infer full Saleor feature parity, production readiness, or completed platform journeys from repository presence or package build success."
+  ]
+}

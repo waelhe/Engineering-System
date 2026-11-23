@@ -1,0 +1,20 @@
+name: Review Signal Capture
+
+on:
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+  pull_request_review_comment:
+    types: [created, edited, deleted]
+  issue_comment:
+    types: [created, edited, deleted]
+
+permissions: {}
+
+jobs:
+  signal:
+    if: ${{ github.event_name != 'issue_comment' || github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Emit static capture completion
+        run: echo "Review event captured. Trusted collector will re-fetch current state from GitHub API."
