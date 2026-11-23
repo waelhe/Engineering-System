@@ -25,8 +25,162 @@ def read_json(path: Path) -> Any:
         raise ValueError(f"{path}: invalid JSON: {exc}") from exc
 
 
-def validate_registry(root: Path = ROOT) -> list[str]:
+def validate_auxiliary_registries(root: Path = ROOT) -> list[str]:
+    """Validate the source-review and repository-governance registries without network access."""
     errors: list[str] = []
+    review_path = root / "registry" / "peos" / "review-sources.json"
+    governance_path = root / "registry" / "peos" / "repository-governance.json"
+
+    def contains_secret_key(value: Any, path: str = "$") -> list[str]:
+        found: list[str] = []
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if str(key).lower() in {"token", "private_key", "secret", "password", "access_token"}:
+                    found.append(f"{path}.{key}")
+                found.extend(contains_secret_key(item, f"{path}.{key}"))
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                found.extend(contains_secret_key(item, f"{path}[{index}]"))
+        return found
+
+    try:
+        review = read_json(review_path)
+        if review.get("schema_version") != 1 or review.get("kind") != "trusted_review_source_registry":
+            errors.append("review-sources.json: invalid schema_version or kind")
+        sink = review.get("sink_repository")
+        if sink != "waelhe/Engineering-System":
+            errors.append("review-sources.json: sink must remain the canonical Engineering-System repository")
+        sources = review.get("repositories")
+        if not isinstance(sources, list) or not sources:
+            errors.append("review-sources.json: repositories must be a non-empty array")
+            sources = []
+        project_map: dict[str, str] = {}
+        profiles_dir = root / "knowledge" / "projects"
+        if profiles_dir.exists():
+            for profile_path in sorted(profiles_dir.glob("*.json")):
+                try:
+                    profile = read_json(profile_path)
+                    project_id = profile.get("project_id")
+                    for repository in profile.get("repositories", []):
+                        if isinstance(project_id, str) and isinstance(repository, dict):
+                            project_map[repository.get("name")] = project_id
+                except ValueError as exc:
+                    errors.append(str(exc))
+        seen_repositories: set[str] = set()
+        seen_projects: set[str] = set()
+        for index, item in enumerate(sources):
+            if not isinstance(item, dict):
+                errors.append(f"review-sources.json: repositories[{index}] must be an object")
+                continue
+            repository = item.get("repository")
+            project_id = item.get("project_id")
+            if not isinstance(repository, str) or repository.count("/") != 1:
+                errors.append(f"review-sources.json: repositories[{index}].repository is invalid")
+                continue
+            if repository.lower() == str(sink).lower():
+                errors.append("review-sources.json: sink repository cannot be a source")
+            if repository.lower() in seen_repositories:
+                errors.append(f"review-sources.json: duplicate source repository {repository}")
+            if project_id in seen_projects:
+                errors.append(f"review-sources.json: duplicate project_id {project_id}")
+            seen_repositories.add(repository.lower())
+            seen_projects.add(project_id)
+            if project_map.get(repository) != project_id:
+                errors.append(f"review-sources.json: {repository} does not match its canonical project profile")
+            if item.get("enabled") not in {True, False}:
+                errors.append(f"review-sources.json: {repository} enabled flag must be boolean")
+            if type(item.get("since_days")) is not int or not 1 <= item["since_days"] <= 90:
+                errors.append(f"review-sources.json: {repository} since_days must be 1..90")
+            if type(item.get("max_prs")) is not int or not 1 <= item["max_prs"] <= 100:
+                errors.append(f"review-sources.json: {repository} max_prs must be 1..100")
+        security = review.get("security_contract", {})
+        source_access = str(security.get("source_access", ""))
+        sink_access = str(security.get("sink_access", ""))
+        if "read-only" not in source_access or "pull-requests:read" not in source_access or "issues:read" not in source_access:
+            errors.append("review-sources.json: source App must remain read-only for pull requests and issues")
+        if "Engineering-System" not in sink_access or "only" not in sink_access:
+            errors.append("review-sources.json: sink write boundary must remain canonical and exclusive")
+        if "untrusted" not in str(security.get("execution", "")):
+            errors.append("review-sources.json: source comments must remain untrusted data")
+        if "never approves" not in str(security.get("approval", "")):
+            errors.append("review-sources.json: intake must not adjudicate or approve Signals")
+        for secret_path in contains_secret_key(review):
+            errors.append(f"review-sources.json: secret-bearing field is forbidden at {secret_path}")
+    except ValueError as exc:
+        errors.append(str(exc))
+
+    try:
+        governance = read_json(governance_path)
+        if governance.get("schema_version") != 1 or governance.get("kind") != "repository_merge_policy":
+            errors.append("repository-governance.json: invalid schema_version or kind")
+        records = governance.get("repositories")
+        if not isinstance(records, list) or not records:
+            errors.append("repository-governance.json: repositories must be a non-empty array")
+            records = []
+        seen: set[str] = set()
+        expected_repositories = {
+            "waelhe/app-java-v3",
+            "waelhe/marketplace-admin",
+            "waelhe/mobile-marketplace",
+            "waelhe/Engineering-System",
+        }
+        found_repositories: set[str] = set()
+        allowed_rules = {
+            "deletion", "non_fast_forward", "required_linear_history",
+            "pull_request", "required_status_checks",
+        }
+        for index, item in enumerate(records):
+            if not isinstance(item, dict):
+                errors.append(f"repository-governance.json: repositories[{index}] must be an object")
+                continue
+            repository = item.get("repository")
+            if not isinstance(repository, str):
+                errors.append(f"repository-governance.json: repositories[{index}].repository is required")
+                continue
+            if repository in seen:
+                errors.append(f"repository-governance.json: duplicate repository {repository}")
+            seen.add(repository)
+            found_repositories.add(repository)
+            if item.get("default_branch") != "main":
+                errors.append(f"repository-governance.json: {repository} must target main")
+            if repository == "waelhe/mobile-marketplace" and item.get("visibility") != "private":
+                errors.append("repository-governance.json: mobile-marketplace must remain private")
+            observed = item.get("observed", {})
+            if observed.get("rulesets_api") not in {"readable", "plan_limited", "not_captured"}:
+                errors.append(f"repository-governance.json: {repository} has invalid rulesets_api state")
+            if observed.get("rulesets_api") == "plan_limited" and not observed.get("limitation"):
+                errors.append(f"repository-governance.json: {repository} plan limitation must be explicit")
+            expected = item.get("expected", {})
+            required = expected.get("required_rules", [])
+            if not isinstance(required, list) or not set(required).issubset(allowed_rules):
+                errors.append(f"repository-governance.json: {repository} has invalid required_rules")
+            checks = expected.get("required_status_checks", [])
+            if not isinstance(checks, list) or any(not isinstance(check, str) or not check for check in checks):
+                errors.append(f"repository-governance.json: {repository} required checks must be non-empty strings")
+            if len(checks) != len(set(checks)):
+                errors.append(f"repository-governance.json: {repository} required checks must be unique")
+            approvals = expected.get("required_approving_review_count")
+            if type(approvals) is not int or approvals < 0:
+                errors.append(f"repository-governance.json: {repository} approval count must be a non-negative integer")
+            if type(expected.get("require_thread_resolution")) is not bool:
+                errors.append(f"repository-governance.json: {repository} thread-resolution policy must be boolean")
+            merge_methods = expected.get("required_merge_methods", [])
+            if not isinstance(merge_methods, list) or not set(merge_methods).issubset({"merge", "squash", "rebase"}):
+                errors.append(f"repository-governance.json: {repository} has invalid merge methods")
+        if found_repositories != expected_repositories:
+            errors.append(
+                "repository-governance.json: registered repositories differ from the four canonical project repositories"
+            )
+        for secret_path in contains_secret_key(governance):
+            errors.append(f"repository-governance.json: secret-bearing field is forbidden at {secret_path}")
+    except ValueError as exc:
+        errors.append(str(exc))
+
+    return errors
+
+
+def validate_registry(root: Path = ROOT) -> list[str]:
+    errors: list[str] = validate_auxiliary_registries(root)
     schema_path = root / "schemas" / "peos-inventory.schema.json"
     try:
         schema = read_json(schema_path)
