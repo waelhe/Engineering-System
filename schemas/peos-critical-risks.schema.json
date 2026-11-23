@@ -1,0 +1,519 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PEOS critical-risk evidence registry",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "snapshot_date",
+    "source",
+    "records",
+    "anomalies"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "critical_risk_registry"
+    },
+    "snapshot_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repository",
+        "ref",
+        "commit_sha",
+        "snapshot_date",
+        "capture_boundary",
+        "evidence_sources"
+      ],
+      "properties": {
+        "repository": {
+          "const": "waelhe/app-java-v3"
+        },
+        "ref": {
+          "const": "main"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "snapshot_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "capture_boundary": {
+          "type": "string",
+          "minLength": 20
+        },
+        "evidence_sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "repository",
+              "ref",
+              "commit_sha",
+              "path",
+              "blob_sha"
+            ],
+            "properties": {
+              "repository": {
+                "const": "waelhe/app-java-v3"
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "commit_sha": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blob_sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "records": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "required": [
+          "risk_id",
+          "category",
+          "priority",
+          "status",
+          "title",
+          "control_objective",
+          "upstream_source",
+          "pull_request",
+          "checks",
+          "review",
+          "source_artifacts",
+          "assessment",
+          "closure_requirements",
+          "closure_evidence"
+        ],
+        "properties": {
+          "risk_id": {
+            "type": "string",
+            "pattern": "^W4-[A-Z0-9-]+$"
+          },
+          "category": {
+            "enum": [
+              "money",
+              "concurrency",
+              "payments",
+              "privacy",
+              "identity",
+              "ci-governance"
+            ]
+          },
+          "priority": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2"
+            ]
+          },
+          "status": {
+            "enum": [
+              "blocked_owner_decision",
+              "partial_candidate",
+              "verification_gate_blocked",
+              "review_and_base_refresh_required",
+              "coverage_gate_fix_candidate",
+              "closed_verified"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 10
+          },
+          "control_objective": {
+            "type": "string",
+            "minLength": 10
+          },
+          "upstream_source": {
+            "type": "object",
+            "required": [
+              "repository",
+              "ref",
+              "commit_sha"
+            ],
+            "properties": {
+              "repository": {
+                "const": "waelhe/app-java-v3"
+              },
+              "ref": {
+                "const": "main"
+              },
+              "commit_sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "pull_request": {
+            "type": "object",
+            "required": [
+              "number",
+              "url",
+              "state",
+              "base_branch",
+              "base_sha",
+              "head_branch",
+              "head_sha",
+              "base_relation",
+              "behind_by"
+            ],
+            "properties": {
+              "number": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "state": {
+                "const": "open"
+              },
+              "base_branch": {
+                "const": "main"
+              },
+              "base_sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "head_branch": {
+                "type": "string",
+                "minLength": 1
+              },
+              "head_sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "base_relation": {
+                "enum": [
+                  "base_matches_current_main",
+                  "diverged_behind_current_main"
+                ]
+              },
+              "behind_by": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          },
+          "checks": {
+            "type": "object",
+            "required": [
+              "head_sha",
+              "total_check_runs",
+              "non_gate_failure_count",
+              "non_gate_checks_conclusion",
+              "coderabbit_check_conclusion",
+              "coderabbit_gate_conclusion",
+              "gate_failure_stage",
+              "gate_job_url"
+            ],
+            "properties": {
+              "head_sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "total_check_runs": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "non_gate_failure_count": {
+                "const": 0
+              },
+              "non_gate_checks_conclusion": {
+                "const": "success"
+              },
+              "coderabbit_check_conclusion": {
+                "enum": [
+                  "success",
+                  "skipped"
+                ]
+              },
+              "coderabbit_gate_conclusion": {
+                "const": "failure"
+              },
+              "gate_failure_stage": {
+                "enum": [
+                  "current_head_review_missing",
+                  "coverage_declaration_missing"
+                ]
+              },
+              "gate_job_url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "additionalProperties": false
+          },
+          "review": {
+            "type": "object",
+            "required": [
+              "latest_state",
+              "latest_sha",
+              "latest_submitted_at",
+              "approval_on_current_head",
+              "review_request_comment_id"
+            ],
+            "properties": {
+              "latest_state": {
+                "enum": [
+                  "approved",
+                  "commented",
+                  "none"
+                ]
+              },
+              "latest_sha": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "latest_submitted_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "approval_on_current_head": {
+                "type": "boolean"
+              },
+              "review_request_comment_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "source_artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "path",
+                "blob_sha",
+                "ref",
+                "role"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "blob_sha": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "ref": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "role": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "assessment": {
+            "type": "object",
+            "required": [
+              "confirmed_facts",
+              "unknowns",
+              "blocking_gaps",
+              "next_actions"
+            ],
+            "properties": {
+              "confirmed_facts": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 10
+                }
+              },
+              "unknowns": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 10
+                }
+              },
+              "blocking_gaps": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 10
+                }
+              },
+              "next_actions": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 10
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "closure_requirements": {
+            "type": "array",
+            "minItems": 4,
+            "items": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "closure_evidence": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "merged_pr_number",
+                  "merge_commit_sha",
+                  "verified_main_sha",
+                  "main_contains_merge_commit",
+                  "post_merge_workflow_url",
+                  "post_merge_conclusion"
+                ],
+                "properties": {
+                  "merged_pr_number": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "merge_commit_sha": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{40}$"
+                  },
+                  "verified_main_sha": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{40}$"
+                  },
+                  "main_contains_merge_commit": {
+                    "const": true
+                  },
+                  "post_merge_workflow_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "post_merge_conclusion": {
+                    "const": "success"
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "closed_verified"
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "properties": {
+                "closure_evidence": {
+                  "type": "object"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "closure_evidence": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    "anomalies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "severity",
+          "affected_risk_ids",
+          "summary"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "high",
+              "critical"
+            ]
+          },
+          "affected_risk_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^W4-[A-Z0-9-]+$"
+            }
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 10
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
