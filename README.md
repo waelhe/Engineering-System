@@ -33,6 +33,8 @@ PEOS is the platform engineering control plane; EGM remains the single canonical
 - [W6 client evidence — 2026-11-21](docs/peos/w6-client-delivery-2026-11-21.md)
 - [W7 operational evidence — 2026-11-21](docs/peos/w7-operational-recheck-2026-11-21.md)
 - [W8 production PostgreSQL quota incident — 2026-11-23](docs/peos/w8-production-postgresql-quota-incident-2026-11-23.md) — read-only evidence; production recovery remains blocked on the external Neon quota.
+- [Cross-repository review intake](docs/peos/cross-repository-review-intake.md) — implemented with a separate read-only source App token; remains disabled until owner credentials/install are configured.
+- [Main-branch repository governance audit](docs/peos/repository-governance-audit.md) — read-only audit; Admin and Engineering-System rulesets are still absent, mobile is plan-limited.
 
 W0-W4 remain dated historical snapshots. W5-W7 are separately captured and SHA-bound evidence; none of these snapshots authorizes merge or production deployment.
 
