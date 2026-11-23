@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PEOS W8 production recovery gates",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "snapshot_date",
+    "incident",
+    "state",
+    "gates",
+    "prohibitions",
+    "safety_boundary",
+    "assessment"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "w8_recovery_gates"
+    },
+    "snapshot_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "incident": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "incident_id",
+        "source_repository",
+        "source_ref",
+        "source_commit_sha",
+        "failed_deployment_id",
+        "service_id",
+        "capture_date",
+        "capture_document",
+        "immediate_cause"
+      ],
+      "properties": {
+        "incident_id": {
+          "const": "W8-NEON-QUOTA-2026-11-23"
+        },
+        "source_repository": {
+          "const": "waelhe/app-java-v3"
+        },
+        "source_ref": {
+          "const": "main"
+        },
+        "source_commit_sha": {
+          "const": "9b5e29afd0a5a344a8ac04a51a51da32fe134d10"
+        },
+        "failed_deployment_id": {
+          "const": "b76e73fd-5ad7-469d-8aa5-e68f7b09ab3f"
+        },
+        "service_id": {
+          "const": "43b1b64b-9087-45d4-88ca-358a40c5a583"
+        },
+        "capture_date": {
+          "const": "2026-11-23"
+        },
+        "capture_document": {
+          "const": "docs/peos/w8-production-postgresql-quota-incident-2026-11-23.md"
+        },
+        "immediate_cause": {
+          "const": "external_postgresql_quota_refusal"
+        }
+      }
+    },
+    "state": {
+      "enum": [
+        "blocked_external",
+        "open",
+        "recovered"
+      ]
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "owner",
+          "state",
+          "owner_action_required",
+          "depends_on",
+          "required_evidence",
+          "evidence",
+          "assessment"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^W8-G[1-5]$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 5
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 3
+          },
+          "state": {
+            "enum": [
+              "blocked_external",
+              "blocked",
+              "in_progress",
+              "verified"
+            ]
+          },
+          "owner_action_required": {
+            "type": "boolean"
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^W8-G[1-5]$"
+            },
+            "uniqueItems": true
+          },
+          "required_evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 3
+            },
+            "uniqueItems": true
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "reference",
+                "captured_at",
+                "result"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "minLength": 3
+                },
+                "reference": {
+                  "type": "string",
+                  "minLength": 8
+                },
+                "captured_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "result": {
+                  "type": "string",
+                  "minLength": 3
+                },
+                "source_sha": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              }
+            }
+          },
+          "assessment": {
+            "type": "string",
+            "minLength": 12
+          }
+        }
+      }
+    },
+    "prohibitions": {
+      "const": [
+        "do_not_point_DB_URL_at_new_empty_project",
+        "do_not_run_manual_migrations",
+        "do_not_rotate_database_credentials_as_quota_workaround",
+        "do_not_replace_live_database"
+      ]
+    },
+    "safety_boundary": {
+      "const": {
+        "production_changes_performed": false,
+        "database_replacement_authorized": false,
+        "manual_migrations_authorized": false,
+        "credential_rotation_authorized": false
+      }
+    },
+    "assessment": {
+      "type": "string",
+      "minLength": 20
+    }
+  }
+}

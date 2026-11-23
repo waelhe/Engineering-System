@@ -14,6 +14,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+try:
+    from .peos_w8_validate import validate_w8_recovery_gates
+except ImportError:  # Support direct execution as tools/peos_validate.py.
+    from peos_w8_validate import validate_w8_recovery_gates
+
 ROOT = Path(__file__).resolve().parents[1]
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
@@ -184,6 +189,7 @@ def validate_auxiliary_registries(root: Path = ROOT) -> list[str]:
 
 def validate_registry(root: Path = ROOT) -> list[str]:
     errors: list[str] = validate_auxiliary_registries(root)
+    errors.extend(validate_w8_recovery_gates(root))
     schema_path = root / "schemas" / "peos-inventory.schema.json"
     try:
         schema = read_json(schema_path)
@@ -626,7 +632,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate historical W0-W4 and current W5-W7 PEOS evidence snapshots.")
+    parser = argparse.ArgumentParser(description="Validate historical W0-W4 and current W5-W8 PEOS evidence snapshots.")
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     errors = validate_registry(args.root)
@@ -635,7 +641,7 @@ def main() -> int:
             print(f"FAIL: {error}")
         return 1
     print("PEOS inventory validation: PASS")
-    print("Validated W0-W4 historical inventories plus W5 backend/commerce, W6 client delivery and W7 operations snapshots.")
+    print("Validated W0-W4 historical inventories plus W5 backend/commerce, W6 client delivery, W7 operations and W8 recovery gates.")
     print("Historical journey labels remain not-revalidated; Maven and Modulith graphs are distinct; W4 closure requires merged-main and exact-SHA proof; W5-W7 remain SHA/date-bound; no merge or deployment is authorized.")
     return 0
 

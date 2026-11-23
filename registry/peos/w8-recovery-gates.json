@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "kind": "w8_recovery_gates",
+  "snapshot_date": "2026-11-23",
+  "incident": {
+    "incident_id": "W8-NEON-QUOTA-2026-11-23",
+    "source_repository": "waelhe/app-java-v3",
+    "source_ref": "main",
+    "source_commit_sha": "9b5e29afd0a5a344a8ac04a51a51da32fe134d10",
+    "failed_deployment_id": "b76e73fd-5ad7-469d-8aa5-e68f7b09ab3f",
+    "service_id": "43b1b64b-9087-45d4-88ca-358a40c5a583",
+    "capture_date": "2026-11-23",
+    "capture_document": "docs/peos/w8-production-postgresql-quota-incident-2026-11-23.md",
+    "immediate_cause": "external_postgresql_quota_refusal"
+  },
+  "state": "blocked_external",
+  "gates": [
+    {
+      "id": "W8-G1",
+      "name": "External Neon quota and account-owner decision",
+      "owner": "Neon project account owner",
+      "state": "blocked_external",
+      "owner_action_required": true,
+      "depends_on": [],
+      "required_evidence": [
+        "neon_plan",
+        "quota_category",
+        "billing_usage_and_reset",
+        "owner_decision"
+      ],
+      "evidence": [],
+      "assessment": "The live billing plan, exhausted quota counter, current-period usage and reset time are not available through the connected read-only sources. Account-owner decision is required."
+    },
+    {
+      "id": "W8-G2",
+      "name": "PostgreSQL connection recovery",
+      "owner": "Platform operator",
+      "state": "blocked",
+      "owner_action_required": false,
+      "depends_on": [
+        "W8-G1"
+      ],
+      "required_evidence": [
+        "postgres_connection_acceptance",
+        "read_only_query"
+      ],
+      "evidence": [],
+      "assessment": "Blocked until the account owner has resolved or deliberately deferred the quota condition and PostgreSQL accepts connections again."
+    },
+    {
+      "id": "W8-G3",
+      "name": "Successful Railway production redeployment",
+      "owner": "Platform operator",
+      "state": "blocked",
+      "owner_action_required": false,
+      "depends_on": [
+        "W8-G2"
+      ],
+      "required_evidence": [
+        "railway_deployment_success",
+        "deployed_commit_sha"
+      ],
+      "evidence": [],
+      "assessment": "No production redeployment is authorized by this snapshot. A terminal successful deployment must be bound to the exact deployed commit."
+    },
+    {
+      "id": "W8-G4",
+      "name": "Application migration and readiness verification",
+      "owner": "Platform operator",
+      "state": "blocked",
+      "owner_action_required": false,
+      "depends_on": [
+        "W8-G3"
+      ],
+      "required_evidence": [
+        "flyway_validation",
+        "readiness_http_200"
+      ],
+      "evidence": [],
+      "assessment": "A successful image build or deployment state alone is insufficient; Flyway validation/application and the readiness probe must be recorded."
+    },
+    {
+      "id": "W8-G5",
+      "name": "Production smoke and post-deployment verification",
+      "owner": "Platform operator",
+      "state": "blocked",
+      "owner_action_required": false,
+      "depends_on": [
+        "W8-G4"
+      ],
+      "required_evidence": [
+        "production_smoke_report",
+        "post_deploy_observation"
+      ],
+      "evidence": [],
+      "assessment": "Recovery remains unproven until the documented production smoke checks and an observed post-deployment result are recorded."
+    }
+  ],
+  "prohibitions": [
+    "do_not_point_DB_URL_at_new_empty_project",
+    "do_not_run_manual_migrations",
+    "do_not_rotate_database_credentials_as_quota_workaround",
+    "do_not_replace_live_database"
+  ],
+  "safety_boundary": {
+    "production_changes_performed": false,
+    "database_replacement_authorized": false,
+    "manual_migrations_authorized": false,
+    "credential_rotation_authorized": false
+  },
+  "assessment": "The incident is blocked by an external Neon quota condition. All five recovery gates remain unverified; this registry is a machine-checked gate contract, not evidence that recovery has occurred."
+}

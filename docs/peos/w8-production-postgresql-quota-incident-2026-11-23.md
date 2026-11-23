@@ -87,3 +87,19 @@ Consequently, the historical runbook statement that Hikari connections categoric
 - No claim of service recovery, readiness, or production availability.
 
 This W8 note is incident evidence only. It does not close the production incident or authorize a financial change.
+
+## 8. Machine-verifiable recovery gates
+
+The recovery sequence is represented by `registry/peos/w8-recovery-gates.json` and validated against `schemas/peos-w8-recovery.schema.json` by `tools/peos_w8_validate.py`.
+
+| Gate | Required proof | Current state |
+|---|---|---|
+| W8-G1 — Neon quota decision | Plan, exhausted quota category, current usage/reset, and account-owner decision | `blocked_external` |
+| W8-G2 — PostgreSQL recovery | Successful connection acceptance and a read-only query | `blocked` |
+| W8-G3 — Railway redeployment | Terminal deployment `SUCCESS` and exact deployed commit SHA | `blocked` |
+| W8-G4 — Application readiness | Flyway validation/application result and readiness HTTP 200 | `blocked` |
+| W8-G5 — Production smoke | Documented production smoke report and post-deployment observation | `blocked` |
+
+The gate validator derives the incident state from the gate states. It rejects a `recovered` claim while any gate remains unverified, rejects progression past an unverified dependency, requires all declared evidence kinds before a gate can be marked `verified`, and forbids secret-bearing fields.
+
+The registry preserves the original incident source pins and data-safety prohibitions. It does not fetch billing data, change Neon, mutate Railway, run migrations, rotate credentials, or authorize production operations. The current registry therefore remains `blocked_external`; recovery has **not** been performed or verified.
