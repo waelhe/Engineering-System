@@ -21,7 +21,44 @@ jobs:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
 
-      - name: Audit active rulesets for canonical main branches
+      - name: Check whether the read-only source App is configured
+        id: app-config
+        env:
+          APP_CLIENT_ID: ${{ vars.EGM_REVIEW_APP_CLIENT_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.EGM_REVIEW_APP_PRIVATE_KEY }}
+        run: |
+          set -eu
+          if [ -n "$APP_CLIENT_ID" ] && [ -n "$APP_PRIVATE_KEY" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create a short-lived, read-only source repository token
+        id: source-token
+        if: ${{ steps.app-config.outputs.enabled == 'true' }}
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
+        with:
+          client-id: ${{ vars.EGM_REVIEW_APP_CLIENT_ID }}
+          private-key: ${{ secrets.EGM_REVIEW_APP_PRIVATE_KEY }}
+          owner: waelhe
+          repositories: |
+            app-java-v3
+            marketplace-admin
+            mobile-marketplace
+          permission-pull-requests: read
+          permission-issues: read
+
+      - name: Audit active main-branch rulesets
+        if: ${{ steps.source-token.outputs.token != '' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          EGM_SOURCE_GITHUB_TOKEN: ${{ steps.source-token.outputs.token }}
         run: python tools/audit_repository_governance.py --config registry/peos/repository-governance.json
+
+      - name: Report that source repository access is not configured
+        if: ${{ steps.app-config.outputs.enabled != 'true' }}
+        run: |
+          echo "Repository governance audit skipped."
+          echo "Install the read-only EGM Review App on the three source repositories and configure EGM_REVIEW_APP_CLIENT_ID plus EGM_REVIEW_APP_PRIVATE_KEY in Engineering-System."
+          echo "No source repository was queried and no ruleset was changed."
