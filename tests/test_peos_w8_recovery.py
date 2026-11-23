@@ -247,3 +247,15 @@ def test_w8_deployed_commit_evidence_must_include_a_full_sha(tmp_path):
     write_snapshot(tmp_path, payload)
     errors = validate_w8_recovery_gates(tmp_path)
     assert any("deployed_commit_sha must carry a full source_sha" in error for error in errors)
+
+
+def test_w8_registry_rejects_duplicate_evidence_kinds(tmp_path):
+    payload = snapshot()
+    gate = payload["gates"][0]
+    gate["evidence"] = [
+        evidence("neon_plan"),
+        evidence("neon_plan"),
+    ]
+    write_snapshot(tmp_path, payload)
+    errors = validate_w8_recovery_gates(tmp_path)
+    assert any("evidence kinds must be unique" in error for error in errors)

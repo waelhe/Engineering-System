@@ -150,11 +150,14 @@ def validate_w8_recovery_gates(root: Path = ROOT) -> list[str]:
         evidence = gate.get("evidence", [])
         if not isinstance(evidence, list):
             evidence = []
+        evidence_kinds = [
+            item.get("kind") for item in evidence
+            if isinstance(item, dict) and isinstance(item.get("kind"), str)
+        ]
         evidence_by_kind = {
             item.get("kind"): item for item in evidence
             if isinstance(item, dict) and isinstance(item.get("kind"), str)
         }
-        evidence_kinds = list(evidence_by_kind)
         if len(evidence_kinds) != len(set(evidence_kinds)):
             errors.append(f"{gate_id}: evidence kinds must be unique")
         required = gate.get("required_evidence", [])
