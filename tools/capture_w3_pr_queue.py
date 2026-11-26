@@ -65,7 +65,7 @@ def api_pages(path: str, token: str) -> list[dict[str, Any]]:
             raise CaptureError(f"Pagination safety limit reached for {path}")
 
 
-def _pr_record(pr: dict[str, Any], template: dict[str, Any] | None) -> dict[str, Any]:
+def _pr_record(pr: dict[str, Any], template: dict[str, Any] | None, current_main_sha: str) -> dict[str, Any]:
     number = pr.get("number")
     if not isinstance(number, int) or number < 1:
         raise CaptureError("GitHub returned a PR without a valid number")
@@ -94,11 +94,14 @@ def _pr_record(pr: dict[str, Any], template: dict[str, Any] | None) -> dict[str,
         )
 
     base_branch = base.get("ref")
-    base_relation = (
-        "base_matches_current_main"
-        if base_branch == "main"
-        else "non_main_base_requires_adjudication"
-    )
+    if base_branch == "main":
+        base_relation = (
+            "base_matches_current_main"
+            if base["sha"] == current_main_sha
+            else "base_sha_differs_from_current_main"
+        )
+    else:
+        base_relation = "non_main_base_requires_adjudication"
     record = {
         "id": f"W3-PR-{number}",
         "pr_number": number,
@@ -155,7 +158,7 @@ def build_snapshot(
         if number in seen:
             raise CaptureError(f"Duplicate PR #{number} in GitHub response")
         seen.add(number)
-        records.append(_pr_record(pull, previous_records.get(number)))
+        records.append(_pr_record(pull, previous_records.get(number), main_sha))
 
     missing_governed = REQUIRED_GOVERNED_PRS - seen
     if missing_governed:

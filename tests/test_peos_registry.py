@@ -203,18 +203,24 @@ def test_w5_w6_w7_snapshots_are_schema_valid_and_keep_unknowns_explicit():
     for kind, relative_path in paths.items():
         payload = json.loads((root / relative_path).read_text(encoding="utf-8"))
         assert payload["kind"] == kind
-        assert payload["snapshot_date"] == "2026-11-21"
+        expected_snapshot_date = "2026-11-26" if kind == "w3_pr_queue_snapshot" else "2026-11-21"
+        assert payload["snapshot_date"] == expected_snapshot_date
         assert not list(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(payload))
         payloads[kind] = payload
 
     w3 = payloads["w3_pr_queue_snapshot"]
     w3_by_number = {item["pr_number"]: item for item in w3["records"]}
-    assert len(w3_by_number) == 25
+    assert len(w3_by_number) == 24
     assert w3_by_number[787]["merge_policy"] == "single_full_commerce_candidate"
     assert all(w3_by_number[number]["merge_policy"] == "tracking_only_do_not_merge" for number in range(806, 812))
     assert w3_by_number[837]["base_relation"] == "stacked_base_behind_candidate"
     assert w3_by_number[840]["draft"] is True
-    assert w3["special_rules"]["stacked_prs"][0]["ahead_by"] == 8
+    assert 839 not in w3_by_number
+    assert w3["sources"][0]["commit_sha"] == "9b5e29afd0a5a344a8ac04a51a51da32fe134d10"
+    assert w3_by_number[787]["base_relation"] == "base_matches_current_main"
+    assert all(w3_by_number[number]["base_relation"] == "base_matches_current_main" for number in range(806, 812))
+    assert w3_by_number[832]["base_relation"] == "base_sha_differs_from_current_main"
+    assert w3["special_rules"]["stacked_prs"][0]["ahead_by"] == 7
 
     w5 = {item["pr_number"]: item for item in payloads["w5_backend_commerce_snapshot"]["records"]}
     assert w5[787]["state"] == "open"
@@ -268,7 +274,7 @@ def test_w3_capture_preserves_governed_queue_and_quarantines_new_prs():
     candidate_sha = "b" * 40
     candidate_branch = "integration/saleor-full-commerce-20261021"
     pulls = [
-        _w3_pull(787, head_branch=candidate_branch, head_sha=candidate_sha),
+        _w3_pull(787, base_sha=main_sha, head_branch=candidate_branch, head_sha=candidate_sha),
         *[
             _w3_pull(number)
             for number in (806, 807, 808, 809, 810, 811)
@@ -309,6 +315,8 @@ def test_w3_capture_preserves_governed_queue_and_quarantines_new_prs():
     by_number = {item["pr_number"]: item for item in snapshot["records"]}
     assert snapshot["open_pr_count"] == 9
     assert by_number[787]["merge_policy"] == "single_full_commerce_candidate"
+    assert by_number[787]["base_relation"] == "base_matches_current_main"
+    assert by_number[806]["base_relation"] == "base_sha_differs_from_current_main"
     assert all(by_number[number]["merge_policy"] == "tracking_only_do_not_merge" for number in range(806, 812))
     assert by_number[837]["base_relation"] == "stacked_base_behind_candidate"
     assert snapshot["special_rules"]["stacked_prs"][0]["candidate_head_sha"] == candidate_sha
