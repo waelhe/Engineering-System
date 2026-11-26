@@ -56,6 +56,7 @@ def unprivileged_child_environment() -> dict[str, str]:
     for name in (
         "GITHUB_TOKEN", "GH_TOKEN", "ACTIONS_RUNTIME_TOKEN",
         "ACTIONS_ID_TOKEN_REQUEST_TOKEN", "ACTIONS_ID_TOKEN_REQUEST_URL",
+        "EGM_SOURCE_GITHUB_TOKEN", "EGM_SINK_GITHUB_TOKEN",
     ):
         environment.pop(name, None)
     return environment

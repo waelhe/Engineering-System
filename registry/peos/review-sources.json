@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "trusted_review_source_registry",
+  "sink_repository": "waelhe/Engineering-System",
+  "snapshot_date": "2026-11-23",
+  "repositories": [
+    {
+      "repository": "waelhe/app-java-v3",
+      "project_id": "app-java-v3",
+      "default_branch": "main",
+      "enabled": true,
+      "since_days": 7,
+      "max_prs": 50
+    },
+    {
+      "repository": "waelhe/marketplace-admin",
+      "project_id": "marketplace-admin",
+      "default_branch": "main",
+      "enabled": true,
+      "since_days": 7,
+      "max_prs": 25
+    },
+    {
+      "repository": "waelhe/mobile-marketplace",
+      "project_id": "mobile-marketplace",
+      "default_branch": "main",
+      "enabled": true,
+      "since_days": 7,
+      "max_prs": 25
+    }
+  ],
+  "security_contract": {
+    "source_access": "read-only GitHub App installation token with pull-requests:read and issues:read, restricted to the three source repositories",
+    "sink_access": "the Engineering-System workflow GITHUB_TOKEN only; contents:write, pull-requests:write and actions:write are not granted to the source token",
+    "execution": "source PR branches, artifacts and bodies are never checked out or executed; reviews and comments are stored only as untrusted Signals",
+    "approval": "intake never approves, merges, closes, adjudicates or converts a Signal into a Finding, Rule or Verification"
+  },
+  "notes": [
+    "The registry is configuration, not proof that the GitHub App has been installed or authorized.",
+    "The collector is disabled until EGM_REVIEW_APP_CLIENT_ID and EGM_REVIEW_APP_PRIVATE_KEY are configured in the Engineering-System repository.",
+    "Only pull requests targeting each source repository's default branch are collected."
+  ]
+}

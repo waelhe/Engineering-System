@@ -6,7 +6,7 @@ The system combines EGM's context-rich design and fresh-context review workflow 
 
 ## Current status
 
-**Early implementation baseline. Not production-ready.** The repository has a pinned EGM submodule, initial architecture and governance policies, JSON Schemas, a knowledge CLI, local skills, and a CI workflow. Native harness and remote CI verification are still required before operational adoption.
+**Implementation baseline — 2026-11-23. Not merged or production-ready.** EGM foundation PR #1 remains open on `873e26268aa53fb223192c18bd00d02fe949c0a6`; its last recorded green run [#45123180932](https://github.com/waelhe/Engineering-System/actions/runs/45123180932) passed 80 Python tests and both runtime package builds. PEOS PR #2 remains an open Draft stacked on PR #1. Its prior green checkpoint [#45129233252](https://github.com/waelhe/Engineering-System/actions/runs/45129233252) passed 94 Python tests and both package builds, but cross-repository intake and governance-audit code were added after that checkpoint; the current full head must pass a fresh run before this extension is called verified. Independent Goldfish review and owner/human acceptance remain outstanding. Cross-repository intake is implemented but disabled until the source GitHub App is installed and its two credentials are configured. Main-branch Rulesets are verified only for the backend; Admin and Engineering-System still have policy gaps, and the private mobile repository is limited by the current GitHub plan. Production readiness remains blocked by the external Neon PostgreSQL quota incident.
 
 ## Architecture
 
@@ -21,6 +21,25 @@ The system combines EGM's context-rich design and fresh-context review workflow 
 - [Migration plan](docs/operations/migration-from-defect-knowledge.md)
 - [Pinned migration manifest](migration/app-java-v3-2026-11-13.manifest.json)
 - [ADR-0001: one EGM-based system](docs/adr/0001-single-egm-system.md)
+
+## Platform Engineering Operating System (PEOS)
+
+PEOS is the platform engineering control plane; EGM remains the single canonical knowledge, review, verification and learning engine. PEOS does not add a separate database or production service.
+
+- [PEOS operating model](docs/peos/operating-model.md)
+- [W3 current pull-request queue — 2026-11-21](docs/peos/w3-pr-queue-2026-11-21.md)
+- Read-only W3 recapture: `GITHUB_TOKEN=... python tools/capture_w3_pr_queue.py` (add `--check` to compare or `--write` to replace the snapshot after review).
+- [W5 backend and commerce evidence — 2026-11-21](docs/peos/w5-backend-commerce-2026-11-21.md)
+- [W6 client evidence — 2026-11-21](docs/peos/w6-client-delivery-2026-11-21.md)
+- [W7 operational evidence — 2026-11-21](docs/peos/w7-operational-recheck-2026-11-21.md)
+- [W8 production PostgreSQL quota incident — 2026-11-23](docs/peos/w8-production-postgresql-quota-incident-2026-11-23.md) — read-only evidence; production recovery remains blocked on the external Neon quota.
+- [W8 machine-checked recovery gates](registry/peos/w8-recovery-gates.json) — fail-closed proof sequence; a recovery claim is rejected until every gate has its required evidence.
+- [Cross-repository review intake](docs/peos/cross-repository-review-intake.md) — implemented with a separate read-only source App token; remains disabled until owner credentials/install are configured.
+- [Main-branch repository governance audit](docs/peos/repository-governance-audit.md) — read-only audit; Admin and Engineering-System rulesets are still absent, mobile is plan-limited.
+- [Cross-repository intake workflow](.github/workflows/cross-repository-review-intake.yml) and [read-only governance audit workflow](.github/workflows/repository-governance-audit.yml).
+- [W8/W9 operating-model extension](docs/peos/operating-model.md) — production incident evidence, external review intake and repository governance.
+
+W0-W4 remain dated historical snapshots. W5-W7 are separately captured and SHA-bound evidence. W8 records the current production quota incident; W9 adds read-only cross-repository review intake and repository-governance auditing. Neither the collector nor the audit mutates source repositories or authorizes merge/deployment. Cross-repository intake remains disabled until the App installation gate is satisfied.
 
 ## Upstream EGM baseline
 
